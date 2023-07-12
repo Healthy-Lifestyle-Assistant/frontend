@@ -30,6 +30,8 @@ jobs:
           ls -l
           cp -a client/dist/ client-build/
           cd client-build/
+          git config user.email ""
+          git config user.name "CI/CD"
           git add .
           git commit -m "VERSION 0.0.1"
           git push -u origin main
