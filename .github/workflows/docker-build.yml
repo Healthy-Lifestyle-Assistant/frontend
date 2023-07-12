@@ -20,6 +20,7 @@ jobs:
           npm run build
       - name: Setup SSH for build repository
         run: |
+          mkdir ~/.ssh 
           touch ~/.ssh/key
           cat ${{ secrets.SSH_SECRET_KEY }} >> ~/.ssh/key
           eval "$(ssh-agent -s)"
