@@ -29,11 +29,11 @@ jobs:
       - name: Clone and update build repository
         run: |
           cd ..
+          git config user.email "OlegKDeveloper@gmail.com"
+          git config user.name "OlegKDev"
           git clone git@github.com:Healthy-Lifestyle-Assistant/client-build.git
           cp -a client/dist/ client-build/
           cd client-build/
-          git config user.email ""
-          git config user.name "OlegKDev"
           git add .
           git commit -m "VERSION 0.0.1"
           git push -u origin main
