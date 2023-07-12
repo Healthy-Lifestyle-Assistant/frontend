@@ -20,12 +20,12 @@ jobs:
           npm run build
       - name: Setup SSH for build repository
         run: |
-          mkdir ~/.ssh
-          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts
+          mkdir ~/.ssh         
           echo "${{ secrets.SSH_SECRET_KEY }}" >> ~/.ssh/key
           chmod 600 ~/.ssh/key
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/key
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts
       - name: Clone and update build repository
         run: |
           cd ..
