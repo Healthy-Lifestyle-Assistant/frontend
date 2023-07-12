@@ -20,7 +20,6 @@ jobs:
           pwd
           ls -l
           npm run build
-          ls -l
       - name: Clone and update destination repository
         run: |
           pwd
