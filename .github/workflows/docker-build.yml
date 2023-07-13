@@ -30,7 +30,7 @@ jobs:
       - name: Clone and update build repository
         run: |
           cd ..
-          git clone git@github.com:Healthy-Lifestyle-Assistant/client-build.git
+          git clone https://github.com/OlegKDev/client-build.git
           git config user.email "OlegKDeveloper@gmail.com"
           git config user.name "OlegKDev"
           pwd
