@@ -30,9 +30,11 @@ jobs:
       - name: Clone and update build repository
         run: |
           cd ..
-          git clone https://github.com/OlegKDev/client-build.git
+          git clone git@github.com:OlegKDev/client-build.git
+          cd client-build/
           git config user.email "OlegKDeveloper@gmail.com"
           git config user.name "OlegKDev"
+          cd ..
           pwd
           ls -l
 #         run: |
