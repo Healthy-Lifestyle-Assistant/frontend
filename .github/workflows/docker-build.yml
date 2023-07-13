@@ -1,0 +1,41 @@
+# name: Build and push CI
+
+# on:
+#   push:
+#     branches: [ main ]
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: 18
+#       - name: Build
+#         run: |
+#           npm install
+#           npm run build
+#       - name: Setup SSH for build repository
+#         run: |
+#           mkdir ~/.ssh         
+#           echo "${{ secrets.SSH_SECRET_KEY }}" >> ~/.ssh/key
+#           chmod 600 ~/.ssh/key
+#           eval "$(ssh-agent -s)"
+#           ssh-add ~/.ssh/key
+#           ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts
+#           cat ~/.ssh/known_hosts
+#       - name: Clone and update build repository
+#         run: |
+#           cd ..
+#           git clone git@github.com:Healthy-Lifestyle-Assistant/client-build.git
+#           cp -a client/dist/ client-build/
+#           cd client-build/
+#           git config user.email "OlegKDeveloper@gmail.com"
+#           git config user.name "OlegKDev"
+#           git add .
+#           git commit -m "VERSION 0.0.1"
+#           git status
+#           git push -u origin main
