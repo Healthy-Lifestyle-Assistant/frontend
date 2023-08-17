@@ -5,21 +5,17 @@
     </div>
 </template>
   
-<!-- ============================================ -->
 <script>
 export default {
     name: "HelloView",
-
     props: {
         message: String
     },
-
     data() {
         return {
             apiMessage: Object
         }
     },
-
     methods: {
         async getHelloWorld() {
             const res = await fetch("/api/v1/helloworld", {
@@ -36,14 +32,12 @@ export default {
             return data;
         }
     },
-
     async created() {
         this.apiMessage = await this.getHelloWorld();
     }
 }
 </script>
   
-<!-- ============================================ -->
 <style scoped>
 .hello {
     color: green;
