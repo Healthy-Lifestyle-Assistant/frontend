@@ -56,8 +56,8 @@ export default {
                 console.log(res);
 
                 if (res.status === 200) {
-                    localStorage.setItem("token", JSON.stringify(res.body.token));
-                    this.message = "Signup successful! Now you can login to your account";
+                    localStorage.setItem("token", JSON.stringify(res.body.token).slice(1, -1));
+                    this.message = "Login successful";
                 } else {
                     this.message = "An error occurred while signing up. Try again";
                 }

@@ -3,6 +3,8 @@ import AboutView from "../views/AboutView";
 import HelloView from "../views/HelloView";
 import SignupView from "../views/SignupView";
 import LoginView from "../views/LoginView";
+import GetExercisesView from "../views/GetExercisesView";
+import WorkoutsMenuView from "../views/WorkoutsMenuView";
 
 const routes = [
     {
@@ -24,6 +26,16 @@ const routes = [
         path: "/login",
         name: "LoginView",
         component: LoginView
+    },
+    {
+        path: "/exercises",
+        name: "GetExercisesView",
+        component: GetExercisesView
+    },
+    {
+        path: "/workouts",
+        name: "WorkoutsMenuView",
+        component: WorkoutsMenuView
     }
 ];
 
