@@ -40,7 +40,11 @@
 
         </ul>
 
-        <div class="d-flex">
+        <div v-if="isLogged" class="d-flex">
+          <router-link to="/logout" class="btn btn-outline-success me-2" role="button">Logout</router-link>
+        </div>
+        <div v-else class="d-flex">
+          isLogged: {{ isLogged }} 
           <router-link to="/login" class="btn btn-outline-success me-2" role="button">Login</router-link>
           <router-link to="/signup" class="btn btn-outline-success me-2" role="button">Sign-Up</router-link>
         </div>
@@ -56,7 +60,12 @@
 
 <script>
 export default {
-  name: "App"
+  name: "App",
+  computed: {
+    isLogged() {
+      return this.$store.state.isLogged;
+    }
+  }
 }
 </script>
 

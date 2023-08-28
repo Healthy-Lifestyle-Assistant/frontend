@@ -4,6 +4,7 @@
     </metainfo>
 
     <p>Application description</p>
+    <div>isLogged: {{ isLogged }}</div>
 </template>
 
 <script>
@@ -18,6 +19,11 @@ export default {
                 lang: "en"
             }
         })
+    },
+    computed: {
+    isLogged() {
+        return this.$store.state.isLogged;
     }
+  }
 }
 </script>
