@@ -71,9 +71,11 @@ export default {
                     this.entities = res.body.exercises;
                 }
                 else if (res.status === 401) {
+                    this.$store.commit('setLogged', false);
                     this.$router.push("/login");
                 }
                 else {
+                    this.$store.commit('setLogged', false);
                     this.message = `Unexpected response status (${res.status})`;
                 }
             } catch (error) {

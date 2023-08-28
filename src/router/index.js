@@ -5,6 +5,7 @@ import HelloView from "../views/home/HelloView";
 // auth
 import SignupView from "../views/auth/SignupView";
 import LoginView from "../views/auth/LoginView";
+import LogoutView from "../views/auth/LogoutView";
 // calendar
 import CalendarMenuView from "../views/calendar/CalendarMenuView";
 // workouts
@@ -40,6 +41,11 @@ const routes = [
         path: "/login",
         name: "LoginView",
         component: LoginView
+    },
+    {
+        path: "/logout",
+        name: "LogoutView",
+        component: LogoutView
     },
     // calendar
     {

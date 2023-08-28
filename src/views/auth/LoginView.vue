@@ -55,7 +55,7 @@ export default {
 
                 if (res.status === 200) {
                     localStorage.setItem("token", JSON.stringify(res.body.token).slice(1, -1));
-                    // set global isLogged = true;
+                    this.$store.commit('setLogged', true);
                     this.message = "Login successful";
                 } else {
                     this.message = "An error occurred while signing up. Try again";
@@ -75,8 +75,6 @@ export default {
             });
 
             const data = await res.json();
-            console.log("loginApi():");
-            console.log(data);
             
             return {
                 status: res.status,
