@@ -52,11 +52,10 @@ export default {
 
             try {
                 const res = await this.loginApi(loginRequestDto);
-                console.log("Login submitForm():")
-                console.log(res);
 
                 if (res.status === 200) {
                     localStorage.setItem("token", JSON.stringify(res.body.token).slice(1, -1));
+                    // set global isLogged = true;
                     this.message = "Login successful";
                 } else {
                     this.message = "An error occurred while signing up. Try again";
