@@ -1,7 +1,14 @@
 <template>
-    <div v-if="entities">
-        <h2>List exercises</h2>
-        <ul v-if="entities">
+    <metainfo>
+		<template v-slot:title="{ content }">{{ content }}</template>
+	</metainfo>
+    
+    <div v-if="entities" class="d-flex flex-column">
+        <div>
+            <router-link to="/workouts" class="btn btn-info mb-4" role="button">Add Custom Exercise</router-link>
+        </div>
+
+        <!-- <ul v-if="entities">
             <li v-for="entity in entities" :key="entity.id">{{ entity.id }}: {{ entity.title }} {{ entity.description }}
 
                 <ul v-if="entity.bodyParts">
@@ -16,8 +23,24 @@
                     </li>
                 </ul>
             </li>
+        </ul> -->
 
-        </ul>
+        <div v-if="entities" class="d-flex flex-wrap">
+            <div v-for="entity in entities" :key="entity.id" class="card w-25 mb-3 me-2 bg-dark text-info"
+                style="min-width: 16rem;">
+                <div class="card-body">
+                    <div class="card-title">{{ entity.title }}</div>
+                    <div v-if="entity.bodyParts" class="card-text mb-2">
+                        <span v-for="bodyPart in entity.bodyParts" :key="bodyPart.id">{{ bodyPart.name }}&nbsp;</span>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <a href="#" class="btn btn-outline-info" target="_blank">Details</a>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <p v-if="message" :class="{ 'success-message': isSuccess, 'error-message': isError }">
@@ -26,22 +49,37 @@
 </template>
 
 <script>
+import { useMeta } from "vue-meta";
+
 export default {
-    name: "GetExercisesView",
+    name: "ExercisesView",
+
+    setup() {
+        useMeta({
+            title: "Exercises",
+            htmlAttrs: {
+                lang: "en"
+            }
+        })
+    },
+
     data() {
         return {
             entities: null,
             message: ""
         };
     },
+
     computed: {
         isSuccess() {
             return this.message.includes('success');
         },
+
         isError() {
             return this.message.includes('error');
         }
     },
+
     methods: {
         async getExercisesApi(token, isCustomOnly) {
             let URL = "/api/v1/exercises";
@@ -61,7 +99,9 @@ export default {
             };
         }
     },
+
     async created() {
+        this.$store.commit("setCurrentUrl", "/exercises");
         const token = localStorage.getItem("token");
         if (token === null || token === "") this.$router.push("/login");
         else {

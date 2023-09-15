@@ -1,71 +1,107 @@
 <template>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-      <!-- <a class="navbar-brand" href="#">Fitness Tracker</a> -->
-      <router-link to="/" class="navbar-brand">Fitness Tracker</router-link>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+	<nav class="navbar navbar-expand-lg bg-dark mb-5" data-bs-theme="dark">
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <!-- <a class="nav-link active" aria-current="page" href="#">Home</a> -->
-            <router-link to="/" class="nav-link active" aria-current="page">Home</router-link>
-          </li>
-          <li class="nav-item">
-            <!-- <a class="nav-link" href="#">Calendar</a> -->
-            <router-link to="/calendar-menu" class="nav-link">Calendar</router-link>
-          </li>
+		<div class="container-fluid">
+			<!-- Most Left Side -->
+			<router-link to="/" class="navbar-brand me-4">Vitality Flow</router-link>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<!-- End of Most Left Side -->
 
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Workouts</a>
-            <ul class="dropdown-menu">
-              <li><router-link to="/exercises-menu" class="dropdown-item">Exercises</router-link></li>
-              <li><router-link to="/workouts-menu" class="dropdown-item">Workouts</router-link></li>
-              <li><router-link to="/media-menu" class="dropdown-item">Media</router-link></li>
-            </ul>
-          </li>
+			<!-- Menu -->
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-          <li class="nav-item">
-            <!-- <a class="nav-link" href="#">Supplements</a> -->
-            <router-link to="/supplements-menu" class="nav-link">Supplements</router-link>
-          </li>
+					<li class="nav-item">
+						<router-link to="/calendar-menu"
+							:class="{ 'nav-link': true, 'active': isCalendar }">Calendar</router-link>
+					</li>
 
-          <li class="nav-item">
-            <!-- <a class="nav-link" href="#">Settings</a> -->
-            <router-link to="/settings-menu" class="nav-link">Settings</router-link>
-          </li>
+					<li class="nav-item">
+						<router-link to="/workouts-menu"
+							:class="{ 'nav-link': true, 'active': isWorkouts }">Workouts</router-link>
+					</li>
 
-        </ul>
+					<li class="nav-item">
+						<router-link to="/nutrition-menu"
+							:class="{ 'nav-link': true, 'active': isNutrition }">Nutrition</router-link>
+					</li>
 
-        <div v-if="isLogged" class="d-flex">
-          <router-link to="/logout" class="btn btn-outline-success me-2" role="button">Logout</router-link>
-        </div>
-        <div v-else class="d-flex">
-          isLogged: {{ isLogged }} 
-          <router-link to="/login" class="btn btn-outline-success me-2" role="button">Login</router-link>
-          <router-link to="/signup" class="btn btn-outline-success me-2" role="button">Sign-Up</router-link>
-        </div>
+					<li class="nav-item">
+						<router-link to="/meditations-menu"
+							:class="{ 'nav-link': true, 'active': isMeditations }">Meditations</router-link>
+					</li>
+				</ul>
+				<!-- End of Menu -->
 
-      </div>
-    </div>
-  </nav>
+				<!-- Most right side -->
+				<div v-if="isLogged" class="d-flex align-items-center">
+					<!-- <div class="me-2">isLogged: {{ isLogged }}</div> -->
+					<!-- <div class="me-2">currentUrl: {{ getCurrentUrl }}</div> -->
+					<!-- <div class="me-2">previousUrl: {{ getPreviousUrl }}</div> -->
+					<router-link to="/settings-menu" class="btn btn-outline-info me-2"
+						role="button">Settings</router-link>
+					<router-link to="/logout" class="btn btn-outline-info me-2" role="button">Logout</router-link>
+				</div>
 
-  <div class="container">
-    <router-view></router-view>
-  </div>
+				<div v-else class="d-flex align-items-center">
+					<!-- <div class="me-2">isLogged: {{ isLogged }} </div> -->
+					<!-- <div class="me-2">currentUrl: {{ getCurrentUrl }}</div> -->
+					<!-- <div class="me-2">previousUrl: {{ getPreviousUrl }}</div> -->
+					<router-link to="/login" class="btn btn-outline-info me-2" role="button">Login</router-link>
+					<router-link to="/signup" class="btn btn-outline-info me-2" role="button">Sign-Up</router-link>
+				</div>
+				<!-- End of Most right side -->
+
+			</div> <!-- </div class="collapse navbar-collapse" id="navbarSupportedContent"> -->
+
+		</div><!-- </div class="container-fluid"> -->
+	</nav>
+
+	<!-- Render App Content -->
+	<div class="container d-flex flex-column align-items-center justify-content-center">
+		<router-view></router-view>
+	</div>
+	<!-- End of App content -->
+
+	<!-- Footer -->
 </template>
 
 <script>
 export default {
-  name: "App",
-  computed: {
-    isLogged() {
-      return this.$store.state.isLogged;
-    }
-  }
+	name: "App",
+
+	computed: {
+		isLogged() {
+			return this.$store.state.isLogged;
+		},
+
+		getCurrentUrl() {
+			return this.$store.state.currentUrl;
+		},
+
+		getPreviousUrl() {
+			return this.$store.state.previousUrl;
+		},
+
+		isCalendar() {
+			return this.$store.state.currentUrl.includes("calendar");
+		},
+
+		isWorkouts() {
+			return this.$store.state.currentUrl.includes("workouts");
+		},
+
+		isNutrition() {
+			return this.$store.state.currentUrl.includes("nutrition");
+		},
+
+		isMeditations() {
+			return this.$store.state.currentUrl.includes("meditations");
+		}
+	}
 }
 </script>
 
