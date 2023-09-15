@@ -4,11 +4,13 @@
 	</metainfo>
     
     <div class="d-flex flex-column">
-        <p>TODO: Dropdown (today, week, month, past three months) -> Show activities button</p>
-        <p>TODO: Date picker Select custom date range -> Show activities button</p>
+        <p>TODO: List of default and custom workouts</p>
+        <div>
+            <router-link to="/workouts" class="btn btn-info" role="button">TODO: Add Custom Workout</router-link>
+        </div>
         <br>
         <div>
-            <router-link to="/calendar-reminders" class="btn btn-info" role="button">TODO: Reminders</router-link>
+            <router-link to="/workouts" class="btn btn-info" role="button">TODO: Manage Reminders</router-link>
         </div>
     </div>
 </template>
@@ -17,11 +19,11 @@
 import { useMeta } from "vue-meta";
 
 export default {
-    name: "CalendarMenuView",
+    name: "WorkoutsView",
 
     setup() {
         useMeta({
-            title: "Calendar",
+            title: "Workouts",
             htmlAttrs: {
                 lang: "en"
             }
@@ -29,7 +31,7 @@ export default {
     },
 
     async created() {
-        this.$store.commit("setCurrentUrl", "calendar-menu");
+        this.$store.commit("setCurrentUrl", "/workouts");
     }
 }
 </script>
