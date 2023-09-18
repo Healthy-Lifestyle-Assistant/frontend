@@ -3,7 +3,7 @@
 
 		<div class="container-fluid">
 			<!-- Most Left Side -->
-			<router-link to="/" class="navbar-brand me-4">Vitality Flow</router-link>
+			<router-link to="/" class="navbar-brand me-4">Healthy Lifestyle</router-link>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
 				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
