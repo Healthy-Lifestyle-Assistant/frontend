@@ -7,8 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      CI: false
+
 
     steps:
       - name: Checkout
@@ -19,8 +18,14 @@ jobs:
         with:
           node-version: 18
 
-      - name: Build
-        run: |
-          npm install
-          npm run build -- --display-error-details
+      - name: Clean cache
+        run: npm cache clean --force
 
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run:
+          npm run build
+        env:
+          CI: false
