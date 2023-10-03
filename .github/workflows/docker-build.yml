@@ -20,3 +20,5 @@ jobs:
         run: |
           npm install
           npm run build -- --display-error-details
+        env:
+          CI: false
