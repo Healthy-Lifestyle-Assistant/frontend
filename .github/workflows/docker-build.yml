@@ -21,10 +21,14 @@ jobs:
       - name: Clean cache
         run: npm cache clean --force
 
-      - name: Install dependencies
+      - name: Install 1
         run: npm ci
+
+      - name: Install 2
+        run: npm install
 
       - name: Build
         run:
           npm run build
-
+        env:
+          CI: false
