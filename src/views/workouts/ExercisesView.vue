@@ -97,32 +97,54 @@ export default {
                 status: res.status,
                 body: data
             };
+        },
+
+        async getDefaultExercisesApi() {
+            let URL = "/api/v1/exercises/default";
+
+            const res = await fetch(URL, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const data = await res.json();
+
+            return {
+                status: res.status,
+                body: data
+            };
         }
     },
 
     async created() {
-        this.$store.commit("setCurrentUrl", "/exercises");
-        const token = localStorage.getItem("token");
-        if (token === null || token === "") this.$router.push("/login");
-        else {
-            try {
-                const res = await this.getExercisesApi(token, false);
-                if (res.status === 200) {
-                    this.entities = res.body.exercises;
-                }
-                else if (res.status === 401) {
-                    this.$store.commit('setLogged', false);
-                    this.$router.push("/login");
-                }
-                else {
-                    this.$store.commit('setLogged', false);
-                    this.message = `Unexpected response status (${res.status})`;
-                }
-            } catch (error) {
-                this.message = "An error occurred while signing up. Try again";
-                console.error(error);
-            }
-        }
+        this.$store.commit("setCurrentUrl", "/workouts-exercises");
+        
+        const res = await this.getDefaultExercisesApi();
+        this.entities = res.body;
+
+        // const token = localStorage.getItem("token");
+        // if (token === null || token === "") this.$router.push("/login");
+        // else {
+        //     try {
+        //         const res = await this.getExercisesApi(token, false);
+        //         if (res.status === 200) {
+        //             this.entities = res.body.exercises;
+        //         }
+        //         else if (res.status === 401) {
+        //             this.$store.commit('setLogged', false);
+        //             this.$router.push("/login");
+        //         }
+        //         else {
+        //             this.$store.commit('setLogged', false);
+        //             this.message = `Unexpected response status (${res.status})`;
+        //         }
+        //     } catch (error) {
+        //         this.message = "An error occurred while signing up. Try again";
+        //         console.error(error);
+        //     }
+        // }
     }
 };
 </script>
