@@ -7,8 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      CI: false
 
     steps:
       - name: Checkout
@@ -23,11 +21,11 @@ jobs:
         run: npm cache clean --force
 
       - name: Install 1
-        run: npm ci
+        run: CI=false npm ci
 
       - name: Install 2
-        run: npm install
+        run: CI=false npm install
 
       - name: Build
         run:
-          npm run build
+          CI=false npm run build
