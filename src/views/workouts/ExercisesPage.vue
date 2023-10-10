@@ -1,31 +1,18 @@
 <template>
     <metainfo>
-		<template v-slot:title="{ content }">{{ content }}</template>
-	</metainfo>
+        <template v-slot:title="{ content }">{{ content }}</template>
+    </metainfo>
 
-    <div>
-        <ExerciseComponent></ExerciseComponent>
-    </div>
-    
-    <div v-if="entities" class="d-flex flex-column">
+    <div v-if="exercises" class="d-flex flex-column">
         <div>
             <router-link to="/workouts" class="btn btn-info mb-4" role="button">Add Custom Exercise</router-link>
         </div>
 
-        <div v-if="entities" class="d-flex flex-wrap">
-            
-            <div v-for="entity in entities" :key="entity.id" class="card w-25 mb-3 me-2 bg-dark text-info"
-                style="min-width: 16rem;">
-                <div class="card-body">
-                    <div class="card-title">{{ entity.title }}</div>
-                    <div v-if="entity.bodyParts" class="card-text mb-2">
-                        <span v-for="bodyPart in entity.bodyParts" :key="bodyPart.id">{{ bodyPart.name }}&nbsp;</span>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <a href="#" class="btn btn-outline-info" target="_blank">Details</a>
+        <div v-if="exercises" class="d-flex flex-wrap">
 
-                    </div>
-                </div>
+            <div v-for="exercise in exercises" :key="exercise.id">
+                <ExerciseComponent :title="exercise.title" :description="exercise.description"
+                    :bodyParts="exercise.bodyParts" :type="exercise.type"></ExerciseComponent>
             </div>
 
         </div>
@@ -54,7 +41,7 @@ export default {
 
     data() {
         return {
-            entities: null,
+            exercises: null,
             message: ""
         };
     },
@@ -75,9 +62,60 @@ export default {
 
     async created() {
         this.$store.commit("setCurrentUrl", "/workouts-exercises");
-        
-        const res = await this.getDefaultExercisesApi();
-        this.entities = res.body;
+
+        this.exercises = [
+            {
+                "id": 1,
+                "title": "Workout Title 1",
+                "description": "Workout Description 1",
+                "bodyParts": [
+                    {
+                        "id": 1,
+                        "name": "BodyPart1"
+                    },
+                    {
+                        "id": 2,
+                        "name": "BodyPart2"
+                    }
+                ],
+                "type": "Default"
+            },
+            {
+                "id": 2,
+                "title": "Workout Title 2",
+                "description": "Workout Description 2",
+                "bodyParts": [
+                {
+                        "id": 3,
+                        "name": "BodyPart3"
+                    },
+                    {
+                        "id": 4,
+                        "name": "BodyPart4"
+                    }
+                ],
+                "type": "Default"
+            },
+            {
+                "id": 3,
+                "title": "Workout Title 3",
+                "description": "Workout Description 3",
+                "bodyParts": [
+                {
+                        "id": 5,
+                        "name": "BodyPart5"
+                    },
+                    {
+                        "id": 6,
+                        "name": "BodyPart6"
+                    }
+                ],
+                "type": "Default"
+            }
+        ];
+
+        // const res = await this.getDefaultExercisesApi();
+        // this.entities = res.body;
 
         // const token = localStorage.getItem("token");
         // if (token === null || token === "") this.$router.push("/login");
@@ -102,43 +140,43 @@ export default {
         // }
     },
 
-    methods: {
-        async getExercisesApi(token, isCustomOnly) {
-            let URL = "/api/v1/exercises";
-            if (isCustomOnly) URL = URL + "?isCustomOnly=true"
-            const res = await fetch(URL, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
-            });
+    // methods: {
+    //     async getExercisesApi(token, isCustomOnly) {
+    //         let URL = "/api/v1/exercises";
+    //         if (isCustomOnly) URL = URL + "?isCustomOnly=true"
+    //         const res = await fetch(URL, {
+    //             method: "GET",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 "Authorization": `Bearer ${token}`
+    //             }
+    //         });
 
-            const data = await res.json();
-            return {
-                status: res.status,
-                body: data
-            };
-        },
+    //         const data = await res.json();
+    //         return {
+    //             status: res.status,
+    //             body: data
+    //         };
+    //     },
 
-        async getDefaultExercisesApi() {
-            let URL = "/api/v1/exercises/default";
+    //     async getDefaultExercisesApi() {
+    //         let URL = "/api/v1/exercises/default";
 
-            const res = await fetch(URL, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
+    //         const res = await fetch(URL, {
+    //             method: "GET",
+    //             headers: {
+    //                 "Content-Type": "application/json"
+    //             }
+    //         });
 
-            const data = await res.json();
+    //         const data = await res.json();
 
-            return {
-                status: res.status,
-                body: data
-            };
-        }
-    }
+    //         return {
+    //             status: res.status,
+    //             body: data
+    //         };
+    //     }
+    // }
 };
 </script>
 
