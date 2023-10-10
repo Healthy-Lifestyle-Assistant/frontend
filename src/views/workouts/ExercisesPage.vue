@@ -66,8 +66,8 @@ export default {
         this.exercises = [
             {
                 "id": 1,
-                "title": "Workout Title 1",
-                "description": "Workout Description 1",
+                "title": "Exercise Title 1",
+                "description": "Exercise Description 1",
                 "bodyParts": [
                     {
                         "id": 1,
@@ -82,8 +82,8 @@ export default {
             },
             {
                 "id": 2,
-                "title": "Workout Title 2",
-                "description": "Workout Description 2",
+                "title": "Exercise Title 2",
+                "description": "Exercise Description 2",
                 "bodyParts": [
                 {
                         "id": 3,
@@ -98,8 +98,8 @@ export default {
             },
             {
                 "id": 3,
-                "title": "Workout Title 3",
-                "description": "Workout Description 3",
+                "title": "Exercise Title 3",
+                "description": "Exercise Description 3",
                 "bodyParts": [
                 {
                         "id": 5,
