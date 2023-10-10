@@ -20,7 +20,7 @@
 					</li>
 
 					<li class="nav-item">
-						<router-link to="/workouts-menu"
+						<router-link to="/workouts-start-page"
 							:class="{ 'nav-link': true, 'active': isWorkouts }">Workouts</router-link>
 					</li>
 

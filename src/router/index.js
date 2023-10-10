@@ -12,8 +12,8 @@ import CalendarMenuView from "../views/calendar/CalendarMenuView";
 import RemindersView from "../views/calendar/RemindersView";
 
 // Workouts
-import WorkoutsMenuView from "../views/workouts/WorkoutsMenuView";
-import ExercisesView from "../views/workouts/ExercisesView";
+import WorkoutsStartPage from "../views/workouts/WorkoutsStartPage";
+import ExercisesPage from "../views/workouts/ExercisesPage";
 import WorkoutsView from "../views/workouts/WorkoutsView";
 import ExercisesMediaView from "../views/workouts/ExercisesMediaView";
 
@@ -71,14 +71,14 @@ const routes = [
 
     // Workouts
     {
-        path: "/workouts-menu",
-        name: "WorkoutsMenuView",
-        component: WorkoutsMenuView
+        path: "/workouts-start-page",
+        name: "WorkoutsStartPage",
+        component: WorkoutsStartPage
     },
     {
         path: "/workouts-exercises",
-        name: "ExercisesView",
-        component: ExercisesView
+        name: "ExercisesPage",
+        component: ExercisesPage
     },
     {
         path: "/workouts",
