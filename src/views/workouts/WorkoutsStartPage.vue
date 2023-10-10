@@ -3,18 +3,26 @@
         <template v-slot:title="{ content }">{{ content }}</template>
     </metainfo>
 
-    <div class="d-flex">
-        <router-link to="" class="btn btn-info me-4" role="button">Create Custom Workout</router-link>
-        <router-link to="/workouts-exercises" class="btn btn-info me-4" role="button">Exercises</router-link>
-        <router-link to="" class="btn btn-info me-4" role="button">Reminders</router-link>
-    </div>
+    <div class="d-flex flex-column">
 
-    <br><br>
-    <div v-if="workouts">
-        <div v-for="workout in workouts" :key="workout.id">
-            <WorkoutComponent :title="workout.title" :description="workout.description" :bodyParts="workout.bodyParts" :type="workout.type">
-            </WorkoutComponent>
+        <div class="d-flex">
+            <router-link to="" class="btn btn-info me-4" role="button">Create Custom Workout</router-link>
+            <router-link to="/workouts-exercises" class="btn btn-info me-4" role="button">Exercises</router-link>
+            <router-link to="" class="btn btn-info me-4" role="button">Reminders</router-link>
         </div>
+
+        <br><br>
+
+        <div v-if="workouts" class="d-flex flex-wrap">
+
+            <div v-for="workout in workouts" :key="workout.id">
+                <WorkoutComponent :title="workout.title" :description="workout.description" :bodyParts="workout.bodyParts"
+                    :type="workout.type" :exercises="workout.exercises">
+                </WorkoutComponent>
+            </div>
+
+        </div>
+
     </div>
 </template>
 
@@ -49,22 +57,175 @@ export default {
                 "id": 1,
                 "title": "Workout Title 1",
                 "description": "Workout Description 1",
-                "bodyParts": "BodyPart1, BodyPart2",
-                "type": "Default"
+                "bodyParts": [
+                    {
+                        "id": 1,
+                        "name": "BodyPart1"
+                    },
+                    {
+                        "id": 2,
+                        "name": "BodyPart2"
+                    },
+                    {
+                        "id": 3,
+                        "name": "BodyPart3"
+                    },
+                    {
+                        "id": 4,
+                        "name": "BodyPart4"
+                    }
+                ],
+                "type": "Default",
+                "exercises": [
+                    {
+                        "id": 1,
+                        "title": "Exercise Title 1",
+                        "description": "Exercise Description 1",
+                        "bodyParts": [
+                            {
+                                "id": 1,
+                                "name": "BodyPart1"
+                            },
+                            {
+                                "id": 2,
+                                "name": "BodyPart2"
+                            }
+                        ],
+                        "type": "Default"
+                    },
+                    {
+                        "id": 2,
+                        "title": "Exercise Title 2",
+                        "description": "Exercise Description 2",
+                        "bodyParts": [
+                            {
+                                "id": 3,
+                                "name": "BodyPart3"
+                            },
+                            {
+                                "id": 4,
+                                "name": "BodyPart4"
+                            }
+                        ],
+                        "type": "Default"
+                    }
+                ]
             },
             {
                 "id": 2,
                 "title": "Workout Title 2",
                 "description": "Workout Description 2",
-                "bodyParts": "BodyPart3, BodyPart4",
-                "type": "Default"
+                "bodyParts": [
+                    {
+                        "id": 1,
+                        "name": "BodyPart1"
+                    },
+                    {
+                        "id": 2,
+                        "name": "BodyPart2"
+                    },
+                    {
+                        "id": 5,
+                        "name": "BodyPart5"
+                    },
+                    {
+                        "id": 6,
+                        "name": "BodyPart6"
+                    }
+                ],
+                "type": "Default",
+                "exercises": [
+                    {
+                        "id": 1,
+                        "title": "Exercise Title 1",
+                        "description": "Exercise Description 1",
+                        "bodyParts": [
+                            {
+                                "id": 1,
+                                "name": "BodyPart1"
+                            },
+                            {
+                                "id": 2,
+                                "name": "BodyPart2"
+                            }
+                        ],
+                        "type": "Default"
+                    },
+                    {
+                        "id": 3,
+                        "title": "Exercise Title 3",
+                        "description": "Exercise Description 3",
+                        "bodyParts": [
+                            {
+                                "id": 5,
+                                "name": "BodyPart5"
+                            },
+                            {
+                                "id": 6,
+                                "name": "BodyPart6"
+                            }
+                        ],
+                        "type": "Default"
+                    }
+                ]
             },
             {
                 "id": 3,
                 "title": "Workout Title 3",
                 "description": "Workout Description 3",
-                "bodyParts": "BodyPart5, BodyPart6",
-                "type": "Default"
+                "bodyParts": [
+                    {
+                        "id": 3,
+                        "name": "BodyPart3"
+                    },
+                    {
+                        "id": 4,
+                        "name": "BodyPart4"
+                    },
+                    {
+                        "id": 5,
+                        "name": "BodyPart5"
+                    },
+                    {
+                        "id": 6,
+                        "name": "BodyPart6"
+                    }
+                ],
+                "type": "Default",
+                "exercises": [
+                    {
+                        "id": 2,
+                        "title": "Exercise Title 2",
+                        "description": "Exercise Description 2",
+                        "bodyParts": [
+                            {
+                                "id": 3,
+                                "name": "BodyPart3"
+                            },
+                            {
+                                "id": 4,
+                                "name": "BodyPart4"
+                            }
+                        ],
+                        "type": "Default"
+                    },
+                    {
+                        "id": 3,
+                        "title": "Exercise Title 3",
+                        "description": "Exercise Description 3",
+                        "bodyParts": [
+                            {
+                                "id": 5,
+                                "name": "BodyPart5"
+                            },
+                            {
+                                "id": 6,
+                                "name": "BodyPart6"
+                            }
+                        ],
+                        "type": "Default"
+                    }
+                ]
             }
         ];
 
