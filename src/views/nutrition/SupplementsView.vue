@@ -6,11 +6,11 @@
     <div class="d-flex flex-column">
         <p>TODO: List of default and custom supplements</p>
         <div>
-            <router-link to="/nutrition-supplements" class="btn btn-info" role="button">TODO: Add Custom Supplement</router-link>
+            <router-link to="/nutrition-supplements" class="btn btn-primary" role="button">TODO: Add Custom Supplement</router-link>
         </div>
         <br>
         <div>
-            <router-link to="/nutrition-supplements" class="btn btn-info" role="button">TODO: Manage Reminders</router-link>
+            <router-link to="/nutrition-supplements" class="btn btn-primary" role="button">TODO: Manage Reminders</router-link>
         </div>
     </div>
 </template>

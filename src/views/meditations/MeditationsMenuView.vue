@@ -4,8 +4,8 @@
 	</metainfo>
     
     <div class="d-flex">
-        <router-link to="/meditations" class="btn btn-info me-4" role="button">Meditations</router-link>
-        <router-link to="/meditations-media" class="btn btn-info" role="button">Media</router-link>
+        <router-link to="/meditations" class="btn btn-primary me-4" role="button">Meditations</router-link>
+        <router-link to="/meditations-media" class="btn btn-primary" role="button">Media</router-link>
     </div>
 </template>
 

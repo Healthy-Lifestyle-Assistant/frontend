@@ -3,16 +3,19 @@
         <template v-slot:title="{ content }">{{ content }}</template>
     </metainfo>
 
-    <div v-if="exercises" class="d-flex flex-column">
-        <div>
-            <router-link to="/workouts" class="btn btn-info mb-4" role="button">Add Custom Exercise</router-link>
+    <div class="d-flex flex-column align-items-start">
+
+        <div class="d-flex">
+            <router-link to="/workouts" class="btn btn-primary" role="button">Add Custom Exercise</router-link>
         </div>
+
+        <br><br>
 
         <div v-if="exercises" class="d-flex flex-wrap">
 
             <div v-for="exercise in exercises" :key="exercise.id">
                 <ExerciseComponent :title="exercise.title" :description="exercise.description"
-                    :bodyParts="exercise.bodyParts" :type="exercise.type"></ExerciseComponent>
+                    :bodyParts="exercise.bodyParts" :type="exercise.type" />
             </div>
 
         </div>
@@ -85,7 +88,7 @@ export default {
                 "title": "Exercise Title 2",
                 "description": "Exercise Description 2",
                 "bodyParts": [
-                {
+                    {
                         "id": 3,
                         "name": "BodyPart3"
                     },
@@ -101,13 +104,9 @@ export default {
                 "title": "Exercise Title 3",
                 "description": "Exercise Description 3",
                 "bodyParts": [
-                {
+                    {
                         "id": 5,
                         "name": "BodyPart5"
-                    },
-                    {
-                        "id": 6,
-                        "name": "BodyPart6"
                     }
                 ],
                 "type": "Default"

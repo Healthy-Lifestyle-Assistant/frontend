@@ -5,7 +5,7 @@
     
     <div>
         <p>TODO: List of reminders</p>
-        <router-link to="/calendar-reminders" class="btn btn-info" role="button">TODO: Create Reminder</router-link>
+        <router-link to="/calendar-reminders" class="btn btn-primary" role="button">TODO: Create Reminder</router-link>
     </div>
 </template>
 

@@ -8,7 +8,7 @@
         <p>TODO: Date picker Select custom date range -> Show activities button</p>
         <br>
         <div>
-            <router-link to="/calendar-reminders" class="btn btn-info" role="button">TODO: Reminders</router-link>
+            <router-link to="/calendar-reminders" class="btn btn-primary" role="button">TODO: Reminders</router-link>
         </div>
     </div>
 </template>

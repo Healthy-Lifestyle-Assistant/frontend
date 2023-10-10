@@ -3,12 +3,12 @@
         <template v-slot:title="{ content }">{{ content }}</template>
     </metainfo>
 
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column align-items-start">
 
         <div class="d-flex">
-            <router-link to="" class="btn btn-info me-4" role="button">Create Custom Workout</router-link>
-            <router-link to="/workouts-exercises" class="btn btn-info me-4" role="button">Exercises</router-link>
-            <router-link to="" class="btn btn-info me-4" role="button">Reminders</router-link>
+            <router-link to="" class="btn btn-primary me-4" role="button">Create Custom Workout</router-link>
+            <router-link to="/workouts-exercises" class="btn btn-primary me-4" role="button">Exercises</router-link>
+            <router-link to="" class="btn btn-primary me-4" role="button">Reminders</router-link>
         </div>
 
         <br><br>
@@ -17,8 +17,7 @@
 
             <div v-for="workout in workouts" :key="workout.id">
                 <WorkoutComponent :title="workout.title" :description="workout.description" :bodyParts="workout.bodyParts"
-                    :type="workout.type" :exercises="workout.exercises">
-                </WorkoutComponent>
+                    :type="workout.type" :exercises="workout.exercises" />
             </div>
 
         </div>
@@ -185,10 +184,6 @@ export default {
                     {
                         "id": 5,
                         "name": "BodyPart5"
-                    },
-                    {
-                        "id": 6,
-                        "name": "BodyPart6"
                     }
                 ],
                 "type": "Default",
@@ -217,10 +212,6 @@ export default {
                             {
                                 "id": 5,
                                 "name": "BodyPart5"
-                            },
-                            {
-                                "id": 6,
-                                "name": "BodyPart6"
                             }
                         ],
                         "type": "Default"

@@ -6,7 +6,7 @@
     <div class="d-flex flex-column">
         <p>TODO: Profile -> Submit changes button</p>
         <div>
-            <router-link to="/settings-menu" class="btn btn-info" role="button">TODO: Delete Profile</router-link>
+            <router-link to="/settings-menu" class="btn btn-primary" role="button">TODO: Delete Profile</router-link>
         </div>
     </div>
 </template>
