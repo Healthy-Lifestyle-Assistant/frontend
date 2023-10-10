@@ -6,7 +6,7 @@
     <div class="d-flex flex-column">
         <p>TODO: List of default and custom meditations media references</p>
         <div>
-            <router-link to="/meditations-media" class="btn btn-info" role="button">TODO: Add Custom Media
+            <router-link to="/meditations-media" class="btn btn-primary" role="button">TODO: Add Custom Media
                 Reference</router-link>
         </div>
     </div>

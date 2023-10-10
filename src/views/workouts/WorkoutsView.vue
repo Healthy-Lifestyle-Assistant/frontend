@@ -6,11 +6,11 @@
     <div class="d-flex flex-column">
         <p>TODO: List of default and custom workouts</p>
         <div>
-            <router-link to="/workouts" class="btn btn-info" role="button">TODO: Add Custom Workout</router-link>
+            <router-link to="/workouts" class="btn btn-primary" role="button">TODO: Add Custom Workout</router-link>
         </div>
         <br>
         <div>
-            <router-link to="/workouts" class="btn btn-info" role="button">TODO: Manage Reminders</router-link>
+            <router-link to="/workouts" class="btn btn-primary" role="button">TODO: Manage Reminders</router-link>
         </div>
     </div>
 </template>

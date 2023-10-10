@@ -34,8 +34,7 @@
         </p>
     </div> -->
 
-    <!-- <div class="d-flex align-items-center justify-content-center"> -->
-    <div>
+    <div class="d-flex justify-content-center">
         <form @submit.prevent="submitForm" style="width: fit-content;">
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
@@ -58,7 +57,7 @@
                 <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required>
             </div>
 
-            <button type="submit" class="btn btn-info mt-4">Sign Up</button>
+            <button type="submit" class="btn btn-primary mt-4">Sign Up</button>
         </form>
 
         <p v-if="message" :class="{ 'success-message': isSuccess, 'error-message': isError }">

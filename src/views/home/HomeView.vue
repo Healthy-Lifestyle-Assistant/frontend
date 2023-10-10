@@ -3,8 +3,9 @@
 		<template v-slot:title="{ content }">{{ content }}</template>
 	</metainfo>
 
-	<div class="d-flex flex-column align-items-center w-75 mb-5">
-		<h3 class="mb-3">Maintain Habits For Your Health.</h3>
+	<div class="d-flex flex-column mb-5" style="width: 90%;">
+		<h3 class="mb-4">Maintain Habits For Your Health</h3>
+
 		<p class="lead mb-5">
 			A healthy lifestyle is a way of living that lowers the risk of being seriously ill or dying early. Not all
 			diseases are preventable, but a large portion of deaths, particularly those from coronary heart disease and lung
@@ -16,17 +17,18 @@
 			Web application aims to support users to change their behavior and improve their health in order to live
 			healthier, longer lives.
 			<br><br>
-			There're template exercises to pick off. You could also add your custom exercises with your media references
-			(YouTube, articles, and so on). One or more exercises should be associated with workout. There’re also template
+			There are template exercises to select. You could also add your custom exercises with your media references
+			(YouTube, articles, and so on). One or more exercises should be associated with workout. There are also template
 			workouts and the possibility to add custom workouts. <br><br>
-			Mental health, relaxation, and spiritual activities can be found in the meditations section. Nutrition track is
+			Mental health activities can be found in the meditations section. Nutrition track is
 			presented by recipes and supplements. <br><br>
-			Once you’ve created a template or custom workout, nutrition event, or meditation, set a reminder to track it.
+			Once you have created a template or custom workout, nutrition event, or meditation, set a reminder to track it.
 			<br><br>
 			<em>Web application is under development.</em>
 		</p>
+
 		<div>
-			<router-link to="/signup" class="btn btn-info" role="button">Try Development Version</router-link>
+			<router-link to="/signup" class="btn btn-primary" role="button">Try Development Version</router-link>
 		</div>
 	</div>
 </template>
