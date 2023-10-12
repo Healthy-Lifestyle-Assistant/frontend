@@ -9,6 +9,7 @@
             <router-link to="" class="btn btn-primary me-4" role="button">Create Custom Workout</router-link>
             <router-link to="/workouts-exercises" class="btn btn-primary me-4" role="button">Exercises</router-link>
             <router-link to="" class="btn btn-primary me-4" role="button">Reminders</router-link>
+            <router-link to="" class="btn btn-primary me-4" role="button">Media</router-link>
         </div>
 
         <br><br>
@@ -30,11 +31,11 @@ import { useMeta } from "vue-meta";
 import WorkoutComponent from "../../components/workouts/WorkoutComponent.vue";
 
 export default {
-    name: "WorkoutsStartPage",
+    name: "WorkoutsPage",
 
     setup() {
         useMeta({
-            title: "Workouts Menu",
+            title: "Healthy - Workouts",
             htmlAttrs: {
                 lang: "en"
             }
@@ -49,7 +50,7 @@ export default {
     },
 
     async created() {
-        this.$store.commit("setCurrentUrl", "/workouts-start-page");
+        this.$store.commit("setCurrentUrl", "/workouts");
 
         this.workouts = [
             {

@@ -1,30 +1,7 @@
 <template>
     <metainfo>
-		<template v-slot:title="{ content }">{{ content }}</template>
-	</metainfo>
-    
-    <!-- <div>
-        <h2>Login</h2>
-        <form @submit.prevent="submitForm">
-            <div>
-                <label for="usernameOrEmail">Username or email:</label>
-                <input type="text" id="usernameOrEmail" v-model="usernameOrEmail" required />
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" v-model="password" required />
-            </div>
-            <div>
-                <label for="confirmPassword">Confirm password:</label>
-                <input type="password" id="confirmPassword" v-model="confirmPassword" required />
-            </div>
-            <button type="submit">Login</button>
-        </form>
-
-        <p v-if="message" :class="{ 'success-message': isSuccess, 'error-message': isError }">
-            {{ message }}
-        </p>
-    </div> -->
+        <template v-slot:title="{ content }">{{ content }}</template>
+    </metainfo>
 
     <div class="d-flex justify-content-center">
         <form @submit.prevent="submitForm" style="width: fit-content;">
@@ -32,10 +9,12 @@
                 <label for="usernameOrEmail" class="form-label">Username or email</label>
                 <input type="text" class="form-control" id="usernameOrEmail" v-model="usernameOrEmail" required>
             </div>
+
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" v-model="password" required>
             </div>
+
             <div class="mb-3">
                 <label for="confirmPassword" class="form-label">Confirm password</label>
                 <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required>
@@ -54,11 +33,11 @@
 import { useMeta } from "vue-meta";
 
 export default {
-    name: "LoginView",
+    name: "LoginPage",
 
     setup() {
         useMeta({
-            title: "Login",
+            title: "Healthy - Login",
             htmlAttrs: {
                 lang: "en"
             }
@@ -72,6 +51,10 @@ export default {
             confirmPassword: "",
             message: ""
         };
+    },
+
+    async created() {
+        this.$store.commit("setCurrentUrl", "/login");
     },
 
     computed: {
@@ -105,7 +88,6 @@ export default {
                 }
             } catch (error) {
                 this.message = "An error occurred while signing up. Try again";
-                console.error(error);
             }
         },
 
@@ -125,10 +107,6 @@ export default {
                 body: data
             };
         }
-    },
-
-    async created() {
-        this.$store.commit("setCurrentUrl", "/login");
     }
 };
 </script>

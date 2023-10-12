@@ -14,22 +14,22 @@
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
 					<li class="nav-item">
-						<router-link to="/calendar-menu"
+						<router-link to="/calendar"
 							:class="{ 'nav-link': true, 'active': isCalendar }">Calendar</router-link>
 					</li>
 
 					<li class="nav-item">
-						<router-link to="/workouts-start-page"
+						<router-link to="/workouts"
 							:class="{ 'nav-link': true, 'active': isWorkouts }">Workouts</router-link>
 					</li>
 
 					<li class="nav-item">
-						<router-link to="/nutrition-menu"
+						<router-link to="/nutrition"
 							:class="{ 'nav-link': true, 'active': isNutrition }">Nutrition</router-link>
 					</li>
 
 					<li class="nav-item">
-						<router-link to="/meditations-menu"
+						<router-link to="/meditations"
 							:class="{ 'nav-link': true, 'active': isMeditations }">Meditations</router-link>
 					</li>
 				</ul>
@@ -39,6 +39,7 @@
 					<!-- <div class="me-2">isLogged: {{ isLogged }}</div> -->
 					<!-- <div class="me-2">currentUrl: {{ getCurrentUrl }}</div> -->
 					<!-- <div class="me-2">previousUrl: {{ getPreviousUrl }}</div> -->
+
 					<router-link to="/settings-menu" class="btn btn-light me-2"
 						role="button">Settings</router-link>
 					<router-link to="/logout" class="btn btn-light me-2" role="button">Logout</router-link>
@@ -48,6 +49,7 @@
 					<!-- <div class="me-2">isLogged: {{ isLogged }} </div> -->
 					<!-- <div class="me-2">currentUrl: {{ getCurrentUrl }}</div> -->
 					<!-- <div class="me-2">previousUrl: {{ getPreviousUrl }}</div> -->
+
 					<router-link to="/login" class="btn btn-light me-2" role="button">Login</router-link>
 					<router-link to="/signup" class="btn btn-light me-2" role="button">Sign-Up</router-link>
 				</div>
@@ -99,5 +101,3 @@ export default {
 	}
 }
 </script>
-
-<style></style>

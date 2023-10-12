@@ -6,7 +6,8 @@
     <div class="d-flex flex-column align-items-start">
 
         <div class="d-flex">
-            <router-link to="/workouts" class="btn btn-primary" role="button">Add Custom Exercise</router-link>
+            <router-link to="/workouts" class="btn btn-primary me-4" role="button">Add Custom Exercise</router-link>
+            <router-link to="" class="btn btn-primary me-4" role="button">Media</router-link>
         </div>
 
         <br><br>
@@ -35,7 +36,7 @@ export default {
 
     setup() {
         useMeta({
-            title: "Exercises",
+            title: "Healthy - Exercises",
             htmlAttrs: {
                 lang: "en"
             }
@@ -51,16 +52,6 @@ export default {
 
     components: {
         ExerciseComponent
-    },
-
-    computed: {
-        isSuccess() {
-            return this.message.includes('success');
-        },
-
-        isError() {
-            return this.message.includes('error');
-        }
     },
 
     async created() {
@@ -137,6 +128,16 @@ export default {
         //         console.error(error);
         //     }
         // }
+    },
+
+    computed: {
+        isSuccess() {
+            return this.message.includes('success');
+        },
+
+        isError() {
+            return this.message.includes('error');
+        }
     },
 
     // methods: {

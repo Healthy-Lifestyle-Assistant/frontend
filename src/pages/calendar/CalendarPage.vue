@@ -4,10 +4,7 @@
     </metainfo>
 
     <div class="d-flex flex-column">
-        <p>TODO: List of default and custom exercises</p>
-        <div>
-            <router-link to="/workouts" class="btn btn-primary" role="button">TODO: Add Custom Media Reference</router-link>
-        </div>
+        <p>Comming soon...</p>
     </div>
 </template>
 
@@ -15,11 +12,11 @@
 import { useMeta } from "vue-meta";
 
 export default {
-    name: "ExercisesMediaView",
+    name: "CalendarPage",
 
     setup() {
         useMeta({
-            title: "Exercises Media",
+            title: "Healthy - Calendar",
             htmlAttrs: {
                 lang: "en"
             }
@@ -27,7 +24,7 @@ export default {
     },
 
     async created() {
-        this.$store.commit("setCurrentUrl", "/workouts-media");
+        this.$store.commit("setCurrentUrl", "calendar");
     }
 }
 </script>

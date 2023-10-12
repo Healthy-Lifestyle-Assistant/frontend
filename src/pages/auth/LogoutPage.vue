@@ -4,7 +4,7 @@
 
 <script>
 export default {
-    name: "LogoutView",
+    name: "LogoutPage",
 
     created() {
         this.$store.commit("setCurrentUrl", "/login");

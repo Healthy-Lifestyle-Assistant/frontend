@@ -1,140 +1,92 @@
 import { createRouter, createWebHistory } from "vue-router";
 // Home
-import HomeView from "../views/home/HomeView";
+import HomePage from "../pages/home/HomePage";
 
 // Auth
-import SignupView from "../views/auth/SignupView";
-import LoginView from "../views/auth/LoginView";
-import LogoutView from "../views/auth/LogoutView";
+import SignupPage from "../pages/auth/SignupPage";
+import LoginPage from "../pages/auth/LoginPage";
+import LogoutPage from "../pages/auth/LogoutPage";
 
 // Calendar
-import CalendarMenuView from "../views/calendar/CalendarMenuView";
-import RemindersView from "../views/calendar/RemindersView";
+import CalendarPage from "../pages/calendar/CalendarPage";
 
 // Workouts
-import WorkoutsStartPage from "../views/workouts/WorkoutsStartPage";
-import ExercisesPage from "../views/workouts/ExercisesPage";
-import WorkoutsView from "../views/workouts/WorkoutsView";
-import ExercisesMediaView from "../views/workouts/ExercisesMediaView";
+import WorkoutsPage from "../pages/workouts/WorkoutsPage";
+import ExercisesPage from "../pages/workouts/ExercisesPage";
 
 // Nutrition
-import NutritionMenuView from "../views/nutrition/NutritionMenuView";
-import RecipesView from "../views/nutrition/RecipesView";
-import SupplementsView from "../views/nutrition/SupplementsView";
-import NutritionMediaView from "../views/nutrition/NutritionMediaView";
+import NutritionPage from "../pages/nutrition/NutritionPage";
 
 // Meditations
-import MeditationsMenuView from "../views/meditations/MeditationsMenuView";
-import MeditationsView from "../views/meditations/MeditationsView";
-import MeditationsMediaView from "../views/meditations/MeditationsMediaView";
+import MeditationsPage from "../pages/meditations/MeditationsPage";
 
 // Settings
-import SettingsMenuView from "../views/settings/SettingsMenuView";
+import SettingsPage from "../pages/settings/SettingsPage";
 
 
 const routes = [
     // Home
     {
         path: "/",
-        name: "HomeView",
-        component: HomeView
+        name: "HomePage",
+        component: HomePage
     },
 
     // Auth
     {
         path: "/signup",
-        name: "SignupView",
-        component: SignupView
+        name: "SignupPage",
+        component: SignupPage
     },
     {
         path: "/login",
-        name: "LoginView",
-        component: LoginView
+        name: "LoginPage",
+        component: LoginPage
     },
     {
         path: "/logout",
-        name: "LogoutView",
-        component: LogoutView
+        name: "LogoutPage",
+        component: LogoutPage
     },
 
     // Calendar
     {
-        path: "/calendar-menu",
-        name: "CalendarMenuView",
-        component: CalendarMenuView
-    },
-    {
-        path: "/calendar-reminders",
-        name: "RemindersView",
-        component: RemindersView
+        path: "/calendar",
+        name: "CalendarPage",
+        component: CalendarPage
     },
 
     // Workouts
     {
-        path: "/workouts-start-page",
-        name: "WorkoutsStartPage",
-        component: WorkoutsStartPage
+        path: "/workouts",
+        name: "WorkoutsPage",
+        component: WorkoutsPage
     },
     {
         path: "/workouts-exercises",
         name: "ExercisesPage",
         component: ExercisesPage
     },
-    {
-        path: "/workouts",
-        name: "WorkoutsView",
-        component: WorkoutsView
-    },
-    {
-        path: "/workouts-media",
-        name: "ExercisesMediaView",
-        component: ExercisesMediaView
-    },
 
     // Nutrition
     {
-        path: "/nutrition-menu",
-        name: "NutritionMenuView",
-        component: NutritionMenuView
-    },
-    {
-        path: "/nutrition-recipes",
-        name: "RecipesView",
-        component: RecipesView
-    },
-    {
-        path: "/nutrition-supplements",
-        name: "SupplementsView",
-        component: SupplementsView
-    },
-    {
-        path: "/nutrition-media",
-        name: "NutritionMediaView",
-        component: NutritionMediaView
+        path: "/nutrition",
+        name: "NutritionPage",
+        component: NutritionPage
     },
 
     // Meditations
     {
-        path: "/meditations-menu",
-        name: "MeditationsMenuView",
-        component: MeditationsMenuView
-    },
-    {
         path: "/meditations",
-        name: "MeditationsView",
-        component: MeditationsView
-    },
-    {
-        path: "/meditations-media",
-        name: "MeditationsMediaView",
-        component: MeditationsMediaView
+        name: "MeditationsPage",
+        component: MeditationsPage
     },
 
     // Settings
     {
-        path: "/settings-menu",
-        name: "SettingsMenuView",
-        component: SettingsMenuView
+        path: "/settings",
+        name: "SettingsPage",
+        component: SettingsPage
     }
 ];
 
