@@ -3,12 +3,12 @@
         <div class="card-body">
 			<h5 class="card-title">{{ title }}</h5>
 
-			<h6 class="card-subtitle mb-2 text-body-secondary">{{ type }}</h6>
+			<h6 class="card-subtitle mb-2 text-body-secondary">{{ isCustom ? "Custom" : "Default" }}</h6>
 
 			<p class="card-text">{{ description }}</p>
 
             <div v-if="bodyParts" class="card-text mb-2">
-                <span v-for="bodyPart in bodyParts" :key="bodyPart.id">{{ bodyPart.name }}&nbsp;</span>
+                <span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small>{{ bodyPart.name.toLowerCase() }}</small>&nbsp;</span>
             </div>
 
             <div class="d-flex justify-content-end">
@@ -27,7 +27,7 @@ export default {
         title: String,
         description: String,
         bodyParts: Array,
-        type: String
+        isCustom: Boolean
     }
 }
 </script>
