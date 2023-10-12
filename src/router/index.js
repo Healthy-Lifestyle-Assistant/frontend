@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 // Home
-import HomeView from "../pages/home/HomeView";
+import HomePage from "../pages/home/HomePage";
 
 // Auth
 import SignupPage from "../pages/auth/SignupPage";
@@ -28,8 +28,8 @@ const routes = [
     // Home
     {
         path: "/",
-        name: "HomeView",
-        component: HomeView
+        name: "HomePage",
+        component: HomePage
     },
 
     // Auth
