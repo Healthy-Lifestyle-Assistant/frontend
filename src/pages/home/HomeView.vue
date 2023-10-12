@@ -41,21 +41,21 @@ export default {
 
 	setup() {
 		useMeta({
-			title: "Healthy Lifestyle Home",
+			title: "Healthy - Home",
 			htmlAttrs: {
 				lang: "en"
 			}
 		})
 	},
 
+	async created() {
+		this.$store.commit("setCurrentUrl", "/");
+	},
+
 	computed: {
 		isLogged() {
 			return this.$store.state.isLogged;
 		}
-	},
-
-	async created() {
-		this.$store.commit("setCurrentUrl", "/");
 	}
 }
 </script>

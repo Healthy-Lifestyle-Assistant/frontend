@@ -1,38 +1,7 @@
 <template>
     <metainfo>
-		<template v-slot:title="{ content }">{{ content }}</template>
-	</metainfo>
-    
-    <!-- <div>
-        <h2>Sign Up</h2>
-        <form @submit.prevent="submitForm">
-            <div>
-                <label for="username">Username:</label>
-                <input type="text" id="username" v-model="username" required />
-            </div>
-            <div>
-                <label for="email">Email:</label>
-                <input type="email" id="email" v-model="email" required />
-            </div>
-            <div>
-                <label for="fullName">Full name:</label>
-                <input type="text" id="fullName" v-model="fullName" required />
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" v-model="password" required />
-            </div>
-            <div>
-                <label for="confirmPassword">Confirm password:</label>
-                <input type="password" id="confirmPassword" v-model="confirmPassword" required />
-            </div>
-            <button type="submit">Sign Up</button>
-        </form>
-
-        <p v-if="message" :class="{ 'success-message': isSuccess, 'error-message': isError }">
-            {{ message }}
-        </p>
-    </div> -->
+        <template v-slot:title="{ content }">{{ content }}</template>
+    </metainfo>
 
     <div class="d-flex justify-content-center">
         <form @submit.prevent="submitForm" style="width: fit-content;">
@@ -40,18 +9,22 @@
                 <label for="username" class="form-label">Username</label>
                 <input type="text" class="form-control" id="username" v-model="username" required>
             </div>
+
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <input type="email" class="form-control" id="email" v-model="email" required>
             </div>
+
             <div class="mb-3">
                 <label for="fullName" class="form-label">Full name</label>
                 <input type="text" class="form-control" id="fullName" v-model="fullName" required>
             </div>
+
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" v-model="password" required>
             </div>
+
             <div class="mb-3">
                 <label for="confirmPassword" class="form-label">Confirm password</label>
                 <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required>
@@ -70,11 +43,11 @@
 import { useMeta } from "vue-meta";
 
 export default {
-    name: "SignupView",
+    name: "SignupPage",
 
     setup() {
         useMeta({
-            title: "Signup",
+            title: "Healthy - Signup",
             htmlAttrs: {
                 lang: "en"
             }
@@ -90,6 +63,10 @@ export default {
             confirmPassword: "",
             message: ""
         };
+    },
+
+    async created() {
+        this.$store.commit("setCurrentUrl", "/signup");
     },
 
     computed: {
@@ -114,8 +91,6 @@ export default {
 
             try {
                 const res = await this.signupApi(signupRequestDto);
-                console.log("submitForm():")
-                console.log(res);
 
                 if (res.status === 201) {
                     this.message = "Signup successful! Now you can login to your account";
@@ -124,7 +99,6 @@ export default {
                 }
             } catch (error) {
                 this.message = "An error occurred while signing up. Try again";
-                console.error(error);
             }
         },
 
@@ -138,18 +112,12 @@ export default {
             });
 
             const data = await res.json();
-            console.log("signupApi():");
-            console.log(data);
-            
+
             return {
                 status: res.status,
                 body: data
             };
         }
-    },
-
-    async created() {
-        this.$store.commit("setCurrentUrl", "/signup");
     }
 };
 </script>
