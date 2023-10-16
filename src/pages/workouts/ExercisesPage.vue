@@ -16,7 +16,7 @@
 
             <div v-for="exercise in exercises" :key="exercise.id">
                 <ExerciseComponent :title="exercise.title" :description="exercise.description"
-                    :bodyParts="exercise.bodyParts" :isCustom="exercise.custom" />
+                    :bodyParts="exercise.bodyParts" :isCustom="exercise.custom" :needsEquipment="exercise.needsEquipment" />
             </div>
 
         </div>
