@@ -13,6 +13,7 @@ import CalendarPage from "../pages/calendar/CalendarPage";
 // Workouts
 import WorkoutsPage from "../pages/workouts/WorkoutsPage";
 import ExercisesPage from "../pages/workouts/ExercisesPage";
+import MediaPage from "../pages/workouts/MediaPage";
 
 // Nutrition
 import NutritionPage from "../pages/nutrition/NutritionPage";
@@ -66,6 +67,11 @@ const routes = [
         path: "/workouts-exercises",
         name: "ExercisesPage",
         component: ExercisesPage
+    },
+    {
+        path: "/workouts-media",
+        name: "MediaPage",
+        component: MediaPage
     },
 
     // Nutrition
