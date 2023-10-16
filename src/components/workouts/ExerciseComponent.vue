@@ -3,7 +3,7 @@
         <div class="card-body">
 			<h5 class="card-title">{{ title }}</h5>
 
-			<h6 class="card-subtitle mb-2 text-body-secondary">{{ isCustom ? "Custom" : "Default" }}</h6>
+			<h6 class="card-subtitle mb-2 text-body-secondary">{{ isCustom ? "Custom" : "Default" }}, {{ needsEquipment ? "With Equipment" : "Without Equipment" }}</h6>
 
 			<p class="card-text">{{ description }}</p>
 
@@ -27,7 +27,8 @@ export default {
         title: String,
         description: String,
         bodyParts: Array,
-        isCustom: Boolean
+        isCustom: Boolean,
+        needsEquipment: Boolean
     }
 }
 </script>
