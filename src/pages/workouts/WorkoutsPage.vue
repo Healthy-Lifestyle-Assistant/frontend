@@ -18,7 +18,7 @@
 
             <div v-for="workout in workouts" :key="workout.id">
                 <WorkoutComponent :title="workout.title" :description="workout.description" :bodyParts="workout.bodyParts"
-                    :type="workout.type" :exercises="workout.exercises" />
+                    :custom="workout.custom" :needsEquipment="workout.needsEquipment" :exercises="workout.exercises" />
             </div>
 
         </div>
@@ -52,202 +52,235 @@ export default {
     async created() {
         this.$store.commit("setCurrentUrl", "/workouts");
 
-        this.workouts = [
-            {
-                "id": 1,
-                "title": "Workout Title 1",
-                "description": "Workout Description 1",
-                "bodyParts": [
-                    {
-                        "id": 1,
-                        "name": "BodyPart1"
-                    },
-                    {
-                        "id": 2,
-                        "name": "BodyPart2"
-                    },
-                    {
-                        "id": 3,
-                        "name": "BodyPart3"
-                    },
-                    {
-                        "id": 4,
-                        "name": "BodyPart4"
-                    }
-                ],
-                "type": "Default",
-                "exercises": [
-                    {
-                        "id": 1,
-                        "title": "Exercise Title 1",
-                        "description": "Exercise Description 1",
-                        "bodyParts": [
-                            {
-                                "id": 1,
-                                "name": "BodyPart1"
-                            },
-                            {
-                                "id": 2,
-                                "name": "BodyPart2"
-                            }
-                        ],
-                        "type": "Default"
-                    },
-                    {
-                        "id": 2,
-                        "title": "Exercise Title 2",
-                        "description": "Exercise Description 2",
-                        "bodyParts": [
-                            {
-                                "id": 3,
-                                "name": "BodyPart3"
-                            },
-                            {
-                                "id": 4,
-                                "name": "BodyPart4"
-                            }
-                        ],
-                        "type": "Default"
-                    }
-                ]
-            },
-            {
-                "id": 2,
-                "title": "Workout Title 2",
-                "description": "Workout Description 2",
-                "bodyParts": [
-                    {
-                        "id": 1,
-                        "name": "BodyPart1"
-                    },
-                    {
-                        "id": 2,
-                        "name": "BodyPart2"
-                    },
-                    {
-                        "id": 5,
-                        "name": "BodyPart5"
-                    },
-                    {
-                        "id": 6,
-                        "name": "BodyPart6"
-                    }
-                ],
-                "type": "Default",
-                "exercises": [
-                    {
-                        "id": 1,
-                        "title": "Exercise Title 1",
-                        "description": "Exercise Description 1",
-                        "bodyParts": [
-                            {
-                                "id": 1,
-                                "name": "BodyPart1"
-                            },
-                            {
-                                "id": 2,
-                                "name": "BodyPart2"
-                            }
-                        ],
-                        "type": "Default"
-                    },
-                    {
-                        "id": 3,
-                        "title": "Exercise Title 3",
-                        "description": "Exercise Description 3",
-                        "bodyParts": [
-                            {
-                                "id": 5,
-                                "name": "BodyPart5"
-                            },
-                            {
-                                "id": 6,
-                                "name": "BodyPart6"
-                            }
-                        ],
-                        "type": "Default"
-                    }
-                ]
-            },
-            {
-                "id": 3,
-                "title": "Workout Title 3",
-                "description": "Workout Description 3",
-                "bodyParts": [
-                    {
-                        "id": 3,
-                        "name": "BodyPart3"
-                    },
-                    {
-                        "id": 4,
-                        "name": "BodyPart4"
-                    },
-                    {
-                        "id": 5,
-                        "name": "BodyPart5"
-                    }
-                ],
-                "type": "Default",
-                "exercises": [
-                    {
-                        "id": 2,
-                        "title": "Exercise Title 2",
-                        "description": "Exercise Description 2",
-                        "bodyParts": [
-                            {
-                                "id": 3,
-                                "name": "BodyPart3"
-                            },
-                            {
-                                "id": 4,
-                                "name": "BodyPart4"
-                            }
-                        ],
-                        "type": "Default"
-                    },
-                    {
-                        "id": 3,
-                        "title": "Exercise Title 3",
-                        "description": "Exercise Description 3",
-                        "bodyParts": [
-                            {
-                                "id": 5,
-                                "name": "BodyPart5"
-                            }
-                        ],
-                        "type": "Default"
-                    }
-                ]
-            }
-        ];
+        const isTokenValid = await this.validateToken();
 
-        // const res = await this.getDefaultWorkouts();
-        // this.workouts = res;
+        if (isTokenValid) {
+            this.$store.commit("setLogged", true);
+            // 
+        } else {
+            try {
+                this.$store.commit("setLogged", false);
+
+                const res = await this.getDefaultWorkouts();
+
+                if (res.status === 200) {
+                    this.workouts = res.body;
+                }
+                else if (res.status === 401) {
+                    this.$router.push("/login");
+                }
+                else {
+                    this.message = `Unexpected response status (${res.status})`;
+                }
+            } catch (error) {
+                this.message = "An error occurred";
+            }
+        }
+
+        // this.workouts = [
+        //     {
+        //         "id": 1,
+        //         "title": "Workout Title 1",
+        //         "description": "Workout Description 1",
+        //         "bodyParts": [
+        //             {
+        //                 "id": 1,
+        //                 "name": "BodyPart1"
+        //             },
+        //             {
+        //                 "id": 2,
+        //                 "name": "BodyPart2"
+        //             },
+        //             {
+        //                 "id": 3,
+        //                 "name": "BodyPart3"
+        //             },
+        //             {
+        //                 "id": 4,
+        //                 "name": "BodyPart4"
+        //             }
+        //         ],
+        //         "type": "Default",
+        //         "exercises": [
+        //             {
+        //                 "id": 1,
+        //                 "title": "Exercise Title 1",
+        //                 "description": "Exercise Description 1",
+        //                 "bodyParts": [
+        //                     {
+        //                         "id": 1,
+        //                         "name": "BodyPart1"
+        //                     },
+        //                     {
+        //                         "id": 2,
+        //                         "name": "BodyPart2"
+        //                     }
+        //                 ],
+        //                 "type": "Default"
+        //             },
+        //             {
+        //                 "id": 2,
+        //                 "title": "Exercise Title 2",
+        //                 "description": "Exercise Description 2",
+        //                 "bodyParts": [
+        //                     {
+        //                         "id": 3,
+        //                         "name": "BodyPart3"
+        //                     },
+        //                     {
+        //                         "id": 4,
+        //                         "name": "BodyPart4"
+        //                     }
+        //                 ],
+        //                 "type": "Default"
+        //             }
+        //         ]
+        //     },
+        //     {
+        //         "id": 2,
+        //         "title": "Workout Title 2",
+        //         "description": "Workout Description 2",
+        //         "bodyParts": [
+        //             {
+        //                 "id": 1,
+        //                 "name": "BodyPart1"
+        //             },
+        //             {
+        //                 "id": 2,
+        //                 "name": "BodyPart2"
+        //             },
+        //             {
+        //                 "id": 5,
+        //                 "name": "BodyPart5"
+        //             },
+        //             {
+        //                 "id": 6,
+        //                 "name": "BodyPart6"
+        //             }
+        //         ],
+        //         "type": "Default",
+        //         "exercises": [
+        //             {
+        //                 "id": 1,
+        //                 "title": "Exercise Title 1",
+        //                 "description": "Exercise Description 1",
+        //                 "bodyParts": [
+        //                     {
+        //                         "id": 1,
+        //                         "name": "BodyPart1"
+        //                     },
+        //                     {
+        //                         "id": 2,
+        //                         "name": "BodyPart2"
+        //                     }
+        //                 ],
+        //                 "type": "Default"
+        //             },
+        //             {
+        //                 "id": 3,
+        //                 "title": "Exercise Title 3",
+        //                 "description": "Exercise Description 3",
+        //                 "bodyParts": [
+        //                     {
+        //                         "id": 5,
+        //                         "name": "BodyPart5"
+        //                     },
+        //                     {
+        //                         "id": 6,
+        //                         "name": "BodyPart6"
+        //                     }
+        //                 ],
+        //                 "type": "Default"
+        //             }
+        //         ]
+        //     },
+        //     {
+        //         "id": 3,
+        //         "title": "Workout Title 3",
+        //         "description": "Workout Description 3",
+        //         "bodyParts": [
+        //             {
+        //                 "id": 3,
+        //                 "name": "BodyPart3"
+        //             },
+        //             {
+        //                 "id": 4,
+        //                 "name": "BodyPart4"
+        //             },
+        //             {
+        //                 "id": 5,
+        //                 "name": "BodyPart5"
+        //             }
+        //         ],
+        //         "type": "Default",
+        //         "exercises": [
+        //             {
+        //                 "id": 2,
+        //                 "title": "Exercise Title 2",
+        //                 "description": "Exercise Description 2",
+        //                 "bodyParts": [
+        //                     {
+        //                         "id": 3,
+        //                         "name": "BodyPart3"
+        //                     },
+        //                     {
+        //                         "id": 4,
+        //                         "name": "BodyPart4"
+        //                     }
+        //                 ],
+        //                 "type": "Default"
+        //             },
+        //             {
+        //                 "id": 3,
+        //                 "title": "Exercise Title 3",
+        //                 "description": "Exercise Description 3",
+        //                 "bodyParts": [
+        //                     {
+        //                         "id": 5,
+        //                         "name": "BodyPart5"
+        //                     }
+        //                 ],
+        //                 "type": "Default"
+        //             }
+        //         ]
+        //     }
+        // ];
     },
 
     components: {
         WorkoutComponent
     },
 
-    // methods: {
-    // async getDefaultWorkouts() {
-    // let URL = "/api/v1/workouts/default";
+    methods: {
+        async validateToken() {
+            const token = localStorage.getItem("token");
 
-    // const res = await fetch(URL, {
-    //     method: "GET",
-    //     headers: {
-    //         "Content-Type": "application/json"
-    //     }
-    // });
+            if (token === null || token === "") {
+                return false;
+            } else {
+                // GET /api/v1/auth/validate
+                return false;
+            }
+        },
 
-    // const data = await res.json();
+        async getDefaultWorkouts() {
+            let URL = "/api/v1/workouts/default";
 
-    // return {
-    //     status: res.status,
-    //     body: data
-    // };
-    // }
-    // }
+            const res = await fetch(URL, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const data = await res.json();
+
+            return {
+                status: res.status,
+                body: data
+            };
+        }
+    }
 
 }
 </script>
