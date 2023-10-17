@@ -3,12 +3,14 @@
 		<div class="card-body">
 			<h5 class="card-title">{{ title }}</h5>
 
-			<h6 class="card-subtitle mb-2 text-body-secondary">{{ type }}</h6>
+			<h6 class="card-subtitle mb-2 text-body-secondary">{{ custom ? "Custom" : "Default" }}, {{ needsEquipment ?
+				"With Equipment" : "Without Equipment" }}</h6>
 
 			<p class="card-text">{{ description }}</p>
 
 			<div v-if="bodyParts" class="card-text mb-2">
-				<span v-for="bodyPart in bodyParts" :key="bodyPart.id">{{ bodyPart.name }}&nbsp;</span>
+				<span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small>{{ bodyPart.name.toLowerCase()
+				}}</small>&nbsp;</span>
 			</div>
 
 			<div v-if="exercises" class="card-text mb-2">
@@ -32,8 +34,9 @@ export default {
 		id: Number,
 		title: String,
 		description: String,
+		custom: Boolean,
+		needsEquipment: Boolean,
 		bodyParts: Array,
-		type: String,
 		exercises: Array
 	}
 }

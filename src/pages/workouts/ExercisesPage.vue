@@ -78,56 +78,9 @@ export default {
                     this.message = `Unexpected response status (${res.status})`;
                 }
             } catch (error) {
-                this.message = "An error occurred while signing up. Try again";
+                this.message = "An error occurred";
             }
         }
-
-        // this.exercises = [
-        //     {
-        //         "id": 1,
-        //         "title": "Exercise Title 1",
-        //         "description": "Exercise Description 1",
-        //         "bodyParts": [
-        //             {
-        //                 "id": 1,
-        //                 "name": "BodyPart1"
-        //             },
-        //             {
-        //                 "id": 2,
-        //                 "name": "BodyPart2"
-        //             }
-        //         ],
-        //         "type": "Default"
-        //     },
-        //     {
-        //         "id": 2,
-        //         "title": "Exercise Title 2",
-        //         "description": "Exercise Description 2",
-        //         "bodyParts": [
-        //             {
-        //                 "id": 3,
-        //                 "name": "BodyPart3"
-        //             },
-        //             {
-        //                 "id": 4,
-        //                 "name": "BodyPart4"
-        //             }
-        //         ],
-        //         "type": "Default"
-        //     },
-        //     {
-        //         "id": 3,
-        //         "title": "Exercise Title 3",
-        //         "description": "Exercise Description 3",
-        //         "bodyParts": [
-        //             {
-        //                 "id": 5,
-        //                 "name": "BodyPart5"
-        //             }
-        //         ],
-        //         "type": "Default"
-        //     }
-        // ];
     },
 
     computed: {
