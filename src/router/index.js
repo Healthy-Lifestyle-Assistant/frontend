@@ -14,6 +14,7 @@ import CalendarPage from "../pages/calendar/CalendarPage";
 import WorkoutsPage from "../pages/workouts/WorkoutsPage";
 import ExercisesPage from "../pages/workouts/ExercisesPage";
 import MediaPage from "../pages/workouts/MediaPage";
+import CreateExercisePage from "../pages/workouts/CreateExercisePage";
 
 // Nutrition
 import NutritionPage from "../pages/nutrition/NutritionPage";
@@ -72,6 +73,11 @@ const routes = [
         path: "/workouts-media",
         name: "MediaPage",
         component: MediaPage
+    },
+    {
+        path: "/workouts-create-exercise",
+        name: "CreateExercisePage",
+        component: CreateExercisePage
     },
 
     // Nutrition

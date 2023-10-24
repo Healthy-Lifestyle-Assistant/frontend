@@ -6,7 +6,7 @@
     <div class="d-flex flex-column align-items-start">
 
         <div class="d-flex">
-            <router-link to="/workouts" class="btn btn-primary me-4" role="button">Add Custom Exercise</router-link>
+            <router-link to="/workouts-create-exercise" class="btn btn-primary me-4" role="button">Create Custom Exercise</router-link>
             <router-link to="/workouts-media" class="btn btn-primary me-4" role="button">Media</router-link>
         </div>
 
