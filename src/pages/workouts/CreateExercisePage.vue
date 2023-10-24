@@ -5,7 +5,7 @@
 
     <div class="d-flex flex-column align-items-center">
 
-        <div v-if="message" :class="{'alert': true, 'alert-primary': isSuccess, 'alert-danger': isError }" role="alert">
+        <div v-if="message" :class="{ 'alert': true, 'alert-primary': isSuccess, 'alert-danger': isError }" role="alert">
             {{ message }}
         </div>
 
@@ -49,6 +49,7 @@
 <script>
 import { useMeta } from "vue-meta";
 import { getToken } from "../common/common.js"
+import { getAndValidateToken } from "../common/common.js"
 
 export default {
     name: "CreateExercisePage",
@@ -76,22 +77,23 @@ export default {
     },
 
     async created() {
+        console.log("created");
         this.$store.commit("setCurrentUrl", "/workouts-create-exercise");
 
-        const token = getToken();
+        const token = await getAndValidateToken();
 
         if (!token) {
             this.$store.commit("setLogged", false);
             this.$router.push("/login");
+        } else {
+            this.$store.commit("setLogged", true);
+
+            let bodyPartsResponse = await this.getBodyParts();
+            this.bodyParts = bodyPartsResponse.body;
+
+            let httpRefsResponse = await this.getHttpRefs();
+            this.httpRefs = httpRefsResponse.body;
         }
-
-        this.$store.commit("setLogged", true);
-
-        let bodyPartsResponse = await this.getBodyParts();
-        this.bodyParts = bodyPartsResponse.body;
-
-        let httpRefsResponse = await this.getHttpRefs();
-        this.httpRefs = httpRefsResponse.body;
     },
 
     computed: {

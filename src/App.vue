@@ -36,9 +36,9 @@
 
 				<!-- Most Right -->
 				<div v-if="isLogged" class="d-flex align-items-center">
-					<!-- <div class="me-2">isLogged: {{ isLogged }}</div> -->
-					<!-- <div class="me-2">currentUrl: {{ getCurrentUrl }}</div> -->
-					<!-- <div class="me-2">previousUrl: {{ getPreviousUrl }}</div> -->
+					<div class="me-2">isLogged: {{ isLogged }}</div>
+					<div class="me-2">currentUrl: {{ getCurrentUrl }}</div>
+					<div class="me-2">previousUrl: {{ getPreviousUrl }}</div>
 
 					<router-link to="/settings-menu" class="btn btn-light me-2"
 						role="button">Settings</router-link>
@@ -46,9 +46,9 @@
 				</div>
 
 				<div v-else class="d-flex align-items-center">
-					<!-- <div class="me-2">isLogged: {{ isLogged }} </div> -->
-					<!-- <div class="me-2">currentUrl: {{ getCurrentUrl }}</div> -->
-					<!-- <div class="me-2">previousUrl: {{ getPreviousUrl }}</div> -->
+					<div class="me-2">isLogged: {{ isLogged }} </div>
+					<div class="me-2">currentUrl: {{ getCurrentUrl }}</div>
+					<div class="me-2">previousUrl: {{ getPreviousUrl }}</div>
 
 					<router-link to="/login" class="btn btn-light me-2" role="button">Login</router-link>
 					<router-link to="/signup" class="btn btn-light me-2" role="button">Sign-Up</router-link>
