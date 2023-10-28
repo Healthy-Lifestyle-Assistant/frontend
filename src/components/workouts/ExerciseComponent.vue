@@ -1,5 +1,5 @@
 <template>
-    <div class="card me-4 mb-4" style="min-width: 26rem;">
+    <div class="card me-4 mb-4" style="min-width: 16rem; max-width: 16rem;">
         <div class="card-body">
             <h5 class="card-title">{{ title }}</h5>
 

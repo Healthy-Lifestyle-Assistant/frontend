@@ -5,14 +5,12 @@
 
     <div class="d-flex flex-column align-items-start">
 
-        <div class="d-flex">
-            <router-link to="" class="btn btn-primary me-4" role="button">Create Custom Workout</router-link>
-            <router-link to="/workouts-exercises" class="btn btn-primary me-4" role="button">Exercises</router-link>
-            <router-link to="" class="btn btn-primary me-4" role="button">Reminders</router-link>
-            <router-link to="/workouts-media" class="btn btn-primary me-4" role="button">Media</router-link>
+        <div>
+            <BreadcrumbWorkoutsComponent />
+            <br>
+            <router-link to="" class="btn btn-primary" role="button">New Workout</router-link>
+            <br><br>
         </div>
-
-        <br><br>
 
         <div v-if="workouts" class="d-flex flex-wrap">
 
@@ -29,6 +27,7 @@
 <script>
 import { useMeta } from "vue-meta";
 import WorkoutComponent from "../../components/workouts/WorkoutComponent.vue";
+import BreadcrumbWorkoutsComponent from "../../components/workouts/BreadcrumbWorkoutsComponent.vue"
 
 export default {
     name: "WorkoutsPage",
@@ -76,179 +75,11 @@ export default {
                 this.message = "An error occurred";
             }
         }
-
-        // this.workouts = [
-        //     {
-        //         "id": 1,
-        //         "title": "Workout Title 1",
-        //         "description": "Workout Description 1",
-        //         "bodyParts": [
-        //             {
-        //                 "id": 1,
-        //                 "name": "BodyPart1"
-        //             },
-        //             {
-        //                 "id": 2,
-        //                 "name": "BodyPart2"
-        //             },
-        //             {
-        //                 "id": 3,
-        //                 "name": "BodyPart3"
-        //             },
-        //             {
-        //                 "id": 4,
-        //                 "name": "BodyPart4"
-        //             }
-        //         ],
-        //         "type": "Default",
-        //         "exercises": [
-        //             {
-        //                 "id": 1,
-        //                 "title": "Exercise Title 1",
-        //                 "description": "Exercise Description 1",
-        //                 "bodyParts": [
-        //                     {
-        //                         "id": 1,
-        //                         "name": "BodyPart1"
-        //                     },
-        //                     {
-        //                         "id": 2,
-        //                         "name": "BodyPart2"
-        //                     }
-        //                 ],
-        //                 "type": "Default"
-        //             },
-        //             {
-        //                 "id": 2,
-        //                 "title": "Exercise Title 2",
-        //                 "description": "Exercise Description 2",
-        //                 "bodyParts": [
-        //                     {
-        //                         "id": 3,
-        //                         "name": "BodyPart3"
-        //                     },
-        //                     {
-        //                         "id": 4,
-        //                         "name": "BodyPart4"
-        //                     }
-        //                 ],
-        //                 "type": "Default"
-        //             }
-        //         ]
-        //     },
-        //     {
-        //         "id": 2,
-        //         "title": "Workout Title 2",
-        //         "description": "Workout Description 2",
-        //         "bodyParts": [
-        //             {
-        //                 "id": 1,
-        //                 "name": "BodyPart1"
-        //             },
-        //             {
-        //                 "id": 2,
-        //                 "name": "BodyPart2"
-        //             },
-        //             {
-        //                 "id": 5,
-        //                 "name": "BodyPart5"
-        //             },
-        //             {
-        //                 "id": 6,
-        //                 "name": "BodyPart6"
-        //             }
-        //         ],
-        //         "type": "Default",
-        //         "exercises": [
-        //             {
-        //                 "id": 1,
-        //                 "title": "Exercise Title 1",
-        //                 "description": "Exercise Description 1",
-        //                 "bodyParts": [
-        //                     {
-        //                         "id": 1,
-        //                         "name": "BodyPart1"
-        //                     },
-        //                     {
-        //                         "id": 2,
-        //                         "name": "BodyPart2"
-        //                     }
-        //                 ],
-        //                 "type": "Default"
-        //             },
-        //             {
-        //                 "id": 3,
-        //                 "title": "Exercise Title 3",
-        //                 "description": "Exercise Description 3",
-        //                 "bodyParts": [
-        //                     {
-        //                         "id": 5,
-        //                         "name": "BodyPart5"
-        //                     },
-        //                     {
-        //                         "id": 6,
-        //                         "name": "BodyPart6"
-        //                     }
-        //                 ],
-        //                 "type": "Default"
-        //             }
-        //         ]
-        //     },
-        //     {
-        //         "id": 3,
-        //         "title": "Workout Title 3",
-        //         "description": "Workout Description 3",
-        //         "bodyParts": [
-        //             {
-        //                 "id": 3,
-        //                 "name": "BodyPart3"
-        //             },
-        //             {
-        //                 "id": 4,
-        //                 "name": "BodyPart4"
-        //             },
-        //             {
-        //                 "id": 5,
-        //                 "name": "BodyPart5"
-        //             }
-        //         ],
-        //         "type": "Default",
-        //         "exercises": [
-        //             {
-        //                 "id": 2,
-        //                 "title": "Exercise Title 2",
-        //                 "description": "Exercise Description 2",
-        //                 "bodyParts": [
-        //                     {
-        //                         "id": 3,
-        //                         "name": "BodyPart3"
-        //                     },
-        //                     {
-        //                         "id": 4,
-        //                         "name": "BodyPart4"
-        //                     }
-        //                 ],
-        //                 "type": "Default"
-        //             },
-        //             {
-        //                 "id": 3,
-        //                 "title": "Exercise Title 3",
-        //                 "description": "Exercise Description 3",
-        //                 "bodyParts": [
-        //                     {
-        //                         "id": 5,
-        //                         "name": "BodyPart5"
-        //                     }
-        //                 ],
-        //                 "type": "Default"
-        //             }
-        //         ]
-        //     }
-        // ];
     },
 
     components: {
-        WorkoutComponent
+        WorkoutComponent,
+        BreadcrumbWorkoutsComponent
     },
 
     methods: {
