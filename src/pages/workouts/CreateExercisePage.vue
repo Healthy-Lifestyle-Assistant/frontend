@@ -115,17 +115,13 @@ export default {
                 httpRefs: this.httpRefIds
             };
 
-            console.log(requestDto);
-
             try {
                 const res = await this.createExercise(requestDto);
 
                 if (res.status === 201) {
                     this.message = "Exercise has been created successfully";
-                    console.log(res.body);
                 } else {
                     this.message = `An error occured (${res.body.message} ${res.status})`;
-                    console.log(res);
                 }
             } catch (error) {
                 this.message = `An error occurred (${error})`;

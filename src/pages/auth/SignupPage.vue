@@ -3,39 +3,50 @@
         <template v-slot:title="{ content }">{{ content }}</template>
     </metainfo>
 
-    <div class="d-flex justify-content-center">
+    <div class="d-flex flex-column align-items-center">
+        <div v-if="message" :class="{ 'alert': true, 'alert-primary': isSuccess, 'alert-danger': isError }" role="alert">
+            {{ message }}
+        </div>
+
         <form @submit.prevent="submitForm" style="width: fit-content;">
             <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
+                <label for="username" class="form-label">Username*</label>
                 <input type="text" class="form-control" id="username" v-model="username" required>
             </div>
 
             <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
+                <label for="email" class="form-label">Email*</label>
                 <input type="email" class="form-control" id="email" v-model="email" required>
             </div>
 
             <div class="mb-3">
-                <label for="fullName" class="form-label">Full name</label>
+                <label for="fullName" class="form-label">Name*</label>
                 <input type="text" class="form-control" id="fullName" v-model="fullName" required>
             </div>
 
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
+                <label for="password" class="form-label">Password*</label>
                 <input type="password" class="form-control" id="password" v-model="password" required>
             </div>
 
             <div class="mb-3">
-                <label for="confirmPassword" class="form-label">Confirm password</label>
+                <label for="confirmPassword" class="form-label">Confirm Password*</label>
                 <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required>
+            </div>
+
+            <div v-if="countries" class="mb-3">
+                <label for="countries" class="form-label">Country*</label>
+                <select id="countries" v-model="countryId" class="form-select" aria-label="Select Country" required>
+                    <option v-for="elt in countries" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
+                </select>
+            </div>
+
+            <div>
+                * Required Fields
             </div>
 
             <button type="submit" class="btn btn-primary mt-4">Sign Up</button>
         </form>
-
-        <p v-if="message" :class="{ 'success-message': isSuccess, 'error-message': isError }">
-            {{ message }}
-        </p>
     </div>
 </template>
   
@@ -61,12 +72,17 @@ export default {
             fullName: "",
             password: "",
             confirmPassword: "",
+            countryId: null,
+            countries: null,
             message: ""
         };
     },
 
     async created() {
         this.$store.commit("setCurrentUrl", "/signup");
+
+        let countriesResponse = await this.getCountries();
+        this.countries = countriesResponse.body;
     },
 
     computed: {
@@ -86,20 +102,28 @@ export default {
                 email: this.email,
                 fullName: this.fullName,
                 password: this.password,
-                confirmPassword: this.confirmPassword
+                confirmPassword: this.confirmPassword,
+                countryId: this.countryId,
             };
 
             try {
                 const res = await this.signupApi(signupRequestDto);
 
                 if (res.status === 201) {
-                    this.message = "Signup successful! Now you can login to your account";
+                    this.message = "User account has been created successfully! Now you can login to your account.";
                 } else {
-                    this.message = "An error occurred while signing up. Try again";
+                    this.message = `An error occurred ${res.status}`;
                 }
             } catch (error) {
-                this.message = "An error occurred while signing up. Try again";
+                this.message = `An error occurred ${error}`;
             }
+
+            this.username = "";
+            this.email = "";
+            this.fullName = "";
+            this.password = "";
+            this.confirmPassword = "";
+            this.countryId = null;
         },
 
         async signupApi(requestBody) {
@@ -117,7 +141,25 @@ export default {
                 status: res.status,
                 body: data
             };
-        }
+        },
+
+        async getCountries() {
+            let URL = "/api/v1/users/countries";
+
+            const res = await fetch(URL, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const data = await res.json();
+
+            return {
+                status: res.status,
+                body: data
+            };
+        },
     }
 };
 </script>
