@@ -9,13 +9,13 @@
             {{ message }}
         </div>
 
-        <div class="d-flex">
-            <router-link to="/workouts-create-exercise" class="btn btn-primary me-4" role="button">Create Custom
+        <div>
+            <BreadcrumbWorkoutsComponent />
+            <br>
+            <router-link to="/workouts-create-exercise" class="btn btn-primary" role="button">Create Custom
                 Exercise</router-link>
-            <router-link to="/workouts-media" class="btn btn-primary me-4" role="button">Media</router-link>
+            <br><br>
         </div>
-
-        <br><br>
 
         <!-- Custom Exercises -->
         <div v-if="customExercises" class="d-flex flex-wrap">
@@ -44,6 +44,7 @@
 import { useMeta } from "vue-meta";
 import ExerciseComponent from "../../components/workouts/ExerciseComponent.vue";
 import { getAndValidateToken } from "../common/common.js"
+import BreadcrumbWorkoutsComponent from "../../components/workouts/BreadcrumbWorkoutsComponent.vue"
 
 export default {
     name: "ExercisesPage",
@@ -66,7 +67,8 @@ export default {
     },
 
     components: {
-        ExerciseComponent
+        ExerciseComponent,
+        BreadcrumbWorkoutsComponent
     },
 
     async created() {

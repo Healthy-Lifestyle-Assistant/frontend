@@ -5,11 +5,12 @@
 
     <div class="d-flex flex-column align-items-start">
 
-        <div class="d-flex">
-            <router-link to="/workouts-media" class="btn btn-primary me-4" role="button">Add Custom Media</router-link>
+        <div>
+            <BreadcrumbWorkoutsComponent />
+            <br>
+            <router-link to="/workouts-media" class="btn btn-primary me-4" role="button">New Media</router-link>
+            <br><br>
         </div>
-
-        <br><br>
 
         <div v-if="elements" class="d-flex flex-wrap">
 
@@ -28,6 +29,7 @@
 <script>
 import { useMeta } from "vue-meta";
 import MediaComponent from "../../components/workouts/MediaComponent.vue";
+import BreadcrumbWorkoutsComponent from "../../components/workouts/BreadcrumbWorkoutsComponent.vue"
 
 export default {
     name: "MediaPage",
@@ -49,7 +51,8 @@ export default {
     },
 
     components: {
-        MediaComponent
+        MediaComponent,
+        BreadcrumbWorkoutsComponent
     },
 
     async created() {

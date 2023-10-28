@@ -1,4 +1,3 @@
-import "bootstrap/dist/css/bootstrap.css";
 import "./style/global.css";
 import { createApp } from "vue";
 import App from "./App.vue";
@@ -13,5 +12,3 @@ app
 	.use(router)
 	.use(createMetaManager())
 	.mount('#app');
-
-import "bootstrap/dist/js/bootstrap.js";
