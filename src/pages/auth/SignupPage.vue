@@ -41,6 +41,11 @@
                 </select>
             </div>
 
+             <div class="mb-3">
+                <label for="age" class="form-label">Age</label>
+                <input type="age" class="form-control" id="age" v-model="age">
+            </div>
+
             <div>
                 * Required Fields
             </div>
@@ -74,6 +79,7 @@ export default {
             confirmPassword: "",
             countryId: null,
             countries: null,
+            age: null,
             message: ""
         };
     },
@@ -104,6 +110,7 @@ export default {
                 password: this.password,
                 confirmPassword: this.confirmPassword,
                 countryId: this.countryId,
+                age: this.age,
             };
 
             try {
@@ -124,6 +131,7 @@ export default {
             this.password = "";
             this.confirmPassword = "";
             this.countryId = null;
+            this.age = null;
         },
 
         async signupApi(requestBody) {
