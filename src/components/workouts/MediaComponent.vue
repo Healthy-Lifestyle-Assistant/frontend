@@ -8,7 +8,7 @@
 			<p class="card-text">{{ description }}</p>
 
             <div class="d-flex justify-content-end">
-                <a :href="httpRef" class="btn btn-primary" target="_blank">Visit Media</a>
+                <a :href="httpRef" class="btn btn-outline-secondary" target="_blank">Visit Media</a>
             </div>
         </div>
     </div>

@@ -3,7 +3,11 @@
         <template v-slot:title="{ content }">{{ content }}</template>
     </metainfo>
 
-    <div class="d-flex justify-content-center">
+    <div class="d-flex flex-column align-items-center">
+        <div v-if="message" :class="{ 'alert': true, 'alert-secondary': isSuccess, 'alert-warning': isError }" role="alert">
+            {{ message }}
+        </div>
+
         <form @submit.prevent="submitForm" style="width: fit-content;">
             <div class="mb-3">
                 <label for="usernameOrEmail" class="form-label">Username or email</label>
@@ -20,12 +24,8 @@
                 <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required>
             </div>
 
-            <button type="submit" class="btn btn-primary mt-4">Login</button>
+            <button type="submit" class="btn btn-outline-secondary mt-4">Login</button>
         </form>
-
-        <p v-if="message" :class="{ 'success-message': isSuccess, 'error-message': isError }">
-            {{ message }}
-        </p>
     </div>
 </template>
   
@@ -82,13 +82,23 @@ export default {
                     localStorage.setItem("token", JSON.stringify(res.body.token).slice(1, -1));
                     this.$store.commit('setLogged', true);
                     this.message = "Login successful";
-                    this.$router.push(this.$store.state.previousUrl);
+
+                    if (this.$store.state.previousUrl === null || this.$store.state.previousUrl === "" ||
+                        this.$store.state.previousUrl === "/login") {
+                        this.$router.push("/workouts");
+                    } else {
+                        this.$router.push(this.$store.state.previousUrl);
+                    }
                 } else {
                     this.message = "An error occurred while signing up. Try again";
                 }
             } catch (error) {
                 this.message = "An error occurred while signing up. Try again";
             }
+
+            this.usernameOrEmail = null;
+            this.password = null;
+            this.confirmPassword = null;
         },
 
         async loginApi(requestBody) {

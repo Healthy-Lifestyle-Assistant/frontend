@@ -1,6 +1,6 @@
 <template>
 	<NavbarComponent />
-	<div class="container">
+	<div class="container container-custom">
 		<router-view></router-view>
 	</div>
 </template>

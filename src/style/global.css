@@ -1,3 +1,16 @@
-body {
-	background-color:rgb(13,110,253, .1);
+.container-custom {
+	margin-top: 6rem;
+	width: 75%;
+}
+
+.logo-custom-size {
+    width: 26px;
+    height: 26px;
+}
+
+/* Styles for screen size range [0; 800] */
+@media screen and (max-width: 800px) {
+    .container-custom {
+        width: 100%;
+    }
 }

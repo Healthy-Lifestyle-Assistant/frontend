@@ -14,7 +14,7 @@
             </div>
 
             <div class="d-flex justify-content-end">
-                <router-link to="/workouts-exercises" class="btn btn-primary">Details</router-link>
+                <router-link to="/workouts-exercises" class="btn btn-outline-secondary">Details</router-link>
             </div>
         </div>
     </div>

@@ -5,6 +5,8 @@
 
     <div class="d-flex flex-column align-items-start">
 
+        <AlertComponent :isUnlogged="isUnlogged" :isError="isError" :message="message" />
+
         <BreadcrumbWorkoutsComponent />
         <br>
         <p>In progress</p>
@@ -15,6 +17,8 @@
 <script>
 import { useMeta } from "vue-meta";
 import BreadcrumbWorkoutsComponent from "../../components/workouts/BreadcrumbWorkoutsComponent.vue"
+import { getAndValidateToken } from "../common/common.js";
+import AlertComponent from "../../components/common/AlertComponent.vue";
 
 export default {
     name: "RemindersWorkoutsPage",
@@ -35,7 +39,8 @@ export default {
     },
 
     components: {
-        BreadcrumbWorkoutsComponent
+        BreadcrumbWorkoutsComponent,
+        AlertComponent
     },
 
     computed: {
@@ -50,6 +55,15 @@ export default {
 
     async created() {
         this.$store.commit("setCurrentUrl", "/workouts-reminders");
+
+        const token = await getAndValidateToken();
+
+        if (!token) {
+            this.$store.commit("setLogged", false);
+            this.message = "You are unlogged";
+        } else {
+            this.$store.commit("setLogged", true);
+        }
     }
 };
 </script>

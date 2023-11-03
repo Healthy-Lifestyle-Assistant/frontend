@@ -5,31 +5,41 @@
 
     <div class="d-flex flex-column align-items-start">
 
+        <AlertComponent :isUnlogged="isUnlogged" :isError="isError" :message="message" />
+
         <div>
             <BreadcrumbWorkoutsComponent />
             <br>
-            <router-link to="/workouts-media" class="btn btn-primary me-4" role="button">New Media</router-link>
+            <router-link to="/workouts-media" class="btn btn-outline-secondary me-4" role="button">New Media</router-link>
             <br><br>
         </div>
 
-        <div v-if="elements" class="d-flex flex-wrap">
+        <!-- Custom Media -->
+        <div v-if="customMedia" class="d-flex flex-wrap">
 
-            <div v-for="elt in elements" :key="elt.id">
+            <div v-for="elt in customMedia" :key="elt.id">
+                <MediaComponent :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
+            </div>
+
+        </div>
+
+        <!-- Default Media -->
+        <div v-if="defaultMedia" class="d-flex flex-wrap">
+
+            <div v-for="elt in defaultMedia" :key="elt.id">
                 <MediaComponent :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
             </div>
 
         </div>
     </div>
-
-    <p v-if="message" :class="{ 'success-message': isSuccess, 'error-message': isError }">
-        {{ message }}
-    </p>
 </template>
 
 <script>
 import { useMeta } from "vue-meta";
 import MediaComponent from "../../components/workouts/MediaComponent.vue";
-import BreadcrumbWorkoutsComponent from "../../components/workouts/BreadcrumbWorkoutsComponent.vue"
+import BreadcrumbWorkoutsComponent from "../../components/workouts/BreadcrumbWorkoutsComponent.vue";
+import { getAndValidateToken } from "../common/common.js";
+import AlertComponent from "../../components/common/AlertComponent.vue";
 
 export default {
     name: "MediaPage",
@@ -45,68 +55,74 @@ export default {
 
     data() {
         return {
-            elements: null,
+            defaultMedia: null,
+            customMedia: null,
             message: ""
         };
     },
 
     components: {
         MediaComponent,
-        BreadcrumbWorkoutsComponent
+        BreadcrumbWorkoutsComponent,
+        AlertComponent
     },
 
     async created() {
         this.$store.commit("setCurrentUrl", "/workouts-media");
 
-        const isTokenValid = await this.validateToken();
+        const token = await getAndValidateToken();
 
-        if (isTokenValid) {
-            this.$store.commit("setLogged", true);
-            // 
-        } else {
-            try {
-                this.$store.commit("setLogged", false);
+        try {
+            const res = await this.getDefaultMedia();
 
-                const res = await this.getDefaultHttpRefs();
-
-                if (res.status === 200) {
-                    this.elements = res.body;
-                }
-                else if (res.status === 401) {
-                    this.$router.push("/login");
-                }
-                else {
-                    this.message = `Unexpected response status (${res.status})`;
-                }
-            } catch (error) {
-                this.message = "An error occurred while signing up. Try again";
+            if (res.status === 200) {
+                this.defaultMedia = res.body;
             }
+            else {
+                this.message = `An error occured (${res.body.message} ${res.status})`;
+            }
+        } catch (error) {
+            this.message = `An error occurred (${error})`;
+        }
+
+        if (!token) {
+            this.$store.commit("setLogged", false);
+            this.message = "You are unlogged";
+        } else {
+            this.$store.commit("setLogged", true);
+
+            // Retrieve Custom Media
+
+            // try {
+            //     const res = await this.getCustomMedia(token);
+
+            //     if (res.status === 200) {
+            //         this.customMedia = res.body;
+            //     }
+            //     else if (res.status === 401) {
+            //         this.$router.push("/login");
+            //     }
+            //     else {
+            //         this.message = `An error occured (${res.body.message} ${res.status})`;
+            //     }
+            // } catch (error) {
+            //     this.message = `An error occurred (${error})`;
+            // }
         }
     },
 
     computed: {
-        isSuccess() {
-            return this.message.includes("success");
-        },
-
         isError() {
             return this.message.includes("error");
+        },
+
+        isUnlogged() {
+            return this.message.includes("unlogged");
         }
     },
 
     methods: {
-        async validateToken() {
-            const token = localStorage.getItem("token");
-
-            if (token === null || token === "") {
-                return false;
-            } else {
-                // GET /api/v1/auth/validate
-                return false;
-            }
-        },
-
-        async getDefaultHttpRefs() {
+        async getDefaultMedia() {
             let URL = "/api/v1/workouts/httpRefs/default";
 
             const res = await fetch(URL, {
