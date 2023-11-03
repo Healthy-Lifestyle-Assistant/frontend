@@ -13,6 +13,7 @@ import CalendarPage from "../pages/calendar/CalendarPage";
 // Workouts
 import WorkoutsPage from "../pages/workouts/WorkoutsPage";
 import ExercisesPage from "../pages/workouts/ExercisesPage";
+import DefaultExerciseDetailsPage from "../pages/workouts/DefaultExerciseDetailsPage";
 import MediaPage from "../pages/workouts/MediaPage";
 import CreateExercisePage from "../pages/workouts/CreateExercisePage";
 import RemindersWorkoutsPage from "../pages/workouts/RemindersWorkoutsPage";
@@ -69,6 +70,11 @@ const routes = [
         path: "/workouts-exercises",
         name: "ExercisesPage",
         component: ExercisesPage
+    },
+    {
+        path: "/workouts-exercise-details/default/:id",
+        name: "DefaultExerciseDetailsPage",
+        component: DefaultExerciseDetailsPage
     },
     {
         path: "/workouts-media",
