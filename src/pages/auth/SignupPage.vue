@@ -4,7 +4,7 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-center">
-        <div v-if="message" :class="{ 'alert': true, 'alert-primary': isSuccess, 'alert-danger': isError }" role="alert">
+        <div v-if="message" :class="{ 'alert': true, 'alert-secondary': isSuccess, 'alert-warning': isError }" role="alert">
             {{ message }}
         </div>
 
@@ -45,7 +45,7 @@
                 * Required Fields
             </div>
 
-            <button type="submit" class="btn btn-primary mt-4">Sign Up</button>
+            <button type="submit" class="btn btn-outline-secondary mt-4">Sign Up</button>
         </form>
     </div>
 </template>
@@ -163,13 +163,3 @@ export default {
     }
 };
 </script>
-
-<style>
-.success-message {
-    color: green;
-}
-
-.error-message {
-    color: red;
-}
-</style>

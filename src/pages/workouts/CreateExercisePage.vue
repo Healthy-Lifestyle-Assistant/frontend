@@ -5,9 +5,7 @@
 
     <div class="d-flex flex-column align-items-center">
 
-        <div v-if="message" :class="{ 'alert': true, 'alert-primary': isSuccess, 'alert-danger': isError }" role="alert">
-            {{ message }}
-        </div>
+        <AlertComponent :isUnlogged="isUnlogged" :isError="isError" :message="message" />
 
         <form @submit.prevent="submitForm" style="width: fit-content;">
             <div class="mb-3">
@@ -48,8 +46,9 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getToken } from "../common/common.js"
-import { getAndValidateToken } from "../common/common.js"
+import { getToken } from "../common/common.js";
+import { getAndValidateToken } from "../common/common.js";
+import AlertComponent from "../../components/common/AlertComponent.vue";
 
 export default {
     name: "CreateExercisePage",
@@ -76,6 +75,10 @@ export default {
         };
     },
 
+    components: {
+        AlertComponent
+    },
+    
     async created() {
         this.$store.commit("setCurrentUrl", "/workouts-create-exercise");
 

@@ -4,7 +4,7 @@
 	</metainfo>
 
 	<div class="d-flex flex-column mb-5" style="width: 90%;">
-		<h3 class="mb-4">Maintain Habits For Your Health</h3>
+		<h3 class="mb-4">Maintain Habits for Your Health</h3>
 
 		<p class="lead mb-5">
 			Healthy Lifestyle Assistant is a Ukrainian non-profit startup promoting a healthy lifestyle using digital
@@ -23,8 +23,34 @@
 		</p>
 
 		<div>
-			<router-link to="/signup" class="btn btn-primary" role="button">Try Development Version</router-link>
+			<router-link to="/signup" class="btn btn-outline-secondary" role="button">Try Development Version</router-link>
 		</div>
+
+		<!-- Contact -->
+		<p class="lead mt-5">
+			<b>Contact Us</b><br>
+			<a href="https://www.linkedin.com/in/olegkdev/" class="me-5" style="text-decoration: none; color: #343a40;">
+				LinkedIn
+				<img src="../../assets/linkedin-icon.svg" alt="" width="20" height="20" class="d-inline-block">
+			</a><br>
+
+			Email: <span>office@healthy-lifestyle-assistant.com</span>
+		</p>
+
+		<!-- Organization -->
+		<p class="lead mt-3">
+			<b>Organization</b><br>
+			<a href="https://www.linkedin.com/company/healthy-lifestyle-assistant/" class="me-5" style="text-decoration: none; color: #343a40;">
+				LinkedIn
+				<img src="../../assets/linkedin-icon.svg" alt="" width="20" height="20" class="d-inline-block">
+			</a><br>
+
+			<a href="https://github.com/Healthy-Lifestyle-Assistant/" class="me-5" style="text-decoration: none; color: #343a40;">
+				GitHub
+				<img src="../../assets/github-icon.svg" alt="" width="20" height="20" class="d-inline-block">
+			</a><br>
+
+		</p>
 	</div>
 </template>
 

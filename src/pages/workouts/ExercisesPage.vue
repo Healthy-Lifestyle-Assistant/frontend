@@ -5,15 +5,12 @@
 
     <div class="d-flex flex-column align-items-start">
 
-        <div v-if="message" :class="{ 'alert': true, 'alert-primary': isUnlogged, 'alert-danger': isError }" role="alert">
-            {{ message }}
-        </div>
+        <AlertComponent :isUnlogged="isUnlogged" :isError="isError" :message="message" />
 
         <div>
             <BreadcrumbWorkoutsComponent />
             <br>
-            <router-link to="/workouts-create-exercise" class="btn btn-primary" role="button">Create Custom
-                Exercise</router-link>
+            <router-link to="/workouts-create-exercise" class="btn btn-outline-secondary" role="button">New Exercise</router-link>
             <br><br>
         </div>
 
@@ -43,8 +40,9 @@
 <script>
 import { useMeta } from "vue-meta";
 import ExerciseComponent from "../../components/workouts/ExerciseComponent.vue";
-import { getAndValidateToken } from "../common/common.js"
-import BreadcrumbWorkoutsComponent from "../../components/workouts/BreadcrumbWorkoutsComponent.vue"
+import { getAndValidateToken } from "../common/common.js";
+import BreadcrumbWorkoutsComponent from "../../components/workouts/BreadcrumbWorkoutsComponent.vue";
+import AlertComponent from "../../components/common/AlertComponent.vue";
 
 export default {
     name: "ExercisesPage",
@@ -68,7 +66,8 @@ export default {
 
     components: {
         ExerciseComponent,
-        BreadcrumbWorkoutsComponent
+        BreadcrumbWorkoutsComponent,
+        AlertComponent
     },
 
     async created() {
@@ -81,9 +80,6 @@ export default {
 
             if (res.status === 200) {
                 this.defaultExercises = res.body;
-            }
-            else if (res.status === 401) {
-                this.$router.push("/login");
             }
             else {
                 this.message = `An error occured (${res.body.message} ${res.status})`;
@@ -113,7 +109,6 @@ export default {
             } catch (error) {
                 this.message = `An error occurred (${error})`;
             }
-
         }
     },
 
