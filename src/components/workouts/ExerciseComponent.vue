@@ -14,7 +14,7 @@
             </div>
 
             <div class="d-flex justify-content-end">
-                <router-link to="/workouts-exercises" class="btn btn-outline-secondary">Details</router-link>
+                <router-link :to="generateLink()" class="btn btn-outline-secondary">Details</router-link>
             </div>
         </div>
     </div>
@@ -31,6 +31,13 @@ export default {
         bodyParts: Array,
         isCustom: Boolean,
         needsEquipment: Boolean
-    }
+    },
+
+    methods: {
+        generateLink() {
+            if(!this.isCustom) return `/workouts-exercise-details/default/${this.id}`;
+            else return "/workouts-exercises"
+        }
+     }
 }
 </script>

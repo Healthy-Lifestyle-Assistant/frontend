@@ -5,7 +5,7 @@
 
     <div class="d-flex flex-column align-items-start">
 
-        <AlertComponent :isUnlogged="isUnlogged" :isError="isError" :message="message" />
+        <AlertComponent :isUnlogged="isUnlogged" :message="authAlertmessage" />
 
         <div>
             <BreadcrumbWorkoutsComponent />
@@ -14,43 +14,13 @@
             <br><br>
         </div>
 
-        <div v-if="this.exercise != null">
-            <div class="card me-4 mb-4" style="min-width: 48rem; max-width: 48rem;">
-                <div class="card-body">
-
-                    <div class="row">
-                        <div class="col-md-6 order-md-first">
-                            <h5 class="card-title">{{ exercise && exercise.title }}</h5>
-                        </div>
-
-                        <div class="col-md-6 d-flex align-items-center justify-content-end">
-                            <h6 class="card-subtitle">{{ exercise && exercise.isCustom ? "Custom" : "Default" }}</h6>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 order-md-first">
-                            <p class="card-text" style="text-align: justify;">{{ exercise && exercise.description }}</p>
-                        </div>
-
-                        <div class="col-md-6 d-flex justify-content-end">
-                            <div v-if="exercise && exercise.bodyParts" class="card-text mb-2">
-                                <span v-for="bodyPart in exercise.bodyParts" :key="bodyPart.id"><small>{{ bodyPart.name.toLowerCase()
-                                }}</small>&nbsp;</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div v-for="elt in exercise && exercise.httpRefs" :key="elt.id">
-                <MediaComponent :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
-            </div>
+        <!-- Default Exercise Details -->
+        <div v-if="exercise">
+            <ExerciseDetailsComponent :title="exercise.title" :description="exercise.description" :bodyParts="exercise.bodyParts"
+                :isCustom="exercise.isCustom" :needsEquipment="exercise.needsEquipment" :httpRefs="exercise.httpRefs" />
         </div>
 
-        <div v-if="this.exercise == null">
-            <h5>Exercise is unavailable</h5>
-        </div>
+        <AlertComponent :isError="isError" :message="exerciseAlertmessage" />
 
     </div>
 </template>
@@ -59,7 +29,7 @@
 import { useMeta } from "vue-meta";
 import { getAndValidateToken } from "../common/common.js";
 import BreadcrumbWorkoutsComponent from "../../components/workouts/BreadcrumbWorkoutsComponent.vue";
-import MediaComponent from "../../components/workouts/MediaComponent.vue";
+import ExerciseDetailsComponent from "../../components/workouts/ExerciseDetailsComponent.vue";
 import AlertComponent from "../../components/common/AlertComponent.vue";
 
 export default {
@@ -77,6 +47,8 @@ export default {
     data() {
         return {
             exercise: null,
+            authAlertmessage: "",
+            exerciseAlertmessage: "",
             message: ""
         };
     },
@@ -88,7 +60,7 @@ export default {
 
         if (!token) {
             this.$store.commit("setLogged", false);
-            this.message = "You are unlogged";
+            this.authAlertmessage = "You are unlogged";
         }else{
             this.$store.commit("setLogged", true);
         }
@@ -96,6 +68,7 @@ export default {
         try {
             let res = await this.getDefaultExercise();
             if(res.status == 200) this.exercise = res.body;
+            else this.exerciseAlertmessage = "error: Exercise is unavailable";
         } catch (error) {
             this.message = `An error occurred (${error})`;
         }
@@ -104,17 +77,17 @@ export default {
 
     components: {
         BreadcrumbWorkoutsComponent,
-        MediaComponent,
+        ExerciseDetailsComponent,
         AlertComponent
     },
 
     computed: {
         isError() {
-            return this.message.includes("error");
+            return this.exerciseAlertmessage.includes("error");
         },
 
         isUnlogged() {
-            return this.message.includes("unlogged");
+            return this.authAlertmessage.includes("unlogged");
         }
     },
 
