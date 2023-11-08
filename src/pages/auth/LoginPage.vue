@@ -4,33 +4,36 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-center">
-        <div v-if="message" :class="{ 'alert': true, 'alert-secondary': isSuccess, 'alert-warning': isError }" role="alert">
-            {{ message }}
-        </div>
+        <AlertComponent :message="message" :messageType="messageType" />
 
         <form @submit.prevent="submitForm" style="width: fit-content;">
-            <div class="mb-3">
-                <label for="usernameOrEmail" class="form-label">Username or email</label>
-                <input type="text" class="form-control" id="usernameOrEmail" v-model="usernameOrEmail" required>
+            <div class="mb-4">
+                <label for="usernameOrEmail" class="form-label">Username or email<span style="color: red;">*</span></label>
+                <input type="text" class="form-control" id="usernameOrEmail" v-model="usernameOrEmail" placeholder="jane-doe@domain.com" required>
             </div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" v-model="password" required>
+            <div class="mb-4">
+                <label for="password" class="form-label">Password<span style="color: red;">*</span></label>
+                <input type="password" class="form-control" id="password" v-model="password" placeholder="********" required>
             </div>
 
-            <div class="mb-3">
-                <label for="confirmPassword" class="form-label">Confirm password</label>
-                <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required>
+            <div class="mb-4">
+                <label for="confirmPassword" class="form-label">Confirm password<span style="color: red;">*</span></label>
+                <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" placeholder="********" required>
             </div>
 
-            <button type="submit" class="btn btn-outline-secondary mt-4">Login</button>
+            <div>
+                <span style="color: red;">*</span> Required Fields
+            </div>
+
+            <button type="submit" class="btn btn-secondary mt-4">Login</button>
         </form>
     </div>
 </template>
   
 <script>
 import { useMeta } from "vue-meta";
+import AlertComponent from "../../components/common/AlertComponent.vue";
 
 export default {
     name: "LoginPage",
@@ -49,22 +52,17 @@ export default {
             usernameOrEmail: "",
             password: "",
             confirmPassword: "",
-            message: ""
+            message: "",
+            messageType: ""
         };
+    },
+
+    components: {
+        AlertComponent
     },
 
     async created() {
         this.$store.commit("setCurrentUrl", "/login");
-    },
-
-    computed: {
-        isSuccess() {
-            return this.message.includes('success');
-        },
-
-        isError() {
-            return this.message.includes('error');
-        }
     },
 
     methods: {
@@ -81,6 +79,7 @@ export default {
                 if (res.status === 200) {
                     localStorage.setItem("token", JSON.stringify(res.body.token).slice(1, -1));
                     this.$store.commit('setLogged', true);
+                    this.messageType = "SUCCESS";
                     this.message = "Login successful";
 
                     if (this.$store.state.previousUrl === null || this.$store.state.previousUrl === "" ||
@@ -90,9 +89,11 @@ export default {
                         this.$router.push(this.$store.state.previousUrl);
                     }
                 } else {
+                    this.messageType = "WARNING";
                     this.message = "An error occurred while signing up. Try again";
                 }
             } catch (error) {
+                this.messageType = "WARNING";
                 this.message = "An error occurred while signing up. Try again";
             }
 
@@ -120,13 +121,3 @@ export default {
     }
 };
 </script>
-
-<style>
-.success-message {
-    color: green;
-}
-
-.error-message {
-    color: red;
-}
-</style>
