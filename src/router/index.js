@@ -16,6 +16,7 @@ import ExercisesPage from "../pages/workouts/ExercisesPage";
 import MediaPage from "../pages/workouts/MediaPage";
 import CreateExercisePage from "../pages/workouts/CreateExercisePage";
 import RemindersWorkoutsPage from "../pages/workouts/RemindersWorkoutsPage";
+import CreateMediaPage from "../pages/workouts/CreateMediaPage";
 
 // Nutrition
 import NutritionPage from "../pages/nutrition/NutritionPage";
@@ -84,6 +85,11 @@ const routes = [
         path: "/workouts-reminders",
         name: "RemindersWorkoutsPage",
         component: RemindersWorkoutsPage
+    },
+    {
+        path: "/workouts-create-media",
+        name: "CreatemediaPage",
+        component: CreateMediaPage
     },
 
     // Nutrition

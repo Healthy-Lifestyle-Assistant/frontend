@@ -5,7 +5,7 @@
 
     <div class="d-flex flex-column align-items-start">
 
-        <AlertComponent :isUnlogged="isUnlogged" :isError="isError" :message="message" />
+        <AlertComponent :message="message" :messageType="messageType" />
 
         <BreadcrumbWorkoutsComponent />
         <br>
@@ -34,23 +34,14 @@ export default {
 
     data() {
         return {
-            message: ""
+            message: "",
+            messageType: ""
         };
     },
 
     components: {
         BreadcrumbWorkoutsComponent,
         AlertComponent
-    },
-
-    computed: {
-        isError() {
-            return this.message.includes("error");
-        },
-
-        isUnlogged() {
-            return this.message.includes("unlogged");
-        }
     },
 
     async created() {
@@ -60,6 +51,7 @@ export default {
 
         if (!token) {
             this.$store.commit("setLogged", false);
+            this.messageType = "SECONDARY";
             this.message = "You are unlogged";
         } else {
             this.$store.commit("setLogged", true);

@@ -5,41 +5,46 @@
 
     <div class="d-flex flex-column align-items-center">
 
-        <AlertComponent :isUnlogged="isUnlogged" :isError="isError" :message="message" />
+        <AlertComponent :message="message" :messageType="messageType" />
 
-        <form @submit.prevent="submitForm" style="width: fit-content;">
-            <div class="mb-3">
-                <label for="title" class="form-label">Title (Required)</label>
-                <input type="text" class="form-control" id="title" v-model="title" required>
+        <form @submit.prevent="submitForm" style="width: fit-content;" class="mb-5">
+            <div class="mb-4">
+                <label for="title" class="form-label">Title<span style="color: red;">*</span></label>
+                <input type="text" class="form-control" id="title" v-model="title" placeholder="My Exercise" required>
             </div>
 
-            <div class="mb-3">
-                <label for="description" class="form-label">Description (Optional)</label>
-                <input type="text" class="form-control" id="description" v-model="description">
+            <div class="mb-4">
+                <label for="description" class="form-label">Description</label>
+                <input type="text" class="form-control" id="description" v-model="description" placeholder="Description">
             </div>
 
-            <div class="form-check mb-3">
+            <div class="form-check mb-4">
                 <input type="checkbox" value="" class="form-check-input" id="needsEquipment" v-model="needsEquipment">
                 <label for="needsEquipment" class="form-check-label">Needs Equipment</label>
             </div>
 
-            <div v-if="bodyParts" class="mb-3">
+            <div v-if="bodyParts" class="mb-5">
                 <select id="bodyParts" v-model="bodyPartIds" class="form-select" multiple aria-label="Select body parts"
                     required>
-                    <option disabled>Body Parts (Required)</option>
+                    <option disabled>Body Parts<span style="color: red;">*</span></option>
                     <option v-for="elt in bodyParts" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
                 </select>
             </div>
 
-            <div v-if="httpRefs" class="mb-3">
+            <div v-if="httpRefs" class="mb-4">
                 <select id="httpRefs" v-model="httpRefIds" class="form-select" multiple
                     aria-label="Select media references">
-                    <option disabled>Media References (Optional)</option>
+                    <option disabled>Media References</option>
                     <option v-for="elt in httpRefs" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-primary mt-4">Create</button>
+            <div>
+                <span style="color: red;">*</span> Required Fields
+            </div>
+
+            <button type="submit" class="btn btn-secondary mt-4">Create</button>
+            <br><br>
         </form>
     </div>
 </template>
@@ -70,6 +75,7 @@ export default {
             httpRefIds: [],
             needsEquipment: false,
             message: "",
+            messageType: "",
             bodyParts: [],
             httpRefs: []
         };
@@ -98,16 +104,6 @@ export default {
         }
     },
 
-    computed: {
-        isSuccess() {
-            return this.message.includes("success");
-        },
-
-        isError() {
-            return this.message.includes("error");
-        }
-    },
-
     methods: {
         async submitForm() {
             const requestDto = {
@@ -122,11 +118,14 @@ export default {
                 const res = await this.createExercise(requestDto);
 
                 if (res.status === 201) {
+                    this.messageType = "SUCCESS";
                     this.message = "Exercise has been created successfully";
                 } else {
+                    this.messageType = "WARNING";
                     this.message = `An error occured (${res.body.message} ${res.status})`;
                 }
             } catch (error) {
+                this.messageType = "WARNING";
                 this.message = `An error occurred (${error})`;
             }
 

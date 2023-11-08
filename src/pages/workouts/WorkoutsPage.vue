@@ -5,7 +5,7 @@
 
     <div class="d-flex flex-column align-items-start">
 
-        <AlertComponent :isUnlogged="isUnlogged" :isError="isError" :message="message" />
+        <AlertComponent :message="message" :messageType="messageType" />
 
         <div>
             <BreadcrumbWorkoutsComponent />
@@ -60,7 +60,8 @@ export default {
         return {
             defaultWorkouts: null,
             customWorkouts: null,
-            message: ""
+            message: "",
+            messageType: ""
         };
     },
 
@@ -76,14 +77,17 @@ export default {
                 this.defaultWorkouts = res.body;
             }
             else {
+                this.messageType = "WARNING";
                 this.message = `An error occured (${res.body.message} ${res.status})`;
             }
         } catch (error) {
+            this.messageType = "WARNING";
             this.message = `An error occurred (${error})`;
         }
 
         if (!token) {
             this.$store.commit("setLogged", false);
+            this.messageType = "SECONDARY";
             this.message = "You are unlogged";
         } else {
             this.$store.commit("setLogged", true);
@@ -112,16 +116,6 @@ export default {
         WorkoutComponent,
         BreadcrumbWorkoutsComponent,
         AlertComponent
-    },
-
-    computed: {
-        isError() {
-            return this.message.includes("error");
-        },
-
-        isUnlogged() {
-            return this.message.includes("unlogged");
-        }
     },
 
     methods: {
