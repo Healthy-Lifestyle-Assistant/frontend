@@ -9,7 +9,7 @@
             <p class="card-text">{{ description }}</p>
 
             <div v-if="bodyParts" class="card-text mb-2">
-                <span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small>{{ bodyPart.name.toLowerCase()
+                <span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small class="body-parts">{{ bodyPart.name.toLowerCase()
                 }}</small>&nbsp;</span>
             </div>
 

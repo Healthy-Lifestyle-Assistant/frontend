@@ -8,14 +8,15 @@
 
 			<p class="card-text">{{ description }}</p>
 
-			<div v-if="bodyParts" class="card-text mb-2">
-				<span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small>{{ bodyPart.name.toLowerCase()
+			<div v-if="bodyParts" class="card-text mb-4">
+				<span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small class="body-parts">{{ bodyPart.name.toLowerCase()
 				}}</small>&nbsp;</span>
 			</div>
 
+			<h6 class="card-subtitle mb-2 mt-4 text-body-secondary">Exercises</h6>
 			<div v-if="exercises" class="card-text mb-2">
 				<span v-for="exercise in exercises" :key="exercise.id">
-					<router-link :to="generateExerciseLink(exercise.id)">{{ exercise.title }}</router-link>
+					<router-link class="media-refs d-inline-block mt-2 mb-2" :to="generateExerciseLink(exercise.id)">{{ exercise.title }}</router-link>
 					&nbsp;</span>
 			</div>
 

@@ -5,24 +5,16 @@
 
     <div class="d-flex flex-column align-items-start">
 
-        <AlertComponent :messageType="'SECONDARY'" :message="authAlertMessage" />
+        <AlertComponent :message="message" :messageType="messageType" />
 
-        <BreadcrumbWorkoutsComponent />
-        
-        <div v-if="!isUnlogged">
-            <br>
-                <router-link to="/workouts-create-exercise" class="btn btn-outline-secondary" role="button">New Exercise</router-link>
-            <br><br>
-        </div>
+        <BreadcrumbWorkoutsComponent /> <br>
 
         <!-- Default Exercise Details -->
         <div v-if="exercise">
-            <ExerciseDetailsComponent :title="exercise.title" :description="exercise.description" :bodyParts="exercise.bodyParts"
-                :isCustom="exercise.isCustom" :needsEquipment="exercise.needsEquipment" :httpRefs="exercise.httpRefs" />
+            <ExerciseDetailsComponent :title="exercise.title" :description="exercise.description"
+                :bodyParts="exercise.bodyParts" :isCustom="exercise.isCustom" :needsEquipment="exercise.needsEquipment"
+                :httpRefs="exercise.httpRefs" />
         </div>
-
-        <AlertComponent :messageType="'WARNING'" :message="exerciseAlertMessage" />
-        <AlertComponent :messageType="'WARNING'" :message="requestAlertMessage" />
 
     </div>
 </template>
@@ -49,10 +41,8 @@ export default {
     data() {
         return {
             exercise: null,
-            authAlertMessage: "",
-            exerciseAlertMessage: "",
-            requestAlertMessage: "",
-            message: ""
+            message: "",
+            messageType: ""
         };
     },
 
@@ -63,20 +53,28 @@ export default {
 
         if (!token) {
             this.$store.commit("setLogged", false);
-            this.authAlertMessage = "You are unlogged";
-        }else{
+            this.messageType = "SECONDARY";
+            this.message = "You are unlogged";
+        } else {
             this.$store.commit("setLogged", true);
         }
 
         try {
             const res = await this.getDefaultExercise();
-            if(res.status == 200) this.exercise = res.body;
-            else if(res.status == 400) this.requestAlertMessage = "error: Bad request";
-            else this.exerciseAlertMessage = "error: Exercise is unavailable";
+            if (res.status == 200) {
+                this.exercise = res.body;
+            } else {
+                let messageBuilder = "";
+                for (const key in res.body) {
+                    messageBuilder += `${key}: ${res.body[key]}. `;
+                }
+                this.messageType = "WARNING";
+                this.message = `An error occured (${messageBuilder}Status ${res.status})`;
+            }
         } catch (error) {
+            this.messageType = "WARNING";
             this.message = `An error occurred (${error})`;
         }
-
     },
 
     components: {
@@ -91,7 +89,7 @@ export default {
         }
     },
 
-     methods: {
+    methods: {
         async getDefaultExercise() {
             let URL = `/api/v1/workouts/exercises/default/${this.$route.params.id}`;
 
