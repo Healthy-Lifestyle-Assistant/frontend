@@ -18,7 +18,7 @@
         <div v-if="customExercises" class="d-flex flex-wrap">
 
             <div v-for="exercise in customExercises" :key="exercise.id">
-                <ExerciseComponent :title="exercise.title" :description="exercise.description"
+                <ExerciseComponent :id="exercise.id" :title="exercise.title" :description="exercise.description"
                     :bodyParts="exercise.bodyParts" :isCustom="exercise.custom" :needsEquipment="exercise.needsEquipment" />
             </div>
 
@@ -28,7 +28,7 @@
         <div v-if="defaultExercises" class="d-flex flex-wrap">
 
             <div v-for="exercise in defaultExercises" :key="exercise.id">
-                <ExerciseComponent :title="exercise.title" :description="exercise.description"
+                <ExerciseComponent :id="exercise.id" :title="exercise.title" :description="exercise.description"
                     :bodyParts="exercise.bodyParts" :isCustom="exercise.custom" :needsEquipment="exercise.needsEquipment" />
             </div>
 

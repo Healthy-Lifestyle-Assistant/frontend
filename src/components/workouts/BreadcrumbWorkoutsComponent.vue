@@ -40,6 +40,7 @@ export default {
         isWorkouts() {
             return this.$store.state.currentUrl.includes("workouts") &&
                 !this.$store.state.currentUrl.includes("exercises") &&
+                !this.$store.state.currentUrl.includes("exercise") &&
                 !this.$store.state.currentUrl.includes("reminders") &&
                 !this.$store.state.currentUrl.includes("media");
         },
