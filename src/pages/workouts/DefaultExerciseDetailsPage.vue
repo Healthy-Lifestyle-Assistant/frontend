@@ -5,7 +5,7 @@
 
     <div class="d-flex flex-column align-items-start">
 
-        <AlertComponent :message="authAlertMessage" :messageType="'SECONDARY'" />
+        <AlertComponent :messageType="'SECONDARY'" :message="authAlertMessage" />
 
         <BreadcrumbWorkoutsComponent />
         
@@ -86,13 +86,6 @@ export default {
     },
 
     computed: {
-        isError() {
-            const hasError = this.exerciseAlertMessage.includes("error") ||
-                             this.requestAlertMessage.includes("error");
-
-            return hasError;
-        },
-
         isUnlogged() {
             return this.authAlertMessage.includes("unlogged");
         }
