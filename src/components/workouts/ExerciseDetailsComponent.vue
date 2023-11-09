@@ -6,7 +6,7 @@
             <h6 class="card-subtitle mb-2">{{ isCustom ? "Custom" : "Default" }}, {{ needsEquipment ?
                 "With Equipment" : "Without Equipment" }}</h6>
 
-            <p class="card-text" style="font-style: italic; text-align: justify; word-wrap: break-word;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p class="card-text" style="font-style: italic; text-align: justify; word-wrap: break-word;">{{description}}</p>
            
            <div v-if="bodyParts" class="card-text">
                 <span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small style="white-space: nowrap;">{{ bodyPart.name.toLowerCase()
