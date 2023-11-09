@@ -10,16 +10,16 @@ export default {
 
     props: {
         message: String,
-        isUnlogged: Boolean,
-        isError: Boolean,
+        messageType: String
     },
 
     computed: {
         alertClasses() {
             return {
                 'alert': true,
-                'alert-secondary': this.isUnlogged,
-                'alert-warning': this.isError,
+                'alert-secondary': this.messageType === "SECONDARY",
+                'alert-warning': this.messageType === "WARNING",
+                'alert-success': this.messageType === "SUCCESS"
             };
         },
     },

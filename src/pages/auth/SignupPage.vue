@@ -4,54 +4,59 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-center">
-        <div v-if="message" :class="{ 'alert': true, 'alert-secondary': isSuccess, 'alert-warning': isError }" role="alert">
-            {{ message }}
-        </div>
+        <AlertComponent :message="message" :messageType="messageType" />
 
-        <form @submit.prevent="submitForm" style="width: fit-content;">
-            <div class="mb-3">
-                <label for="username" class="form-label">Username*</label>
-                <input type="text" class="form-control" id="username" v-model="username" required>
+        <form @submit.prevent="submitForm" style="width: fit-content;" class="mb-5">
+            <div class="mb-4">
+                <label for="username" class="form-label">Username<span style="color: red;">*</span></label>
+                <input type="text" class="form-control" id="username" v-model="username" placeholder="johndoe" required>
             </div>
 
-            <div class="mb-3">
-                <label for="email" class="form-label">Email*</label>
-                <input type="email" class="form-control" id="email" v-model="email" required>
+            <div class="mb-4">
+                <label for="email" class="form-label">Email<span style="color: red;">*</span></label>
+                <input type="email" class="form-control" id="email" v-model="email" placeholder="john-doe@domain.com" required>
             </div>
 
-            <div class="mb-3">
-                <label for="fullName" class="form-label">Name*</label>
-                <input type="text" class="form-control" id="fullName" v-model="fullName" required>
+            <div class="mb-4">
+                <label for="fullName" class="form-label">Name<span style="color: red;">*</span></label>
+                <input type="text" class="form-control" id="fullName" v-model="fullName" placeholder="John Doe" required>
             </div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Password*</label>
-                <input type="password" class="form-control" id="password" v-model="password" required>
+            <div class="mb-4">
+                <label for="password" class="form-label">Password<span style="color: red;">*</span></label>
+                <input type="password" class="form-control" id="password" v-model="password" placeholder="********" required>
             </div>
 
-            <div class="mb-3">
-                <label for="confirmPassword" class="form-label">Confirm Password*</label>
-                <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required>
+            <div class="mb-4">
+                <label for="confirmPassword" class="form-label">Confirm Password<span style="color: red;">*</span></label>
+                <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" placeholder="********" required>
             </div>
 
-            <div v-if="countries" class="mb-3">
-                <label for="countries" class="form-label">Country*</label>
+            <div v-if="countries" class="mb-4">
+                <label for="countries" class="form-label">Country<span style="color: red;">*</span></label>
                 <select id="countries" v-model="countryId" class="form-select" aria-label="Select Country" required>
                     <option v-for="elt in countries" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
                 </select>
             </div>
 
-            <div>
-                * Required Fields
+             <div class="mb-4">
+                <label for="age" class="form-label">Age</label>
+                <input type="age" class="form-control" id="age" v-model="age">
             </div>
 
-            <button type="submit" class="btn btn-outline-secondary mt-4">Sign Up</button>
+            <div>
+                <span style="color: red;">*</span> Required Fields
+            </div>
+
+            <button type="submit" class="btn btn-secondary mt-4">Sign Up</button>
+            <br><br>
         </form>
     </div>
 </template>
   
 <script>
 import { useMeta } from "vue-meta";
+import AlertComponent from "../../components/common/AlertComponent.vue";
 
 export default {
     name: "SignupPage",
@@ -74,8 +79,14 @@ export default {
             confirmPassword: "",
             countryId: null,
             countries: null,
-            message: ""
+            age: null,
+            message: "",
+            messageType: ""
         };
+    },
+
+    components: {
+        AlertComponent
     },
 
     async created() {
@@ -83,16 +94,6 @@ export default {
 
         let countriesResponse = await this.getCountries();
         this.countries = countriesResponse.body;
-    },
-
-    computed: {
-        isSuccess() {
-            return this.message.includes('success');
-        },
-
-        isError() {
-            return this.message.includes('error');
-        }
     },
 
     methods: {
@@ -104,17 +105,21 @@ export default {
                 password: this.password,
                 confirmPassword: this.confirmPassword,
                 countryId: this.countryId,
+                age: this.age,
             };
 
             try {
                 const res = await this.signupApi(signupRequestDto);
 
                 if (res.status === 201) {
+                    this.messageType = "SUCCESS";
                     this.message = "User account has been created successfully! Now you can login to your account.";
                 } else {
+                    this.messageType = "WARNING";
                     this.message = `An error occurred ${res.status}`;
                 }
             } catch (error) {
+                this.messageType = "WARNING";
                 this.message = `An error occurred ${error}`;
             }
 
@@ -124,6 +129,7 @@ export default {
             this.password = "";
             this.confirmPassword = "";
             this.countryId = null;
+            this.age = null;
         },
 
         async signupApi(requestBody) {
