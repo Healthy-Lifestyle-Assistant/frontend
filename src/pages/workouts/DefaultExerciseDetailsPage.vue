@@ -5,12 +5,13 @@
 
     <div class="d-flex flex-column align-items-start">
 
-        <AlertComponent :isUnlogged="isUnlogged" :message="authAlertmessage" />
+        <AlertComponent :message="authAlertMessage" :messageType="'SECONDARY'" />
 
-        <div>
-            <BreadcrumbWorkoutsComponent />
+        <BreadcrumbWorkoutsComponent />
+        
+        <div v-if="!isUnlogged">
             <br>
-            <router-link to="/workouts-create-exercise" class="btn btn-outline-secondary" role="button">New Exercise</router-link>
+                <router-link to="/workouts-create-exercise" class="btn btn-outline-secondary" role="button">New Exercise</router-link>
             <br><br>
         </div>
 
@@ -20,7 +21,8 @@
                 :isCustom="exercise.isCustom" :needsEquipment="exercise.needsEquipment" :httpRefs="exercise.httpRefs" />
         </div>
 
-        <AlertComponent :isError="isError" :message="exerciseAlertmessage" />
+        <AlertComponent :messageType="'WARNING'" :message="exerciseAlertMessage" />
+        <AlertComponent :messageType="'WARNING'" :message="requestAlertMessage" />
 
     </div>
 </template>
@@ -47,8 +49,9 @@ export default {
     data() {
         return {
             exercise: null,
-            authAlertmessage: "",
-            exerciseAlertmessage: "",
+            authAlertMessage: "",
+            exerciseAlertMessage: "",
+            requestAlertMessage: "",
             message: ""
         };
     },
@@ -60,15 +63,16 @@ export default {
 
         if (!token) {
             this.$store.commit("setLogged", false);
-            this.authAlertmessage = "You are unlogged";
+            this.authAlertMessage = "You are unlogged";
         }else{
             this.$store.commit("setLogged", true);
         }
 
         try {
-            let res = await this.getDefaultExercise();
+            const res = await this.getDefaultExercise();
             if(res.status == 200) this.exercise = res.body;
-            else this.exerciseAlertmessage = "error: Exercise is unavailable";
+            else if(res.status == 400) this.requestAlertMessage = "error: Bad request";
+            else this.exerciseAlertMessage = "error: Exercise is unavailable";
         } catch (error) {
             this.message = `An error occurred (${error})`;
         }
@@ -83,11 +87,14 @@ export default {
 
     computed: {
         isError() {
-            return this.exerciseAlertmessage.includes("error");
+            const hasError = this.exerciseAlertMessage.includes("error") ||
+                             this.requestAlertMessage.includes("error");
+
+            return hasError;
         },
 
         isUnlogged() {
-            return this.authAlertmessage.includes("unlogged");
+            return this.authAlertMessage.includes("unlogged");
         }
     },
 

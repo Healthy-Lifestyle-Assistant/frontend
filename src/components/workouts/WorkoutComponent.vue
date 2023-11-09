@@ -15,7 +15,7 @@
 
 			<div v-if="exercises" class="card-text mb-2">
 				<span v-for="exercise in exercises" :key="exercise.id">
-					<router-link to="/workouts-exercises">{{ exercise.title }}</router-link>
+					<router-link :to="generateExerciseLink(exercise.id)">{{ exercise.title }}</router-link>
 					&nbsp;</span>
 			</div>
 
@@ -38,6 +38,12 @@ export default {
 		needsEquipment: Boolean,
 		bodyParts: Array,
 		exercises: Array
-	}
+	},
+
+	methods: {
+        generateExerciseLink(exerciseId) {
+            return `/workouts-exercise-details/default/${exerciseId}`;
+        }
+    }
 }
 </script>

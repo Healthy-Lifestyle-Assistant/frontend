@@ -1,37 +1,28 @@
 <template>
-    <div class="card me-4 mb-4 w-auto">
+    <div class="card" style="max-width: 38rem;">
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-8">
-                    <h5 class="card-title">{{ title }}</h5>
-                </div>
+            <h5 class="card-title">{{ title }}</h5>
 
-                <div class="col-md-4">
-                    <h6 class="card-subtitle">{{ isCustom ? "Custom" : "Default" }}</h6>
-                </div>
+            <h6 class="card-subtitle mb-2">{{ isCustom ? "Custom" : "Default" }}, {{ needsEquipment ?
+                "With Equipment" : "Without Equipment" }}</h6>
+
+            <p class="card-text" style="font-style: italic; text-align: justify; word-wrap: break-word;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+           
+           <div v-if="bodyParts" class="card-text">
+                <span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small style="white-space: nowrap;">{{ bodyPart.name.toLowerCase()
+                }}</small>&nbsp;</span>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="col-md-8">
-                    <p class="card-text" style="text-align: justify; word-wrap: break-word;">{{ description }}</p>
-                </div>
-
-                <div class="col-md-4">
-                    <div v-if="bodyParts" class="card-text mb-2">
-                        <span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small style="white-space: nowrap;">{{ bodyPart.name.toLowerCase()
-                        }}</small>&nbsp;</span>
-                    </div>
+        <div style="margin-left: 16px;">
+            <div v-if="httpRefs" class="d-flex flex-wrap justify-content-center justify-content-lg-start">
+                <div v-for="elt in httpRefs" :key="elt.id">
+                    <MediaComponent :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref"/>
                 </div>
             </div>
         </div>
+        
     </div>
-
-    <div v-if="httpRefs" class="d-flex flex-wrap">
-        <div v-for="elt in httpRefs" :key="elt.id">
-            <MediaComponent :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
-        </div>
-    </div>
-
 </template>
 
 <script>
@@ -53,6 +44,6 @@ export default {
 
     components: {
         MediaComponent
-    }
+    },
 }
 </script>
