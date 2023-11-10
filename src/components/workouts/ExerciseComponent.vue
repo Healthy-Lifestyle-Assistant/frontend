@@ -9,7 +9,8 @@
             <p class="card-text">{{ description }}</p>
 
             <div v-if="bodyParts" class="card-text mb-2">
-                <span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small class="body-parts">{{ bodyPart.name.toLowerCase()
+                <span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small class="body-parts">{{
+                    bodyPart.name.toLowerCase()
                 }}</small>&nbsp;</span>
             </div>
 
@@ -35,9 +36,9 @@ export default {
 
     methods: {
         generateLink() {
-            if(!this.isCustom) return `/workouts-exercise-details/default/${this.id}`;
+            if (!this.isCustom) return `/workouts-exercise-details/default/${this.id}`;
             else return "/workouts-exercises"
         }
-     }
+    }
 }
 </script>

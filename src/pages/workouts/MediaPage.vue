@@ -17,19 +17,23 @@
         </div>
 
         <!-- Custom Media -->
+        <h6 v-if="customMedia" class="mt-3 mb-4">Custom Media</h6>
+
         <div v-if="customMedia" class="d-flex flex-wrap">
 
             <div v-for="elt in customMedia" :key="elt.id">
-                <MediaComponent :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
+                <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
             </div>
 
         </div>
 
         <!-- Default Media -->
+        <h6 v-if="defaultMedia" class="mt-3 mb-4">Default Media</h6>
+
         <div v-if="defaultMedia" class="d-flex flex-wrap">
 
             <div v-for="elt in defaultMedia" :key="elt.id">
-                <MediaComponent :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
+                <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
             </div>
 
         </div>
