@@ -15,6 +15,8 @@
         </div>
 
         <!-- Custom Exercises -->
+        <h6 v-if="customExercises" class="mt-3 mb-4">Custom Exercises</h6>
+
         <div v-if="customExercises" class="d-flex flex-wrap">
 
             <div v-for="exercise in customExercises" :key="exercise.id">
@@ -25,6 +27,8 @@
         </div>
 
         <!-- Default Exercises -->
+        <h6 v-if="defaultExercises" class="mt-3 mb-4">Default Exercises</h6>
+
         <div v-if="defaultExercises" class="d-flex flex-wrap">
 
             <div v-for="exercise in defaultExercises" :key="exercise.id">
