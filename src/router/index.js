@@ -1,33 +1,33 @@
 import { createRouter, createWebHistory } from "vue-router";
 // Home
-import HomePage from "../pages/home/HomePage";
+import HomePage from "../home/pages/HomePage.vue";
 
 // Auth
-import SignupPage from "../pages/auth/SignupPage";
-import LoginPage from "../pages/auth/LoginPage";
-import LogoutPage from "../pages/auth/LogoutPage";
+import SignupPage from "../auth/pages/SignupPage.vue";
+import LoginPage from "../auth/pages/LoginPage.vue";
+import LogoutPage from "../auth/pages/LogoutPage.vue";
+
+// User Settings
+import SettingsPage from "../users/pages/SettingsPage.vue";
 
 // Calendar
-import CalendarPage from "../pages/calendar/CalendarPage";
+import CalendarPage from "../calendar/pages/CalendarPage.vue";
 
 // Workouts
-import WorkoutsPage from "../pages/workouts/WorkoutsPage";
-import ExercisesPage from "../pages/workouts/ExercisesPage";
-import DefaultExerciseDetailsPage from "../pages/workouts/DefaultExerciseDetailsPage";
-import MediaPage from "../pages/workouts/MediaPage";
-import CreateExercisePage from "../pages/workouts/CreateExercisePage";
-import RemindersWorkoutsPage from "../pages/workouts/RemindersWorkoutsPage";
-import CreateMediaPage from "../pages/workouts/CreateMediaPage";
-import ManageMediaPage from "../pages/workouts/ManageMediaPage";
+import WorkoutsPage from "../workouts/pages/WorkoutsPage.vue";
+import ExercisesPage from "../workouts/pages/ExercisesPage.vue";
+import DefaultExerciseDetailsPage from "../workouts/pages/DefaultExerciseDetailsPage.vue";
+import MediaPage from "../workouts/pages/MediaPage.vue";
+import CreateExercisePage from "../workouts/pages/CreateExercisePage.vue";
+import RemindersWorkoutsPage from "../workouts/pages/RemindersWorkoutsPage.vue";
+import CreateMediaPage from "../workouts/pages/CreateMediaPage.vue";
+import ManageMediaPage from "../workouts/pages/ManageMediaPage.vue";
 
 // Nutrition
-import NutritionPage from "../pages/nutrition/NutritionPage";
+import NutritionPage from "../nutrition/pages/NutritionPage.vue";
 
 // Meditations
-import MeditationsPage from "../pages/meditations/MeditationsPage";
-
-// Settings
-import SettingsPage from "../pages/settings/SettingsPage";
+import MeditationsPage from "../meditations/pages/MeditationsPage.vue";
 
 
 const routes = [
@@ -53,6 +53,13 @@ const routes = [
         path: "/logout",
         name: "LogoutPage",
         component: LogoutPage
+    },
+
+    // User Settings
+    {
+        path: "/settings",
+        name: "SettingsPage",
+        component: SettingsPage
     },
 
     // Calendar
@@ -116,13 +123,6 @@ const routes = [
         path: "/meditations",
         name: "MeditationsPage",
         component: MeditationsPage
-    },
-
-    // Settings
-    {
-        path: "/settings",
-        name: "SettingsPage",
-        component: SettingsPage
     }
 ];
 

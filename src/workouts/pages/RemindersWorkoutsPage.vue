@@ -16,9 +16,9 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import BreadcrumbWorkoutsComponent from "../../components/workouts/BreadcrumbWorkoutsComponent.vue"
-import { getAndValidateToken } from "../common/common.js";
-import AlertComponent from "../../components/common/AlertComponent.vue";
+import { getAndValidateToken } from "../../share/js/common.js";
+import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue"
+import AlertComponent from "../../share/components/AlertComponent.vue";
 
 export default {
     name: "RemindersWorkoutsPage",

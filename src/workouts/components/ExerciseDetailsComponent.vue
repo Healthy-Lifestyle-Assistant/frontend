@@ -28,7 +28,7 @@
 
 <script>
 
-import MediaComponent from "../../components/workouts/MediaComponent.vue";
+import MediaComponent from "../components/MediaComponent.vue";
 
 export default {
     name: "ExerciseDetailsComponent",
