@@ -34,9 +34,9 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getToken } from "../common/common.js";
-import { getAndValidateToken } from "../common/common.js";
-import AlertComponent from "../../components/common/AlertComponent.vue";
+import { getToken } from "../../share/js/common.js";
+import { getAndValidateToken } from "../../share/js/common.js";
+import AlertComponent from "../../share/components/AlertComponent.vue";
 
 export default {
     name: "CreateMediaPage",

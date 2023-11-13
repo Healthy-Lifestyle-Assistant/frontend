@@ -21,10 +21,10 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getAndValidateToken } from "../common/common.js";
-import BreadcrumbWorkoutsComponent from "../../components/workouts/BreadcrumbWorkoutsComponent.vue";
-import ExerciseDetailsComponent from "../../components/workouts/ExerciseDetailsComponent.vue";
-import AlertComponent from "../../components/common/AlertComponent.vue";
+import { getAndValidateToken } from "../../share/js/common.js";
+import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
+import ExerciseDetailsComponent from "../components/ExerciseDetailsComponent.vue";
+import AlertComponent from "../../share/components/AlertComponent.vue";
 
 export default {
     name: "DefaultExerciseDetailsPage",

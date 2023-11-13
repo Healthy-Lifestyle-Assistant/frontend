@@ -6,54 +6,54 @@
     <div class="d-flex flex-column align-items-start">
 
         <AlertComponent :message="message" :messageType="messageType" />
+        <!-- <AlertComponent :isUnlogged="isUnlogged" :isError="isError" :message="message" /> -->
 
         <div>
             <BreadcrumbWorkoutsComponent />
             <br>
-            <router-link to="/workouts-create-exercise" class="btn btn-outline-secondary" role="button">New Exercise</router-link>
+            <router-link to="/workouts-create-media" class="btn btn-outline-secondary me-4" role="button">New
+                Media</router-link>
             <br><br>
         </div>
 
-        <!-- Custom Exercises -->
-        <h6 v-if="customExercises" class="mt-3 mb-4">Custom Exercises</h6>
+        <!-- Custom Media -->
+        <h6 v-if="customMedia" class="mt-3 mb-4">Custom Media</h6>
 
-        <div v-if="customExercises" class="d-flex flex-wrap">
+        <div v-if="customMedia" class="d-flex flex-wrap">
 
-            <div v-for="exercise in customExercises" :key="exercise.id">
-                <ExerciseComponent :id="exercise.id" :title="exercise.title" :description="exercise.description"
-                    :bodyParts="exercise.bodyParts" :isCustom="exercise.custom" :needsEquipment="exercise.needsEquipment" />
+            <div v-for="elt in customMedia" :key="elt.id">
+                <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
             </div>
 
         </div>
 
-        <!-- Default Exercises -->
-        <h6 v-if="defaultExercises" class="mt-3 mb-4">Default Exercises</h6>
+        <!-- Default Media -->
+        <h6 v-if="defaultMedia" class="mt-3 mb-4">Default Media</h6>
 
-        <div v-if="defaultExercises" class="d-flex flex-wrap">
+        <div v-if="defaultMedia" class="d-flex flex-wrap">
 
-            <div v-for="exercise in defaultExercises" :key="exercise.id">
-                <ExerciseComponent :id="exercise.id" :title="exercise.title" :description="exercise.description"
-                    :bodyParts="exercise.bodyParts" :isCustom="exercise.custom" :needsEquipment="exercise.needsEquipment" />
+            <div v-for="elt in defaultMedia" :key="elt.id">
+                <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
             </div>
 
         </div>
-
     </div>
 </template>
 
 <script>
 import { useMeta } from "vue-meta";
-import ExerciseComponent from "../../components/workouts/ExerciseComponent.vue";
-import { getAndValidateToken } from "../common/common.js";
-import BreadcrumbWorkoutsComponent from "../../components/workouts/BreadcrumbWorkoutsComponent.vue";
-import AlertComponent from "../../components/common/AlertComponent.vue";
+import { getToken } from "../../share/js/common.js";
+import { getAndValidateToken } from "../../share/js/common.js";
+import MediaComponent from "../components/MediaComponent.vue";
+import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
+import AlertComponent from "../../share/components/AlertComponent.vue";
 
 export default {
-    name: "ExercisesPage",
+    name: "MediaPage",
 
     setup() {
         useMeta({
-            title: "Healthy - Exercises",
+            title: "Healthy - Media",
             htmlAttrs: {
                 lang: "en"
             }
@@ -62,29 +62,30 @@ export default {
 
     data() {
         return {
-            defaultExercises: null,
-            customExercises: null,
+            defaultMedia: null,
+            customMedia: null,
             message: "",
-            messageType: ""
+            messageType: "",
         };
     },
 
     components: {
-        ExerciseComponent,
+        MediaComponent,
         BreadcrumbWorkoutsComponent,
         AlertComponent
     },
 
     async created() {
-        this.$store.commit("setCurrentUrl", "/workouts-exercises");
+        this.$store.commit("setCurrentUrl", "/workouts-media");
 
         const token = await getAndValidateToken();
 
+        // Retrieve Default Media
         try {
-            const res = await this.getDefaultExercises();
+            const res = await this.getDefaultMedia();
 
             if (res.status === 200) {
-                this.defaultExercises = res.body;
+                this.defaultMedia = res.body;
             }
             else {
                 this.messageType = "WARNING";
@@ -95,6 +96,7 @@ export default {
             this.message = `An error occurred (${error})`;
         }
 
+        // Retrieve Custom Media
         if (!token) {
             this.$store.commit("setLogged", false);
             this.messageType = "SECONDARY";
@@ -103,10 +105,15 @@ export default {
             this.$store.commit("setLogged", true);
 
             try {
-                const res = await this.getCustomExercises(token);
+                const res = await this.getCustomMedia(token);
 
                 if (res.status === 200) {
-                    this.customExercises = res.body;
+                    this.customMedia = res.body;
+
+                    if (Array.isArray(res.body) && res.body.length === 0) {
+                        this.messageType = "SECONDARY";
+                        this.message = "No Custom Media Found";
+                    }
                 }
                 else if (res.status === 401) {
                     this.$router.push("/login");
@@ -123,8 +130,8 @@ export default {
     },
 
     methods: {
-        async getDefaultExercises() {
-            let URL = "/api/v1/workouts/exercises/default";
+        async getDefaultMedia() {
+            let URL = "/api/v1/workouts/httpRefs/default";
 
             const res = await fetch(URL, {
                 method: "GET",
@@ -141,8 +148,9 @@ export default {
             };
         },
 
-        async getCustomExercises(token) {
-            let URL = "/api/v1/workouts/exercises";
+        async getCustomMedia() {
+            let URL = "/api/v1/workouts/httpRefs";
+            let token = getToken();
 
             const res = await fetch(URL, {
                 method: "GET",

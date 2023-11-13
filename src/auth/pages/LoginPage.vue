@@ -33,7 +33,7 @@
   
 <script>
 import { useMeta } from "vue-meta";
-import AlertComponent from "../../components/common/AlertComponent.vue";
+import AlertComponent from "../../share/components/AlertComponent.vue";
 
 export default {
     name: "LoginPage",

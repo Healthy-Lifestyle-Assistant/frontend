@@ -21,7 +21,7 @@
 
             <div v-for="workout in customWorkouts" :key="workout.id">
                 <WorkoutComponent :title="workout.title" :description="workout.description" :bodyParts="workout.bodyParts"
-                    :custom="workout.custom" :needsEquipment="workout.needsEquipment" :exercises="workout.exercises" />
+                    :isCustom="workout.isCustom" :needsEquipment="workout.needsEquipment" :exercises="workout.exercises" />
             </div>
 
         </div>
@@ -33,7 +33,7 @@
 
             <div v-for="workout in defaultWorkouts" :key="workout.id">
                 <WorkoutComponent :title="workout.title" :description="workout.description" :bodyParts="workout.bodyParts"
-                    :custom="workout.custom" :needsEquipment="workout.needsEquipment" :exercises="workout.exercises" />
+                    :isCustom="workout.isCustom" :needsEquipment="workout.needsEquipment" :exercises="workout.exercises" />
             </div>
 
         </div>
@@ -43,10 +43,10 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import WorkoutComponent from "../../components/workouts/WorkoutComponent.vue";
-import BreadcrumbWorkoutsComponent from "../../components/workouts/BreadcrumbWorkoutsComponent.vue";
-import { getAndValidateToken } from "../common/common.js";
-import AlertComponent from "../../components/common/AlertComponent.vue";
+import { getAndValidateToken } from "../../share/js/common.js";
+import WorkoutComponent from "../components/WorkoutComponent.vue";
+import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
+import AlertComponent from "../../share/components/AlertComponent.vue";
 
 export default {
     name: "WorkoutsPage",
