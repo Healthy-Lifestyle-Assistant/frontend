@@ -20,7 +20,7 @@
         <div v-if="customWorkouts" class="d-flex flex-wrap">
 
             <div v-for="workout in customWorkouts" :key="workout.id">
-                <WorkoutComponent :title="workout.title" :description="workout.description" :bodyParts="workout.bodyParts"
+                <WorkoutComponent :id="workout.id" :title="workout.title" :description="workout.description" :bodyParts="workout.bodyParts"
                     :isCustom="workout.isCustom" :needsEquipment="workout.needsEquipment" :exercises="workout.exercises" />
             </div>
 
@@ -32,7 +32,7 @@
         <div v-if="defaultWorkouts" class="d-flex flex-wrap">
 
             <div v-for="workout in defaultWorkouts" :key="workout.id">
-                <WorkoutComponent :title="workout.title" :description="workout.description" :bodyParts="workout.bodyParts"
+                <WorkoutComponent :id="workout.id" :title="workout.title" :description="workout.description" :bodyParts="workout.bodyParts"
                     :isCustom="workout.isCustom" :needsEquipment="workout.needsEquipment" :exercises="workout.exercises" />
             </div>
 

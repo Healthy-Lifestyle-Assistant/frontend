@@ -15,6 +15,7 @@ import CalendarPage from "../calendar/pages/CalendarPage.vue";
 
 // Workouts
 import WorkoutsPage from "../workouts/pages/WorkoutsPage.vue";
+import DefaultWorkoutDetailsPage from "../workouts/pages/DefaultWorkoutDetailsPage.vue";
 import ExercisesPage from "../workouts/pages/ExercisesPage.vue";
 import DefaultExerciseDetailsPage from "../workouts/pages/DefaultExerciseDetailsPage.vue";
 import MediaPage from "../workouts/pages/MediaPage.vue";
@@ -74,6 +75,11 @@ const routes = [
         path: "/workouts",
         name: "WorkoutsPage",
         component: WorkoutsPage
+    },
+    {
+        path: "/workouts-details/default/:id",
+        name: "DefaultWorkoutDetailsPage",
+        component: DefaultWorkoutDetailsPage
     },
     {
         path: "/workouts-exercises",
