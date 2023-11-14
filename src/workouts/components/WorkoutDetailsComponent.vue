@@ -15,11 +15,11 @@
             </div>
         </div>
 
-        <h6 class="card-subtitle mb-4 mt-3" style="margin-left: 16px;">Media References</h6>
-            <div style="margin-left: 16px;" v-if="httpRefs" class="d-flex flex-wrap justify-content-center justify-content-md-start">
-                <div v-for="elt in httpRefs" :key="elt.id">
-                    <MediaComponent :name="elt.name" :description="elt.description" :isCustom="elt.custom"
-                        :httpRef="elt.ref" />
+        <h6 class="card-subtitle mb-4 mt-3" style="margin-left: 16px;">Exercises</h6>
+            <div style="margin-left: 16px;" v-if="exercises" class="d-flex flex-wrap justify-content-center justify-content-md-start">
+                <div v-for="elt in exercises" :key="elt.id">
+                    <ExerciseComponent :id="elt.id" :title="elt.title" :description="elt.description"
+                        :bodyParts="elt.bodyParts" :isCustom="elt.custom" :needsEquipment="elt.needsEquipment" />
                 </div>
             </div>
 
@@ -28,10 +28,10 @@
 
 <script>
 
-import MediaComponent from "../components/MediaComponent.vue";
+import ExerciseComponent from "../components/ExerciseComponent.vue";
 
 export default {
-    name: "ExerciseDetailsComponent",
+    name: "WorkoutDetailsComponent",
 
     props: {
         id: Number,
@@ -40,11 +40,11 @@ export default {
         bodyParts: Array,
         isCustom: Boolean,
         needsEquipment: Boolean,
-        httpRefs: Object
+        exercises: Object
     },
 
     components: {
-        MediaComponent
+        ExerciseComponent
     },
 }
 </script>

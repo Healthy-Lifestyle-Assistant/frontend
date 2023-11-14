@@ -21,7 +21,7 @@
 			</div>
 
 			<div class="d-flex justify-content-end">
-				<router-link to="/workouts" class="btn btn-outline-secondary">Details</router-link>
+				<router-link :to="generateWorkoutLink(id)" class="btn btn-outline-secondary">Details</router-link>
 			</div>
 		</div>
 	</div>
@@ -42,9 +42,13 @@ export default {
 	},
 
 	methods: {
-        generateExerciseLink(exerciseId) {
+       generateExerciseLink(exerciseId) {
             return `/workouts-exercise-details/default/${exerciseId}`;
-        }
+        },
+
+		generateWorkoutLink(workoutId) {
+			return `/workouts-details/default/${workoutId}`;
+		}
     }
 }
 </script>
