@@ -58,7 +58,7 @@ const routes = [
 
     // User Settings
     {
-        path: "/settings",
+        path: "/users",
         name: "SettingsPage",
         component: SettingsPage
     },

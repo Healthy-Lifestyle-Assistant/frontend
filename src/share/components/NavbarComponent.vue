@@ -64,7 +64,7 @@
                     <div class="me-2">curUrl: {{ getCurrentUrl }}</div>
                     <div class="me-2">prevUrl: {{ getPreviousUrl }}</div> -->
 
-                    <router-link to="/" class="btn btn-outline-secondary me-2" role="button">Settings</router-link>
+                    <router-link to="/users" class="btn btn-outline-secondary me-2" role="button">Settings</router-link>
                     <router-link to="/logout" class="btn btn-outline-secondary me-2" role="button">Logout</router-link>
                 </div>
 
