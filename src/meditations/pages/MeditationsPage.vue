@@ -4,7 +4,7 @@
     </metainfo>
 
     <div class="d-flex">
-        <p>Comming soon...</p>
+        <h5>Comming soon...</h5>
     </div>
 </template>
 

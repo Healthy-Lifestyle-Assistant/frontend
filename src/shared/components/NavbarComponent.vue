@@ -17,30 +17,24 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                    <!-- Calendar -->
-                    <li class="nav-item me-3">
-                        <router-link to="/calendar"
-                            :class="{ 'nav-link': true, 'active': isCalendar }">Calendar</router-link>
-                    </li>
-
                     <!-- Workouts -->
                     <li class="nav-item dropdown me-3">
                         <a :class="{ 'nav-link': true, 'dropdown-toggle': true, 'active': isWorkouts }" href=""
                             role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true">
-                            Workouts
+                            Workouts <span class="badge text-bg-success">New</span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="nav-item">
-                                <router-link to="/workouts" class="dropdown-item">Workouts</router-link>
+                                <a href="/workouts" class="dropdown-item">Workouts</a>
                             </li>
                             <li class="nav-item">
-                                <router-link to="/workouts-exercises" class="dropdown-item">Exercises</router-link>
+                                <a href="/workouts-exercises" class="dropdown-item">Exercises</a>
                             </li>
                             <li class="nav-item">
-                                <router-link to="/workouts-reminders" class="dropdown-item">Reminders</router-link>
+                                <a href="/workouts-reminders" class="dropdown-item">Reminders</a>
                             </li>
                             <li class="nav-item">
-                                <router-link to="/workouts-media" class="dropdown-item">Media</router-link>
+                                <a href="/workouts-media" class="dropdown-item">Media</a>
                             </li>
                         </ul>
                     </li>
@@ -48,14 +42,20 @@
                     <!-- Nutrition -->
                     <li class="nav-item me-3">
                         <router-link to="/nutrition"
-                            :class="{ 'nav-link': true, 'active': isNutrition }">Nutrition</router-link>
+                            :class="{ 'nav-link': true, 'active': isNutrition }">Nutrition <span class="badge text-bg-secondary">Soon</span></router-link>
                     </li>
 
                     <!-- Meditation -->
                     <li class="nav-item me-3">
                         <router-link to="/meditations"
-                            :class="{ 'nav-link': true, 'active': isMeditations }">Meditations</router-link>
+                            :class="{ 'nav-link': true, 'active': isMeditations }">Meditations <span class="badge text-bg-secondary">Soon</span></router-link>
                     </li>
+
+                    <!-- Calendar -->
+                    <!-- <li class="nav-item me-3">
+                        <router-link to="/calendar"
+                            :class="{ 'nav-link': true, 'active': isCalendar }">Calendar <span class="badge text-bg-secondary">Soon</span></router-link>
+                    </li> -->
                 </ul>
 
                 <!-- Login/Signup -->

@@ -43,10 +43,10 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getAndValidateToken } from "../../share/js/common.js";
+import { getAndValidateToken } from "../../shared/js/common.js";
 import ExerciseComponent from "../components/ExerciseComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
-import AlertComponent from "../../share/components/AlertComponent.vue";
+import AlertComponent from "../../shared/components/AlertComponent.vue";
 
 export default {
     name: "ExercisesPage",
