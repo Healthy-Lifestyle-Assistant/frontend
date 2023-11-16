@@ -42,11 +42,11 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getToken } from "../../share/js/common.js";
-import { getAndValidateToken } from "../../share/js/common.js";
+import { getToken } from "../../shared/js/common.js";
+import { getAndValidateToken } from "../../shared/js/common.js";
 import MediaComponent from "../components/MediaComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
-import AlertComponent from "../../share/components/AlertComponent.vue";
+import AlertComponent from "../../shared/components/AlertComponent.vue";
 
 export default {
     name: "MediaPage",

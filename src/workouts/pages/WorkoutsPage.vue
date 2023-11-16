@@ -10,7 +10,7 @@
         <div>
             <BreadcrumbWorkoutsComponent />
             <br>
-            <router-link to="" class="btn btn-outline-secondary" role="button">New Workout</router-link>
+            <router-link to="/workouts-create-workout" class="btn btn-outline-secondary" role="button">New Workout</router-link>
             <br><br>
         </div>
 
@@ -43,10 +43,10 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getAndValidateToken } from "../../share/js/common.js";
+import { getAndValidateToken } from "../../shared/js/common.js";
 import WorkoutComponent from "../components/WorkoutComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
-import AlertComponent from "../../share/components/AlertComponent.vue";
+import AlertComponent from "../../shared/components/AlertComponent.vue";
 
 export default {
     name: "WorkoutsPage",

@@ -23,6 +23,7 @@ import CreateExercisePage from "../workouts/pages/CreateExercisePage.vue";
 import RemindersWorkoutsPage from "../workouts/pages/RemindersWorkoutsPage.vue";
 import CreateMediaPage from "../workouts/pages/CreateMediaPage.vue";
 import ManageMediaPage from "../workouts/pages/ManageMediaPage.vue";
+import CreateCustomWorkoutPage from "../workouts/pages/CreateCustomWorkoutPage.vue";
 
 // Nutrition
 import NutritionPage from "../nutrition/pages/NutritionPage.vue";
@@ -115,6 +116,11 @@ const routes = [
         path: "/workouts-manage-media/:id",
         name: "ManageMediaPage",
         component: ManageMediaPage
+    },
+    {
+        path: "/workouts-create-workout",
+        name: "CreateCustomWorkoutPage",
+        component: CreateCustomWorkoutPage
     },
 
     // Nutrition
