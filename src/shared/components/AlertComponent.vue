@@ -1,6 +1,7 @@
 <template>
-    <div v-if="message" :class="alertClasses" role="alert">
+    <div v-if="message" :class="alertClasses" role="alert" style="width: fit-content;">
         {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 </template>
   
@@ -16,12 +17,13 @@ export default {
     computed: {
         alertClasses() {
             return {
-                'alert': true,
-                'alert-secondary': this.messageType === "SECONDARY",
-                'alert-warning': this.messageType === "WARNING",
-                'alert-success': this.messageType === "SUCCESS"
+                "alert": true,
+                "alert-secondary": this.messageType === "SECONDARY",
+                "alert-warning": this.messageType === "WARNING",
+                "alert-success": this.messageType === "SUCCESS",
+                "alert-dismissible fade show": true
             };
         },
-    },
+    }
 };
 </script>

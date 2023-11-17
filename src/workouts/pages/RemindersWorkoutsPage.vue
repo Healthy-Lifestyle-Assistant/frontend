@@ -5,11 +5,12 @@
 
     <div class="d-flex flex-column align-items-start">
 
-        <AlertComponent :message="message" :messageType="messageType" />
+        <div>
+            <BreadcrumbWorkoutsComponent />
+            <AlertComponent :message="message" :messageType="messageType" /><br>
+        </div>
 
-        <BreadcrumbWorkoutsComponent />
-        <br>
-        <p>In progress</p>
+        <h5>Comming Soon...</h5>
 
     </div>
 </template>

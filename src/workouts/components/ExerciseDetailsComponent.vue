@@ -1,12 +1,16 @@
 <template>
-    <div class="card mb-5" style="max-width: 38rem;">
+    <div class="w-100">
         <div class="card-body">
-            <h5 class="card-title">{{ title }}</h5>
+            <h5 class="card-title mb-3">{{ title }}</h5>
 
-            <h6 class="card-subtitle text-body-secondary mb-2">{{ isCustom ? "Custom" : "Default" }}, {{ needsEquipment ?
-                "With Equipment" : "Without Equipment" }}</h6>
+            <h6 class="card-subtitle text-body-secondary mb-2">
+                {{ isCustom ? "Custom" : "Default" }},
+                {{ needsEquipment ? "With Equipment" : "Without Equipment" }}
+            </h6>
 
-            <p class="card-text" style="font-style: italic; text-align: justify; word-wrap: break-word;">{{ description }}</p>
+            <p v-if="description" class="card-text" style="font-style: italic; text-align: justify; word-wrap: break-word;">
+                {{ description }}
+            </p>
 
             <div v-if="bodyParts" class="card-text">
                 <span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small class="body-parts">{{
@@ -15,15 +19,18 @@
             </div>
         </div>
 
-        <h6 class="card-subtitle mb-4 mt-3" style="margin-left: 16px;">Media References</h6>
-            <div style="margin-left: 16px;" v-if="httpRefs" class="d-flex flex-wrap justify-content-center justify-content-md-start">
-                <div v-for="elt in httpRefs" :key="elt.id">
-                    <MediaComponent :name="elt.name" :description="elt.description" :isCustom="elt.custom"
-                        :httpRef="elt.ref" />
-                </div>
+        <h5 class="text-secondary mb-4 mt-5">Media</h5>
+
+        <div v-if="httpRefs" class="d-flex flex-column">
+
+            <div v-for="elt in httpRefs" :key="elt.id">
+                <MediaComponent :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
+
             </div>
 
-    </div>
+        </div>
+
+</div>
 </template>
 
 <script>
