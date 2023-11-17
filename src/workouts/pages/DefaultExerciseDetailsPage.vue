@@ -4,13 +4,11 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-start">
-
-        <AlertComponent :message="message" :messageType="messageType" />
-
-        <BreadcrumbWorkoutsComponent /> <br>
+        <BreadcrumbWorkoutsComponent />
+        <AlertComponent :message="message" :messageType="messageType" /> <br>
 
         <!-- Default Exercise Details -->
-        <div v-if="exercise">
+        <div v-if="exercise" class="w-100">
             <ExerciseDetailsComponent :title="exercise.title" :description="exercise.description"
                 :bodyParts="exercise.bodyParts" :isCustom="exercise.isCustom" :needsEquipment="exercise.needsEquipment"
                 :httpRefs="exercise.httpRefs" />

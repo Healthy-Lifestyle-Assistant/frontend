@@ -1,32 +1,32 @@
 <template>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li v-if="isWorkouts" class="breadcrumb-item active" aria-current="page">
-                Workouts
+            <li v-if="isWorkouts" class="breadcrumb-item mb-3 active" aria-current="page">
+                <span class="breadcrumb-custom">Workouts</span>
             </li>
-            <li v-else class="breadcrumb-item" aria-current="page">
-                <router-link to="/workouts">Workouts</router-link>
-            </li>
-
-            <li v-if="isExercises" class="breadcrumb-item active" aria-current="page">
-                Exercises
-            </li>
-            <li v-else class="breadcrumb-item" aria-current="page">
-                <router-link to="/workouts-exercises">Exercises</router-link>
+            <li v-else class="breadcrumb-item mb-3" aria-current="page">
+                <router-link to="/workouts" class="breadcrumb-custom">Workouts</router-link>
             </li>
 
-            <li v-if="isReminders" class="breadcrumb-item active" aria-current="page">
-                Reminders
+            <li v-if="isExercises" class="breadcrumb-item mb-3 active" aria-current="page">
+                <span class="breadcrumb-custom">Exercises</span>
             </li>
-            <li v-else class="breadcrumb-item" aria-current="page">
-                <router-link to="/workouts-reminders">Reminders</router-link>
+            <li v-else class="breadcrumb-item mb-3" aria-current="page">
+                <router-link to="/workouts-exercises" class="breadcrumb-custom">Exercises</router-link>
             </li>
 
-            <li v-if="isMedia" class="breadcrumb-item active" aria-current="page">
-                Media
+            <li v-if="isReminders" class="breadcrumb-item mb-3 active" aria-current="page">
+                <span class="breadcrumb-custom">Reminders</span>
             </li>
-            <li v-else class="breadcrumb-item" aria-current="page">
-                <router-link to="/workouts-media">Media</router-link>
+            <li v-else class="breadcrumb-item mb-3" aria-current="page">
+                <router-link to="/workouts-reminders" class="breadcrumb-custom">Reminders</router-link>
+            </li>
+
+            <li v-if="isMedia" class="breadcrumb-item mb-3 active" aria-current="page">
+                <span class="breadcrumb-custom">Media</span>
+            </li>
+            <li v-else class="breadcrumb-item mb-3" aria-current="page">
+                <router-link to="/workouts-media" class="breadcrumb-custom">Media</router-link>
             </li>
         </ol>
     </nav>

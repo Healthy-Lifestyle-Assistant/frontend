@@ -1,6 +1,7 @@
 .container-custom {
-	margin-top: 6rem;
-	width: 75%;
+	margin-top: 7rem;
+	margin-bottom: 3rem;
+	width: 50%;
 }
 
 .logo-custom-size {
@@ -28,9 +29,26 @@
     text-decoration: none;
 }
 
+.breadcrumb-custom {
+    background-color: lightgray;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 12px;
+    padding-right: 12px;
+    border-radius: 12px;
+    text-decoration: none;
+}
+
 /* Styles for screen size range [0; 800] */
 @media screen and (max-width: 800px) {
     .container-custom {
         width: 100%;
+    }
+}
+
+/* For screen widths from 801px to 1000px */
+@media screen and (min-width: 801px) and (max-width: 1000px) {
+    .container-custom {
+        width: 75%;
     }
 }

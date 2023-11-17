@@ -4,6 +4,8 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-center">
+        <h4 class="mb-4">Create Profile</h4>
+        
         <AlertComponent :message="message" :messageType="messageType" />
 
         <form @submit.prevent="submitForm" style="width: fit-content;" class="mb-5">

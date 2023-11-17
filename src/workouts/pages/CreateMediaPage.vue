@@ -4,6 +4,7 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-center">
+        <h4 class="mb-4">Create Media</h4>
 
         <AlertComponent :message="message" :messageType="messageType" />
 

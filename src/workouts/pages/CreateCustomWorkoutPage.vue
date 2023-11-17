@@ -4,10 +4,9 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-center">
+        <h4 class="mb-4">Create Workout</h4>
 
         <AlertComponent :message="message" :messageType="messageType" />
-
-        <h5 class="mb-4">Create Workout</h5>
 
         <form @submit.prevent="submitForm" style="width: fit-content;" class="mb-5">
             <div class="mb-4">
