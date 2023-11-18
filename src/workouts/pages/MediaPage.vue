@@ -13,9 +13,9 @@
         </div>
 
         <!-- Custom Media -->
-        <h6 v-if="customMedia" class="text-secondary mt-3 mb-4">Custom Media</h6>
+        <h6 v-if="customMedia && customMedia.length > 0" class="text-secondary mt-3 mb-4">Custom Media</h6>
 
-        <div v-if="customMedia" class="d-flex flex-column w-100">
+        <div v-if="customMedia && customMedia.length > 0" class="d-flex flex-column w-100">
 
             <div v-for="elt in customMedia" :key="elt.id">
                 <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />

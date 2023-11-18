@@ -107,6 +107,11 @@ export default {
 
                 if (res.status === 200) {
                     this.customExercises = res.body;
+
+                    if (Array.isArray(res.body) && res.body.length === 0) {
+                        this.messageType = "SECONDARY";
+                        this.message = "No Custom Exercises Found";
+                    }
                 }
                 else if (res.status === 401) {
                     this.$router.push("/login");
