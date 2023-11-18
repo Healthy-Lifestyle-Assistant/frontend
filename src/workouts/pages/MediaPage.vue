@@ -18,7 +18,8 @@
         <div v-if="customMedia && customMedia.length > 0" class="d-flex flex-column w-100">
 
             <div v-for="elt in customMedia" :key="elt.id">
-                <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
+                <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.isCustom"
+                    :httpRef="elt.ref" />
             </div>
 
         </div>
@@ -29,7 +30,8 @@
         <div v-if="defaultMedia" class="d-flex flex-column w-100">
 
             <div v-for="elt in defaultMedia" :key="elt.id">
-                <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
+                <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.isCustom"
+                    :httpRef="elt.ref" />
             </div>
 
         </div>
