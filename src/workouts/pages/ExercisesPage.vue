@@ -13,9 +13,9 @@
         </div>
 
         <!-- Custom Exercises -->
-        <h6 v-if="customExercises" class="text-secondary mt-3 mb-4">Custom Exercises</h6>
+        <h6 v-if="customExercises && customExercises.length > 0" class="text-secondary mt-3 mb-4">Custom Exercises</h6>
 
-        <div v-if="customExercises" class="d-flex flex-column w-100">
+        <div v-if="customExercises && customExercises.length > 0" class="d-flex flex-column w-100">
 
             <div v-for="exercise in customExercises" :key="exercise.id">
                 <ExerciseComponent :id="exercise.id" :title="exercise.title" :description="exercise.description"
