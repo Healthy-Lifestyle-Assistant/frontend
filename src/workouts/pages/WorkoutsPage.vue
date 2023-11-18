@@ -19,8 +19,8 @@
 
             <div v-for="workout  in  customWorkouts" :key="workout.id">
                 <WorkoutComponent :id="workout.id" :title="workout.title" :description="workout.description"
-                    :bodyParts="workout.bodyParts" :isCustom="workout.isCustom"
-                    :needsEquipment="workout.needsEquipment" :exercises="workout.exercises" />
+                    :bodyParts="workout.bodyParts" :isCustom="workout.isCustom" :needsEquipment="workout.needsEquipment"
+                    :exercises="workout.exercises" />
             </div>
 
         </div>
@@ -32,8 +32,8 @@
 
             <div v-for=" workout  in  defaultWorkouts " :key="workout.id">
                 <WorkoutComponent :id="workout.id" :title="workout.title" :description="workout.description"
-                    :bodyParts="workout.bodyParts" :isCustom="workout.isCustom"
-                    :needsEquipment="workout.needsEquipment" :exercises="workout.exercises" />
+                    :bodyParts="workout.bodyParts" :isCustom="workout.isCustom" :needsEquipment="workout.needsEquipment"
+                    :exercises="workout.exercises" />
             </div>
 
         </div>
@@ -104,6 +104,10 @@ export default {
 
             //     if (res.status === 200) {
             //         this.customWorkouts = res.body;
+            // if (Array.isArray(res.body) && res.body.length === 0) {
+            //             this.messageType = "SECONDARY";
+            //             this.message = "No Custom Workouts Found";
+            //         }
             //     }
             //     else if (res.status === 401) {
             //         this.$router.push("/login");
