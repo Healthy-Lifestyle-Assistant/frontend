@@ -7,7 +7,9 @@
 
         <AlertComponent :message="message" :messageType="messageType" />
 
+        <!-- Update Media -->
         <h4 v-if="!isDeleted" class="mb-4">Update Media</h4>
+
         <form v-if="!isDeleted" class="mb-5" @submit.prevent="submitForm" style="width: fit-content;">
             <div class="mb-4">
                 <label for="name" class="form-label">{{ this.nameLabel }}</label>
@@ -27,7 +29,9 @@
             <button type="submit" class="btn btn-secondary mt-4">Update</button>
         </form>
 
-        <h4 v-if="!isDeleted" class="mb-2">Delete</h4>
+        <!-- Delete media -->
+        <h4 v-if="!isDeleted" class="mb-2">Delete Media</h4>
+
         <form v-if="!isDeleted" @submit.prevent="submitFormDelete" style="min-width: 13rem; width: fit-content;"
             class="mb-5">
             <button type="submit" class="btn btn-warning mt-4">Delete</button>
