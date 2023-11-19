@@ -19,7 +19,7 @@
 
             <div v-for="exercise in customExercises" :key="exercise.id">
                 <ExerciseComponent :id="exercise.id" :title="exercise.title" :description="exercise.description"
-                    :bodyParts="exercise.bodyParts" :isCustom="exercise.custom" :needsEquipment="exercise.needsEquipment" />
+                    :bodyParts="exercise.bodyParts" :isCustom="exercise.isCustom" :needsEquipment="exercise.needsEquipment" />
             </div>
 
         </div>
@@ -31,7 +31,7 @@
 
             <div v-for="exercise in defaultExercises" :key="exercise.id">
                 <ExerciseComponent :id="exercise.id" :title="exercise.title" :description="exercise.description"
-                    :bodyParts="exercise.bodyParts" :isCustom="exercise.custom" :needsEquipment="exercise.needsEquipment" />
+                    :bodyParts="exercise.bodyParts" :isCustom="exercise.isCustom" :needsEquipment="exercise.needsEquipment" />
             </div>
 
         </div>

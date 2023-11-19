@@ -36,8 +36,7 @@ export default {
 
     methods: {
         generateLink() {
-            if (!this.isCustom) return `/workouts-exercise-details/default/${this.id}`;
-            else return "/workouts-exercises"
+            return `/workouts-exercise-details/${this.isCustom ? 'custom' : 'default'}/${this.id}`;
         }
     }
 }

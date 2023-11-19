@@ -19,9 +19,11 @@
             </div>
         </div>
 
-        <h5 class="text-secondary mb-4 mt-5">Media</h5>
+        <ButtonComponent v-if="isCustom" link="/" title="Manage" class="mt-4" />
 
-        <div v-if="httpRefs" class="d-flex flex-column">
+        <h5 v-if="httpRefs && httpRefs.length > 0" class="text-secondary mb-4 mt-5">Media</h5>
+
+        <div v-if="httpRefs && httpRefs.length > 0" class="d-flex flex-column">
 
             <div v-for="elt in httpRefs" :key="elt.id">
                 <MediaComponent :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
@@ -36,6 +38,7 @@
 <script>
 
 import MediaComponent from "../components/MediaComponent.vue";
+import ButtonComponent from "../../shared/components/ButtonComponent.vue";
 
 export default {
     name: "ExerciseDetailsComponent",
@@ -51,7 +54,8 @@ export default {
     },
 
     components: {
-        MediaComponent
+        MediaComponent,
+        ButtonComponent
     },
 }
 </script>

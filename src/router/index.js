@@ -17,7 +17,7 @@ import CalendarPage from "../calendar/pages/CalendarPage.vue";
 import WorkoutsPage from "../workouts/pages/WorkoutsPage.vue";
 import DefaultWorkoutDetailsPage from "../workouts/pages/DefaultWorkoutDetailsPage.vue";
 import ExercisesPage from "../workouts/pages/ExercisesPage.vue";
-import DefaultExerciseDetailsPage from "../workouts/pages/DefaultExerciseDetailsPage.vue";
+import ExerciseDetailsPage from "../workouts/pages/ExerciseDetailsPage.vue";
 import MediaPage from "../workouts/pages/MediaPage.vue";
 import CreateExercisePage from "../workouts/pages/CreateExercisePage.vue";
 import RemindersWorkoutsPage from "../workouts/pages/RemindersWorkoutsPage.vue";
@@ -88,10 +88,15 @@ const routes = [
         component: ExercisesPage
     },
     {
-        path: "/workouts-exercise-details/default/:id",
-        name: "DefaultExerciseDetailsPage",
-        component: DefaultExerciseDetailsPage
+        path: "/workouts-exercise-details/:type/:id",
+        name: "ExerciseDetailsPage",
+        component: ExerciseDetailsPage
     },
+    // {
+    //     path: "/workouts-exercise-details/custom/:id",
+    //     name: "ExerciseDetailsPage",
+    //     component: ExerciseDetailsPage
+    // },
     {
         path: "/workouts-media",
         name: "MediaPage",
