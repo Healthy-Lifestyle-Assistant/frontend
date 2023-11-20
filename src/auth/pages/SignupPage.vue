@@ -4,6 +4,8 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-center">
+        <h4 class="mb-4">Create Profile</h4>
+        
         <AlertComponent :message="message" :messageType="messageType" />
 
         <form @submit.prevent="submitForm" style="width: fit-content;" class="mb-5">
@@ -56,7 +58,7 @@
   
 <script>
 import { useMeta } from "vue-meta";
-import AlertComponent from "../../share/components/AlertComponent.vue";
+import AlertComponent from "../../shared/components/AlertComponent.vue";
 
 export default {
     name: "SignupPage",

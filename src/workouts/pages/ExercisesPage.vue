@@ -5,35 +5,33 @@
 
     <div class="d-flex flex-column align-items-start">
 
-        <AlertComponent :message="message" :messageType="messageType" />
-
         <div>
             <BreadcrumbWorkoutsComponent />
-            <br>
-            <router-link to="/workouts-create-exercise" class="btn btn-outline-secondary" role="button">New Exercise</router-link>
+            <AlertComponent :message="message" :messageType="messageType" /><br>
+            <ButtonComponent link="/workouts-create-exercise" title="New Exercise" />
             <br><br>
         </div>
 
         <!-- Custom Exercises -->
-        <h6 v-if="customExercises" class="mt-3 mb-4">Custom Exercises</h6>
+        <h6 v-if="customExercises && customExercises.length > 0" class="text-secondary mt-3 mb-4">Custom Exercises</h6>
 
-        <div v-if="customExercises" class="d-flex flex-wrap">
+        <div v-if="customExercises && customExercises.length > 0" class="d-flex flex-column w-100">
 
             <div v-for="exercise in customExercises" :key="exercise.id">
                 <ExerciseComponent :id="exercise.id" :title="exercise.title" :description="exercise.description"
-                    :bodyParts="exercise.bodyParts" :isCustom="exercise.custom" :needsEquipment="exercise.needsEquipment" />
+                    :bodyParts="exercise.bodyParts" :isCustom="exercise.isCustom" :needsEquipment="exercise.needsEquipment" />
             </div>
 
         </div>
 
         <!-- Default Exercises -->
-        <h6 v-if="defaultExercises" class="mt-3 mb-4">Default Exercises</h6>
+        <h6 v-if="defaultExercises" class="text-secondary mt-3 mb-4">Default Exercises</h6>
 
-        <div v-if="defaultExercises" class="d-flex flex-wrap">
+        <div v-if="defaultExercises" class="d-flex flex-column w-100">
 
             <div v-for="exercise in defaultExercises" :key="exercise.id">
                 <ExerciseComponent :id="exercise.id" :title="exercise.title" :description="exercise.description"
-                    :bodyParts="exercise.bodyParts" :isCustom="exercise.custom" :needsEquipment="exercise.needsEquipment" />
+                    :bodyParts="exercise.bodyParts" :isCustom="exercise.isCustom" :needsEquipment="exercise.needsEquipment" />
             </div>
 
         </div>
@@ -43,10 +41,11 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getAndValidateToken } from "../../share/js/common.js";
+import { getAndValidateToken } from "../../shared/js/common.js";
 import ExerciseComponent from "../components/ExerciseComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
-import AlertComponent from "../../share/components/AlertComponent.vue";
+import AlertComponent from "../../shared/components/AlertComponent.vue";
+import ButtonComponent from "../../shared/components/ButtonComponent.vue";
 
 export default {
     name: "ExercisesPage",
@@ -72,7 +71,8 @@ export default {
     components: {
         ExerciseComponent,
         BreadcrumbWorkoutsComponent,
-        AlertComponent
+        AlertComponent,
+        ButtonComponent
     },
 
     async created() {
@@ -107,6 +107,11 @@ export default {
 
                 if (res.status === 200) {
                     this.customExercises = res.body;
+
+                    if (Array.isArray(res.body) && res.body.length === 0) {
+                        this.messageType = "SECONDARY";
+                        this.message = "No Custom Exercises Found";
+                    }
                 }
                 else if (res.status === 401) {
                     this.$router.push("/login");

@@ -4,39 +4,27 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-center">
-        <h4 class="mb-4">Create Exercise</h4>
+        <h4 class="mb-4">Create Workout</h4>
 
         <AlertComponent :message="message" :messageType="messageType" />
 
         <form @submit.prevent="submitForm" style="width: fit-content;" class="mb-5">
             <div class="mb-4">
                 <label for="title" class="form-label">Title<span style="color: red;">*</span></label>
-                <input type="text" class="form-control" id="title" v-model="title" placeholder="My Exercise" required>
+                <input type="text" class="form-control" id="title" v-model="title" placeholder="Workout Title" required>
             </div>
 
             <div class="mb-4">
                 <label for="description" class="form-label">Description</label>
-                <input type="text" class="form-control" id="description" v-model="description" placeholder="Description">
+                <input type="text" class="form-control" id="description" v-model="description" placeholder="Workout Description">
             </div>
 
-            <div class="form-check mb-4">
-                <input type="checkbox" value="" class="form-check-input" id="needsEquipment" v-model="needsEquipment">
-                <label for="needsEquipment" class="form-check-label">Needs Equipment</label>
-            </div>
 
-            <div v-if="bodyParts" class="mb-5">
-                <select id="bodyParts" v-model="bodyPartIds" class="form-select" multiple aria-label="Select body parts"
+            <div v-if="exercises" class="mb-4">
+                <label for="exercises" class="form-label">Exercises<span style="color: red;">*</span></label>
+                <select id="exercises" v-model="exerciseIds" class="form-select" multiple aria-label="Select Exercises"
                     required>
-                    <option disabled>Body Parts<span style="color: red;">*</span></option>
-                    <option v-for="elt in bodyParts" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
-                </select>
-            </div>
-
-            <div v-if="httpRefs" class="mb-4">
-                <select id="httpRefs" v-model="httpRefIds" class="form-select" multiple
-                    aria-label="Select media references">
-                    <option disabled>Media References</option>
-                    <option v-for="elt in httpRefs" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
+                    <option v-for="exercise in exercises" :key="exercise.id" :value="exercise.id">{{ exercise.title }}</option>
                 </select>
             </div>
 
@@ -57,11 +45,11 @@ import { getAndValidateToken } from "../../shared/js/common.js";
 import AlertComponent from "../../shared/components/AlertComponent.vue";
 
 export default {
-    name: "CreateExercisePage",
+    name: "CreateCustomWorkoutPage",
 
     setup() {
         useMeta({
-            title: "Healthy - Create Exercise",
+            title: "Healthy - Create Workout",
             htmlAttrs: {
                 lang: "en"
             }
@@ -70,15 +58,12 @@ export default {
 
     data() {
         return {
-            title: "",
-            description: "",
-            bodyPartIds: [],
-            httpRefIds: [],
-            needsEquipment: false,
-            message: "",
-            messageType: "",
-            bodyParts: [],
-            httpRefs: []
+            title: null,
+            description: null,
+            exercises: [],
+            exerciseIds: [],
+            message: null,
+            messageType: null,
         };
     },
 
@@ -87,7 +72,7 @@ export default {
     },
     
     async created() {
-        this.$store.commit("setCurrentUrl", "/workouts-create-exercise");
+        this.$store.commit("setCurrentUrl", "/workouts-create-workout");
 
         const token = await getAndValidateToken();
 
@@ -97,11 +82,11 @@ export default {
         } else {
             this.$store.commit("setLogged", true);
 
-            let bodyPartsResponse = await this.getBodyParts();
-            this.bodyParts = bodyPartsResponse.body;
+            let defaultExercisesResponse = await this.getDefaultExercises();
+            this.exercises = defaultExercisesResponse.body;
 
-            let httpRefsResponse = await this.getHttpRefs();
-            this.httpRefs = httpRefsResponse.body;
+            let customExercisesResponse = await this.getCustomExercises(token);
+            this.exercises = this.exercises.concat(customExercisesResponse.body);
         }
     },
 
@@ -110,17 +95,15 @@ export default {
             const requestDto = {
                 title: this.title,
                 description: this.description,
-                needsEquipment: this.needsEquipment,
-                bodyParts: this.bodyPartIds,
-                httpRefs: this.httpRefIds
+                exerciseIds: this.exerciseIds
             };
 
             try {
-                const res = await this.createExercise(requestDto);
+                const res = await this.createWorkout(requestDto);
 
                 if (res.status === 201) {
                     this.messageType = "SUCCESS";
-                    this.message = "Exercise has been created successfully";
+                    this.message = "Workout has been created successfully";
                 } else {
                     this.messageType = "WARNING";
                     this.message = `An error occured (${res.body.message} ${res.status})`;
@@ -130,15 +113,13 @@ export default {
                 this.message = `An error occurred (${error})`;
             }
 
-            this.title = "";
-            this.description = "";
-            this.bodyPartIds = [];
-            this.httpRefIds = [];
-            this.needsEquipment = false;
+            this.title = null;
+            this.description = null;
+            this.exerciseIds = [];
         },
 
-        async createExercise(requestBody) {
-            let URL = "/api/v1/workouts/exercises";
+        async createWorkout(requestBody) {
+            let URL = "/api/v1/workouts";
             let token = getToken();
 
             const res = await fetch(URL, {
@@ -158,8 +139,8 @@ export default {
             };
         },
 
-        async getBodyParts() {
-            let URL = "/api/v1/workouts/bodyParts";
+        async getDefaultExercises() {
+            let URL = "/api/v1/workouts/exercises/default";
 
             const res = await fetch(URL, {
                 method: "GET",
@@ -176,13 +157,14 @@ export default {
             };
         },
 
-        async getHttpRefs() {
-            let URL = "/api/v1/workouts/httpRefs/default";
+        async getCustomExercises(token) {
+            let URL = "/api/v1/workouts/exercises";
 
             const res = await fetch(URL, {
                 method: "GET",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 }
             });
 

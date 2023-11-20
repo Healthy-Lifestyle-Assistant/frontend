@@ -3,10 +3,10 @@
 		<template v-slot:title="{ content }">{{ content }}</template>
 	</metainfo>
 
-	<div class="d-flex flex-column mb-5" style="width: 90%;">
-		<h3 class="mb-4">Maintain Habits for Your Health</h3>
+	<div class="d-flex flex-column" style="width: 90%;">
+		<h2 class="mt-3 mb-5">Enhance Your Health and Wellbeing</h2>
 
-		<p class="lead mb-5">
+		<p class="lead">
 			Healthy Lifestyle Assistant is a Ukrainian non-profit startup promoting a healthy lifestyle using digital
 			technologies. Our web application helps people maintain good habits like workouts, nutrition, and mental health
 			activities.
@@ -22,12 +22,8 @@
 			healthier, longer lives.
 		</p>
 
-		<div>
-			<router-link to="/signup" class="btn btn-outline-secondary" role="button">Try Development Version</router-link>
-		</div>
-
 		<!-- Contact -->
-		<p class="lead mt-5">
+		<p class="lead mt-3">
 			<b>Contact Us</b><br>
 			<a href="https://www.linkedin.com/in/olegkdev/" class="me-5" style="text-decoration: none; color: #343a40;">
 				LinkedIn

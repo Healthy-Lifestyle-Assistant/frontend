@@ -1,20 +1,20 @@
 <template>
-    <div class="card me-4 mb-4" style="min-width: 16rem; max-width: 16rem;">
+    <div class="card mb-5">
         <div class="card-body">
             <h5 class="card-title">{{ title }}</h5>
 
             <h6 class="card-subtitle mb-2 text-body-secondary">{{ isCustom ? "Custom" : "Default" }}, {{ needsEquipment ?
                 "With Equipment" : "Without Equipment" }}</h6>
 
-            <p class="card-text">{{ description }}</p>
+            <p v-if="description" class="card-text">{{ description }}</p>
 
-            <div v-if="bodyParts" class="card-text mb-2">
+            <div v-if="bodyParts" class="card-text">
                 <span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small class="body-parts">{{
                     bodyPart.name.toLowerCase()
                 }}</small>&nbsp;</span>
             </div>
 
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-end mb-2 me-4">
                 <router-link :to="generateLink()" class="btn btn-outline-secondary">Details</router-link>
             </div>
         </div>
@@ -36,8 +36,7 @@ export default {
 
     methods: {
         generateLink() {
-            if (!this.isCustom) return `/workouts-exercise-details/default/${this.id}`;
-            else return "/workouts-exercises"
+            return `/workouts-exercise-details/${this.isCustom ? 'custom' : 'default'}/${this.id}`;
         }
     }
 }

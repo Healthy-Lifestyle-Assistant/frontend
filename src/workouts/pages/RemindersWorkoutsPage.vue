@@ -5,20 +5,21 @@
 
     <div class="d-flex flex-column align-items-start">
 
-        <AlertComponent :message="message" :messageType="messageType" />
+        <div>
+            <BreadcrumbWorkoutsComponent />
+            <AlertComponent :message="message" :messageType="messageType" /><br>
+        </div>
 
-        <BreadcrumbWorkoutsComponent />
-        <br>
-        <p>In progress</p>
+        <h5>Comming Soon...</h5>
 
     </div>
 </template>
 
 <script>
 import { useMeta } from "vue-meta";
-import { getAndValidateToken } from "../../share/js/common.js";
+import { getAndValidateToken } from "../../shared/js/common.js";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue"
-import AlertComponent from "../../share/components/AlertComponent.vue";
+import AlertComponent from "../../shared/components/AlertComponent.vue";
 
 export default {
     name: "RemindersWorkoutsPage",

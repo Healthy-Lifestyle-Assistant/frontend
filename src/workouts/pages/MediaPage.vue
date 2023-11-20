@@ -5,35 +5,33 @@
 
     <div class="d-flex flex-column align-items-start">
 
-        <AlertComponent :message="message" :messageType="messageType" />
-        <!-- <AlertComponent :isUnlogged="isUnlogged" :isError="isError" :message="message" /> -->
-
         <div>
             <BreadcrumbWorkoutsComponent />
-            <br>
-            <router-link to="/workouts-create-media" class="btn btn-outline-secondary me-4" role="button">New
-                Media</router-link>
+            <AlertComponent :message="message" :messageType="messageType" /><br>
+            <ButtonComponent link="/workouts-create-media" title="New Media" />
             <br><br>
         </div>
 
         <!-- Custom Media -->
-        <h6 v-if="customMedia" class="mt-3 mb-4">Custom Media</h6>
+        <h6 v-if="customMedia && customMedia.length > 0" class="text-secondary mt-3 mb-4">Custom Media</h6>
 
-        <div v-if="customMedia" class="d-flex flex-wrap">
+        <div v-if="customMedia && customMedia.length > 0" class="d-flex flex-column w-100">
 
             <div v-for="elt in customMedia" :key="elt.id">
-                <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
+                <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.isCustom"
+                    :httpRef="elt.ref" />
             </div>
 
         </div>
 
         <!-- Default Media -->
-        <h6 v-if="defaultMedia" class="mt-3 mb-4">Default Media</h6>
+        <h6 v-if="defaultMedia" class="text-secondary mt-3 mb-4">Default Media</h6>
 
-        <div v-if="defaultMedia" class="d-flex flex-wrap">
+        <div v-if="defaultMedia" class="d-flex flex-column w-100">
 
             <div v-for="elt in defaultMedia" :key="elt.id">
-                <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.custom" :httpRef="elt.ref" />
+                <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.isCustom"
+                    :httpRef="elt.ref" />
             </div>
 
         </div>
@@ -42,11 +40,12 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getToken } from "../../share/js/common.js";
-import { getAndValidateToken } from "../../share/js/common.js";
+import { getToken } from "../../shared/js/common.js";
+import { getAndValidateToken } from "../../shared/js/common.js";
 import MediaComponent from "../components/MediaComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
-import AlertComponent from "../../share/components/AlertComponent.vue";
+import AlertComponent from "../../shared/components/AlertComponent.vue";
+import ButtonComponent from "../../shared/components/ButtonComponent.vue";
 
 export default {
     name: "MediaPage",
@@ -72,7 +71,8 @@ export default {
     components: {
         MediaComponent,
         BreadcrumbWorkoutsComponent,
-        AlertComponent
+        AlertComponent,
+        ButtonComponent
     },
 
     async created() {

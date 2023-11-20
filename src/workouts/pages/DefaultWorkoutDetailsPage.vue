@@ -4,13 +4,11 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-start">
-
-        <AlertComponent :message="message" :messageType="messageType" />
-
-        <BreadcrumbWorkoutsComponent /> <br>
+        <BreadcrumbWorkoutsComponent />
+        <AlertComponent :message="message" :messageType="messageType" /> <br>
 
         <!-- Default Workout Details -->
-        <div v-if="workout">
+        <div v-if="workout" class="w-100">
             <WorkoutDetailsComponent :title="workout.title" :description="workout.description"
                 :bodyParts="workout.bodyParts" :isCustom="workout.isCustom" :needsEquipment="workout.needsEquipment"
                 :exercises="workout.exercises" />
@@ -21,10 +19,10 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getAndValidateToken } from "../../share/js/common.js";
+import { getAndValidateToken } from "../../shared/js/common.js";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
 import WorkoutDetailsComponent from "../components/WorkoutDetailsComponent.vue";
-import AlertComponent from "../../share/components/AlertComponent.vue";
+import AlertComponent from "../../shared/components/AlertComponent.vue";
 
 export default {
     name: "DefaultWorkoutDetailsPage",

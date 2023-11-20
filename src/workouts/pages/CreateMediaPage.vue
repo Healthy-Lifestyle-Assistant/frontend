@@ -4,6 +4,7 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-center">
+        <h4 class="mb-4">Create Media</h4>
 
         <AlertComponent :message="message" :messageType="messageType" />
 
@@ -34,9 +35,9 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getToken } from "../../share/js/common.js";
-import { getAndValidateToken } from "../../share/js/common.js";
-import AlertComponent from "../../share/components/AlertComponent.vue";
+import { getToken } from "../../shared/js/common.js";
+import { getAndValidateToken } from "../../shared/js/common.js";
+import AlertComponent from "../../shared/components/AlertComponent.vue";
 
 export default {
     name: "CreateMediaPage",
