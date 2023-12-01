@@ -19,7 +19,7 @@
             </div>
         </div>
 
-        <ButtonComponent v-if="isCustom" link="/" title="Manage" class="mt-4" />
+        <ButtonComponent v-if="isCustom" :link="generateLink()" title="Manage" class="mt-4" />
 
         <h5 v-if="httpRefs && httpRefs.length > 0" class="text-secondary mb-4 mt-5">Media</h5>
 
@@ -57,5 +57,12 @@ export default {
         MediaComponent,
         ButtonComponent
     },
+
+    methods: {
+        generateLink() {
+            if (this.isCustom) return `/workouts-manage-exercise/${this.id}`;
+            else return "/";
+        }
+    }
 }
 </script>

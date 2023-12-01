@@ -3,10 +3,14 @@
         <template v-slot:title="{ content }">{{ content }}</template>
     </metainfo>
 
-    <div class="d-flex flex-column align-items-center">
-        <h4 class="mb-4">Create Workout</h4>
+    <div class="d-flex flex-column align-items-start">
 
-        <AlertComponent :message="message" :messageType="messageType" />
+        <div>
+            <BreadcrumbWorkoutsComponent />
+            <AlertComponent :message="message" :messageType="messageType" /><br>
+        </div>
+
+        <h4 class="mb-4">Create Workout</h4>
 
         <form @submit.prevent="submitForm" style="width: fit-content;" class="mb-5">
             <div class="mb-4">
@@ -43,6 +47,7 @@ import { useMeta } from "vue-meta";
 import { getToken } from "../../shared/js/common.js";
 import { getAndValidateToken } from "../../shared/js/common.js";
 import AlertComponent from "../../shared/components/AlertComponent.vue";
+import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
 
 export default {
     name: "CreateCustomWorkoutPage",
@@ -68,7 +73,8 @@ export default {
     },
 
     components: {
-        AlertComponent
+        AlertComponent,
+        BreadcrumbWorkoutsComponent
     },
     
     async created() {

@@ -3,9 +3,12 @@
         <template v-slot:title="{ content }">{{ content }}</template>
     </metainfo>
 
-    <div class="d-flex flex-column align-items-center">
+    <div class="d-flex flex-column align-items-start">
 
-        <AlertComponent :message="message" :messageType="messageType" />
+        <div>
+            <BreadcrumbWorkoutsComponent />
+            <AlertComponent :message="message" :messageType="messageType" /><br>
+        </div>
 
         <!-- Update Media -->
         <h4 v-if="!isDeleted" class="mb-4">Update Media</h4>
@@ -45,6 +48,7 @@ import { useMeta } from "vue-meta";
 import { getToken } from "../../shared/js/common.js";
 import { getAndValidateToken } from "../../shared/js/common.js";
 import AlertComponent from "../../shared/components/AlertComponent.vue";
+import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
 
 export default {
     name: "ManageMediaPage",
@@ -72,7 +76,8 @@ export default {
     },
 
     components: {
-        AlertComponent
+        AlertComponent,
+        BreadcrumbWorkoutsComponent
     },
 
     async created() {

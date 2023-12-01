@@ -8,7 +8,7 @@
         <AlertComponent :message="message" :messageType="messageType" /> <br>
 
         <div v-if="exercise" class="w-100">
-            <ExerciseDetailsComponent :title="exercise.title" :description="exercise.description"
+            <ExerciseDetailsComponent :id="exercise.id" :title="exercise.title" :description="exercise.description"
                 :bodyParts="exercise.bodyParts" :isCustom="exercise.isCustom" :needsEquipment="exercise.needsEquipment"
                 :httpRefs="exercise.httpRefs" />
         </div>

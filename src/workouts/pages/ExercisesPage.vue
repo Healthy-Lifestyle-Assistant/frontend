@@ -76,7 +76,7 @@ export default {
     },
 
     async created() {
-        this.$store.commit("setCurrentUrl", "/workouts-exercises");
+        this.$store.commit("setCurrentUrl", "/workouts-exercises-list");
 
         const token = await getAndValidateToken();
 

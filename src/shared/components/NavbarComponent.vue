@@ -41,7 +41,7 @@
 
                     <!-- Workouts -->
                     <li class="nav-item me-3">
-                        <router-link to="/workouts" :class="{ 'nav-link': true, 'active': isWorkouts }">Workouts <span
+                        <router-link to="/workouts-list" :class="{ 'nav-link': true, 'active': isWorkouts }">Workouts <span
                                 class="badge text-bg-success">New</span></router-link>
                     </li>
 
