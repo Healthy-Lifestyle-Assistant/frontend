@@ -3,7 +3,13 @@
         <template v-slot:title="{ content }">{{ content }}</template>
     </metainfo>
 
-    <div class="d-flex flex-column align-items-center">
+    <div class="d-flex flex-column align-items-start">
+
+        <div>
+            <BreadcrumbWorkoutsComponent />
+            <AlertComponent :message="message" :messageType="messageType" /><br>
+        </div>
+
         <h4 class="mb-4">Create Exercise</h4>
 
         <AlertComponent :message="message" :messageType="messageType" />
@@ -25,17 +31,17 @@
             </div>
 
             <div v-if="bodyParts" class="mb-5">
+                <label for="bodyParts" class="form-label">Body Parts (Hold Ctrl to select multiple)</label>
                 <select id="bodyParts" v-model="bodyPartIds" class="form-select" multiple aria-label="Select body parts"
                     required>
-                    <option disabled>Body Parts<span style="color: red;">*</span></option>
                     <option v-for="elt in bodyParts" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
                 </select>
             </div>
 
             <div v-if="httpRefs" class="mb-4">
+                <label for="httpRefs" class="form-label">Media (Hold Ctrl to select multiple)</label>
                 <select id="httpRefs" v-model="httpRefIds" class="form-select" multiple
                     aria-label="Select media references">
-                    <option disabled>Media References</option>
                     <option v-for="elt in httpRefs" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
                 </select>
             </div>
@@ -55,6 +61,7 @@ import { useMeta } from "vue-meta";
 import { getToken } from "../../shared/js/common.js";
 import { getAndValidateToken } from "../../shared/js/common.js";
 import AlertComponent from "../../shared/components/AlertComponent.vue";
+import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
 
 export default {
     name: "CreateExercisePage",
@@ -83,7 +90,8 @@ export default {
     },
 
     components: {
-        AlertComponent
+        AlertComponent,
+        BreadcrumbWorkoutsComponent
     },
     
     async created() {

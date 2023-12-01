@@ -16,14 +16,19 @@ import CalendarPage from "../calendar/pages/CalendarPage.vue";
 // Workouts
 import WorkoutsPage from "../workouts/pages/WorkoutsPage.vue";
 import DefaultWorkoutDetailsPage from "../workouts/pages/DefaultWorkoutDetailsPage.vue";
+import CreateCustomWorkoutPage from "../workouts/pages/CreateCustomWorkoutPage.vue";
+
+// Exercises
 import ExercisesPage from "../workouts/pages/ExercisesPage.vue";
 import ExerciseDetailsPage from "../workouts/pages/ExerciseDetailsPage.vue";
-import MediaPage from "../workouts/pages/MediaPage.vue";
 import CreateExercisePage from "../workouts/pages/CreateExercisePage.vue";
+import ExerciseManagePage from "../workouts/pages/ExerciseManagePage.vue";
+
+// Media
+import MediaPage from "../workouts/pages/MediaPage.vue";
 import RemindersWorkoutsPage from "../workouts/pages/RemindersWorkoutsPage.vue";
 import CreateMediaPage from "../workouts/pages/CreateMediaPage.vue";
 import ManageMediaPage from "../workouts/pages/ManageMediaPage.vue";
-import CreateCustomWorkoutPage from "../workouts/pages/CreateCustomWorkoutPage.vue";
 
 // Nutrition
 import NutritionPage from "../nutrition/pages/NutritionPage.vue";
@@ -73,7 +78,7 @@ const routes = [
 
     // Workouts
     {
-        path: "/workouts",
+        path: "/workouts-list",
         name: "WorkoutsPage",
         component: WorkoutsPage
     },
@@ -82,8 +87,9 @@ const routes = [
         name: "DefaultWorkoutDetailsPage",
         component: DefaultWorkoutDetailsPage
     },
+    // Exercises
     {
-        path: "/workouts-exercises",
+        path: "/workouts-exercises-list",
         name: "ExercisesPage",
         component: ExercisesPage
     },
@@ -92,25 +98,21 @@ const routes = [
         name: "ExerciseDetailsPage",
         component: ExerciseDetailsPage
     },
-    // {
-    //     path: "/workouts-exercise-details/custom/:id",
-    //     name: "ExerciseDetailsPage",
-    //     component: ExerciseDetailsPage
-    // },
-    {
-        path: "/workouts-media",
-        name: "MediaPage",
-        component: MediaPage
-    },
     {
         path: "/workouts-create-exercise",
         name: "CreateExercisePage",
         component: CreateExercisePage
     },
     {
-        path: "/workouts-reminders",
-        name: "RemindersWorkoutsPage",
-        component: RemindersWorkoutsPage
+        path: "/workouts-manage-exercise/:id",
+        name: "ExerciseManagePage",
+        component: ExerciseManagePage
+    },
+    // Media
+    {
+        path: "/workouts-media-list",
+        name: "MediaPage",
+        component: MediaPage
     },
     {
         path: "/workouts-create-media",
@@ -126,6 +128,12 @@ const routes = [
         path: "/workouts-create-workout",
         name: "CreateCustomWorkoutPage",
         component: CreateCustomWorkoutPage
+    },
+    // Reminders
+    {
+        path: "/workouts-reminders-list",
+        name: "RemindersWorkoutsPage",
+        component: RemindersWorkoutsPage
     },
 
     // Nutrition
