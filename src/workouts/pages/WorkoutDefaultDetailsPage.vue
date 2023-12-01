@@ -25,7 +25,7 @@ import WorkoutDetailsComponent from "../components/WorkoutDetailsComponent.vue";
 import AlertComponent from "../../shared/components/AlertComponent.vue";
 
 export default {
-    name: "DefaultWorkoutDetailsPage",
+    name: "WorkoutDefaultDetailsPage",
 
     setup() {
         useMeta({
