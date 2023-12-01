@@ -8,51 +8,51 @@
         <div>
             <BreadcrumbWorkoutsComponent />
             <AlertComponent :message="message" :messageType="messageType" /><br>
-            <ButtonComponent link="/workouts-create-media" title="New Media" />
+            <ButtonComponent link="/workouts-create-exercise" title="New Exercise" />
             <br><br>
         </div>
 
-        <!-- Custom Media -->
-        <h6 v-if="customMedia && customMedia.length > 0" class="text-secondary mt-3 mb-4">Custom Media</h6>
+        <!-- Custom Exercises -->
+        <h6 v-if="customExercises && customExercises.length > 0" class="text-secondary mt-3 mb-4">Custom Exercises</h6>
 
-        <div v-if="customMedia && customMedia.length > 0" class="d-flex flex-column w-100">
+        <div v-if="customExercises && customExercises.length > 0" class="d-flex flex-column w-100">
 
-            <div v-for="elt in customMedia" :key="elt.id">
-                <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.isCustom"
-                    :httpRef="elt.ref" />
+            <div v-for="exercise in customExercises" :key="exercise.id">
+                <ExerciseComponent :id="exercise.id" :title="exercise.title" :description="exercise.description"
+                    :bodyParts="exercise.bodyParts" :isCustom="exercise.isCustom" :needsEquipment="exercise.needsEquipment" />
             </div>
 
         </div>
 
-        <!-- Default Media -->
-        <h6 v-if="defaultMedia" class="text-secondary mt-3 mb-4">Default Media</h6>
+        <!-- Default Exercises -->
+        <h6 v-if="defaultExercises" class="text-secondary mt-3 mb-4">Default Exercises</h6>
 
-        <div v-if="defaultMedia" class="d-flex flex-column w-100">
+        <div v-if="defaultExercises" class="d-flex flex-column w-100">
 
-            <div v-for="elt in defaultMedia" :key="elt.id">
-                <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.isCustom"
-                    :httpRef="elt.ref" />
+            <div v-for="exercise in defaultExercises" :key="exercise.id">
+                <ExerciseComponent :id="exercise.id" :title="exercise.title" :description="exercise.description"
+                    :bodyParts="exercise.bodyParts" :isCustom="exercise.isCustom" :needsEquipment="exercise.needsEquipment" />
             </div>
 
         </div>
+
     </div>
 </template>
 
 <script>
 import { useMeta } from "vue-meta";
-import { getToken } from "../../shared/js/common.js";
 import { getAndValidateToken } from "../../shared/js/common.js";
-import MediaComponent from "../components/MediaComponent.vue";
+import ExerciseComponent from "../components/ExerciseComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
 import AlertComponent from "../../shared/components/AlertComponent.vue";
 import ButtonComponent from "../../shared/components/ButtonComponent.vue";
 
 export default {
-    name: "MediaPage",
+    name: "ExercisesListPage",
 
     setup() {
         useMeta({
-            title: "Healthy - Media",
+            title: "Healthy - Exercises",
             htmlAttrs: {
                 lang: "en"
             }
@@ -61,31 +61,30 @@ export default {
 
     data() {
         return {
-            defaultMedia: null,
-            customMedia: null,
+            defaultExercises: null,
+            customExercises: null,
             message: "",
-            messageType: "",
+            messageType: ""
         };
     },
 
     components: {
-        MediaComponent,
+        ExerciseComponent,
         BreadcrumbWorkoutsComponent,
         AlertComponent,
         ButtonComponent
     },
 
     async created() {
-        this.$store.commit("setCurrentUrl", "/workouts-media-list");
+        this.$store.commit("setCurrentUrl", "/workouts-exercises-list");
 
         const token = await getAndValidateToken();
 
-        // Retrieve Default Media
         try {
-            const res = await this.getDefaultMedia();
+            const res = await this.getDefaultExercises();
 
             if (res.status === 200) {
-                this.defaultMedia = res.body;
+                this.defaultExercises = res.body;
             }
             else {
                 this.messageType = "WARNING";
@@ -96,7 +95,6 @@ export default {
             this.message = `An error occurred (${error})`;
         }
 
-        // Retrieve Custom Media
         if (!token) {
             this.$store.commit("setLogged", false);
             this.messageType = "SECONDARY";
@@ -105,14 +103,14 @@ export default {
             this.$store.commit("setLogged", true);
 
             try {
-                const res = await this.getCustomMedia(token);
+                const res = await this.getCustomExercises(token);
 
                 if (res.status === 200) {
-                    this.customMedia = res.body;
+                    this.customExercises = res.body;
 
                     if (Array.isArray(res.body) && res.body.length === 0) {
                         this.messageType = "SECONDARY";
-                        this.message = "No Custom Media Found";
+                        this.message = "No Custom Exercises Found";
                     }
                 }
                 else if (res.status === 401) {
@@ -130,8 +128,8 @@ export default {
     },
 
     methods: {
-        async getDefaultMedia() {
-            let URL = "/api/v1/workouts/httpRefs/default";
+        async getDefaultExercises() {
+            let URL = "/api/v1/workouts/exercises/default";
 
             const res = await fetch(URL, {
                 method: "GET",
@@ -148,9 +146,8 @@ export default {
             };
         },
 
-        async getCustomMedia() {
-            let URL = "/api/v1/workouts/httpRefs";
-            let token = getToken();
+        async getCustomExercises(token) {
+            let URL = "/api/v1/workouts/exercises";
 
             const res = await fetch(URL, {
                 method: "GET",

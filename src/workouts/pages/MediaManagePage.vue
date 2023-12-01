@@ -51,7 +51,7 @@ import AlertComponent from "../../shared/components/AlertComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
 
 export default {
-    name: "ManageMediaPage",
+    name: "MediaManagePage",
 
     setup() {
         useMeta({

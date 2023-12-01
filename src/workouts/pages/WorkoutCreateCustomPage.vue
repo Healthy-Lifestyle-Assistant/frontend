@@ -50,7 +50,7 @@ import AlertComponent from "../../shared/components/AlertComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
 
 export default {
-    name: "CreateCustomWorkoutPage",
+    name: "WorkoutCreateCustomPage",
 
     setup() {
         useMeta({

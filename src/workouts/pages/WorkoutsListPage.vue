@@ -50,7 +50,7 @@ import AlertComponent from "../../shared/components/AlertComponent.vue";
 import ButtonComponent from "../../shared/components/ButtonComponent.vue";
 
 export default {
-    name: "WorkoutsPage",
+    name: "WorkoutsListPage",
 
     setup() {
         useMeta({
