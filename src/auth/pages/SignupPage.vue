@@ -5,45 +5,49 @@
 
     <div class="d-flex flex-column align-items-center">
         <h4 class="text-muted mb-4">Register</h4>
-        
+
         <AlertComponent :message="message" :messageType="messageType" />
 
         <form @submit.prevent="submitForm" style="width: fit-content;" class="mb-5">
             <div class="mb-4">
                 <label for="username" class="form-label">Username<span class="span-color"> *</span></label>
-                <input type="text" class="form-control" id="username" v-model="username" placeholder="johndoe" required>
+                <input type="text" class="form-control" id="username" v-model="username" placeholder="Enter username" required>
             </div>
 
             <div class="mb-4">
                 <label for="email" class="form-label">Email<span class="span-color"> *</span></label>
-                <input type="email" class="form-control" id="email" v-model="email" placeholder="john-doe@domain.com" required>
+                <input type="email" class="form-control" id="email" v-model="email" placeholder="Enter email"
+                    required>
             </div>
 
             <div class="mb-4">
                 <label for="fullName" class="form-label">Name<span class="span-color"> *</span></label>
-                <input type="text" class="form-control" id="fullName" v-model="fullName" placeholder="John Doe" required>
+                <input type="text" class="form-control" id="fullName" v-model="fullName" placeholder="Enter full name" required>
             </div>
 
             <div class="mb-4">
                 <label for="password" class="form-label">Password<span class="span-color"> *</span></label>
-                <input type="password" class="form-control" id="password" v-model="password" placeholder="********" required>
+                <input type="password" class="form-control" id="password" v-model="password" placeholder="Enter password"
+                    required>
             </div>
 
             <div class="mb-4">
                 <label for="confirmPassword" class="form-label">Confirm Password<span class="span-color"> *</span></label>
-                <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" placeholder="********" required>
+                <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword"
+                    placeholder="Confirm password" required>
             </div>
 
             <div v-if="countries" class="mb-4">
                 <label for="countries" class="form-label">Country<span class="span-color"> *</span></label>
                 <select id="countries" v-model="countryId" class="form-select" aria-label="Select Country" required>
+                    <option :value="null" disabled>Select country</option>
                     <option v-for="elt in countries" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
                 </select>
             </div>
 
-             <div class="mb-4">
+            <div class="mb-4">
                 <label for="age" class="form-label">Age</label>
-                <input type="age" class="form-control" id="age" v-model="age">
+                <input type="age" class="form-control" id="age" v-model="age" placeholder="Enter age (optional)">
             </div>
 
             <div>
@@ -112,17 +116,22 @@ export default {
 
             try {
                 const res = await this.signupApi(signupRequestDto);
+                console.log("res", res);
 
                 if (res.status === 201) {
                     this.messageType = "SUCCESS";
                     this.message = "User account has been created successfully! Now you can login to your account.";
                 } else {
-                    this.messageType = "WARNING";
-                    this.message = `An error occurred ${res.status}`;
+                    let messageBuilder = "";
+					for (const key in res.body) {
+						messageBuilder += `${key}: ${res.body[key]}. `;
+					}
+					this.messageType = "WARNING";
+					this.message = `${messageBuilder}(${res.status})`;
                 }
             } catch (error) {
                 this.messageType = "WARNING";
-                this.message = `An error occurred ${error}`;
+                this.message = `Error: ${error}`;
             }
 
             this.username = "";
@@ -143,12 +152,27 @@ export default {
                 body: JSON.stringify(requestBody)
             });
 
-            const data = await res.json();
+            const contentType = res.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+                const data = await res.json();
+                console.log("Data", data);
+                return {
+                    status: res.status,
+                    body: data
+                };
+            } else {
+                return {
+                    status: res.status,
+                    body: null
+                };
+            }
 
-            return {
-                status: res.status,
-                body: data
-            };
+            // const data = await res.json();
+
+            // return {
+            //     status: res.status,
+            //     body: data
+            // };
         },
 
         async getCountries() {
