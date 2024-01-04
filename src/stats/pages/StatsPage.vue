@@ -3,7 +3,7 @@
         <template v-slot:title="{ content }">{{ content }}</template>
     </metainfo>
 
-    <div class="d-flex">
+    <div class="d-flex flex-column">
         <h5>In development</h5>
     </div>
 </template>
@@ -12,11 +12,11 @@
 import { useMeta } from "vue-meta";
 
 export default {
-    name: "MeditationsPage",
+    name: "StatsPage",
 
     setup() {
         useMeta({
-            title: "Meditations",
+            title: "Stats",
             htmlAttrs: {
                 lang: "en"
             }
@@ -24,7 +24,7 @@ export default {
     },
 
     async created() {
-        this.$store.commit("setCurrentUrl", "meditations");
+        this.$store.commit("setCurrentUrl", "stats");
     }
 }
 </script>

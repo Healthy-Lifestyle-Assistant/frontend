@@ -4,7 +4,7 @@
     </metainfo>
 
     <div class="d-flex">
-        <h5>Comming soon...</h5>
+        <h5>In development</h5>
     </div>
 </template>
 
@@ -16,7 +16,7 @@ export default {
 
     setup() {
         useMeta({
-            title: "Healthy - Nutrition",
+            title: "Nutrition",
             htmlAttrs: {
                 lang: "en"
             }

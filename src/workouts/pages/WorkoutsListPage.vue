@@ -54,7 +54,7 @@ export default {
 
     setup() {
         useMeta({
-            title: "Healthy - Workouts",
+            title: "Workouts",
             htmlAttrs: {
                 lang: "en"
             }
