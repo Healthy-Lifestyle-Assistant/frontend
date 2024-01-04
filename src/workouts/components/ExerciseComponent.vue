@@ -6,7 +6,7 @@
             <h6 class="card-subtitle mb-2 text-body-secondary">{{ isCustom ? "Custom" : "Default" }}, {{ needsEquipment ?
                 "With Equipment" : "Without Equipment" }}</h6>
 
-            <p v-if="description" class="card-text">{{ description }}</p>
+            <p v-if="description" class="card-text">{{ truncatedDescription }}</p>
 
             <div v-if="bodyParts" class="card-text">
                 <span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small class="body-parts">{{
@@ -22,6 +22,8 @@
 </template>
   
 <script>
+import { truncateStringWithWordBoundary } from "../../shared/js/stringUtils";
+
 export default {
     name: "ExerciseComponent",
 
@@ -38,6 +40,12 @@ export default {
         generateLink() {
             return `/workouts-exercise-details/${this.isCustom ? 'custom' : 'default'}/${this.id}`;
         }
+    },
+
+    computed: {
+        truncatedDescription() {
+            return truncateStringWithWordBoundary(this.description, 100);
+        },
     }
 }
 </script>
