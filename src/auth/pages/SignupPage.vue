@@ -116,7 +116,6 @@ export default {
 
             try {
                 const res = await this.signupApi(signupRequestDto);
-                console.log("res", res);
 
                 if (res.status === 201) {
                     this.messageType = "SUCCESS";
@@ -155,7 +154,6 @@ export default {
             const contentType = res.headers.get("content-type");
             if (contentType && contentType.includes("application/json")) {
                 const data = await res.json();
-                console.log("Data", data);
                 return {
                     status: res.status,
                     body: data
@@ -166,13 +164,6 @@ export default {
                     body: null
                 };
             }
-
-            // const data = await res.json();
-
-            // return {
-            //     status: res.status,
-            //     body: data
-            // };
         },
 
         async getCountries() {

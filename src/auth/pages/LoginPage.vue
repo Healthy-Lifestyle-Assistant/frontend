@@ -73,7 +73,6 @@ export default {
 
             try {
                 const res = await this.loginApi(loginRequestDto);
-                console.log("res", res);
 
                 if (res.status === 200) {
                     localStorage.setItem("token", JSON.stringify(res.body.token).slice(1, -1));
