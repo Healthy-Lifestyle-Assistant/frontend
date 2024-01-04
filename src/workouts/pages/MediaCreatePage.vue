@@ -49,7 +49,7 @@ export default {
 
     setup() {
         useMeta({
-            title: "Healthy - Create Media",
+            title: "Create Media",
             htmlAttrs: {
                 lang: "en"
             }

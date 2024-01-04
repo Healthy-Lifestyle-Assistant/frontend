@@ -4,38 +4,38 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-center">
-        <h4 class="mb-4">Create Profile</h4>
+        <h4 class="text-muted mb-4">Register</h4>
         
         <AlertComponent :message="message" :messageType="messageType" />
 
         <form @submit.prevent="submitForm" style="width: fit-content;" class="mb-5">
             <div class="mb-4">
-                <label for="username" class="form-label">Username<span style="color: red;">*</span></label>
+                <label for="username" class="form-label">Username<span class="span-color"> *</span></label>
                 <input type="text" class="form-control" id="username" v-model="username" placeholder="johndoe" required>
             </div>
 
             <div class="mb-4">
-                <label for="email" class="form-label">Email<span style="color: red;">*</span></label>
+                <label for="email" class="form-label">Email<span class="span-color"> *</span></label>
                 <input type="email" class="form-control" id="email" v-model="email" placeholder="john-doe@domain.com" required>
             </div>
 
             <div class="mb-4">
-                <label for="fullName" class="form-label">Name<span style="color: red;">*</span></label>
+                <label for="fullName" class="form-label">Name<span class="span-color"> *</span></label>
                 <input type="text" class="form-control" id="fullName" v-model="fullName" placeholder="John Doe" required>
             </div>
 
             <div class="mb-4">
-                <label for="password" class="form-label">Password<span style="color: red;">*</span></label>
+                <label for="password" class="form-label">Password<span class="span-color"> *</span></label>
                 <input type="password" class="form-control" id="password" v-model="password" placeholder="********" required>
             </div>
 
             <div class="mb-4">
-                <label for="confirmPassword" class="form-label">Confirm Password<span style="color: red;">*</span></label>
+                <label for="confirmPassword" class="form-label">Confirm Password<span class="span-color"> *</span></label>
                 <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" placeholder="********" required>
             </div>
 
             <div v-if="countries" class="mb-4">
-                <label for="countries" class="form-label">Country<span style="color: red;">*</span></label>
+                <label for="countries" class="form-label">Country<span class="span-color"> *</span></label>
                 <select id="countries" v-model="countryId" class="form-select" aria-label="Select Country" required>
                     <option v-for="elt in countries" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
                 </select>
@@ -47,7 +47,7 @@
             </div>
 
             <div>
-                <span style="color: red;">*</span> Required Fields
+                <span class="span-color">*</span> <i>Required fields</i>
             </div>
 
             <button type="submit" class="btn btn-secondary mt-4">Sign Up</button>

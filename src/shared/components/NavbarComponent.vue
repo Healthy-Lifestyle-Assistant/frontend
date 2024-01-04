@@ -5,7 +5,7 @@
             <!-- Logo -->
             <router-link to="/" class="navbar-brand me-5">
                 <img src="../../assets/logo.png" alt="Logo" class="d-inline-block align-text-top logo-custom-size">
-                Healthy Lifestyle
+                Healthy Life
             </router-link>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -39,29 +39,27 @@
                         </ul>
                     </li> -->
 
-                    <!-- Workouts -->
                     <li class="nav-item me-3">
-                        <router-link to="/workouts-list" :class="{ 'nav-link': true, 'active': isWorkouts }">Workouts <span
-                                class="badge text-bg-success">New</span></router-link>
+                        <router-link to="/workouts-list" :class="{ 'nav-link': true, 'active': isWorkouts }">Workouts</router-link>
                     </li>
 
-                    <!-- Nutrition -->
                     <li class="nav-item me-3">
-                        <router-link to="/nutrition" :class="{ 'nav-link': true, 'active': isNutrition }">Nutrition <span
-                                class="badge text-bg-secondary">Soon</span></router-link>
+                        <router-link to="/nutrition" :class="{ 'nav-link': true, 'active': isNutrition }">Nutrition</router-link>
                     </li>
 
-                    <!-- Meditation -->
                     <li class="nav-item me-3">
-                        <router-link to="/meditations" :class="{ 'nav-link': true, 'active': isMeditations }">Meditations
-                            <span class="badge text-bg-secondary">Soon</span></router-link>
+                        <router-link to="/meditations" :class="{ 'nav-link': true, 'active': isMeditations }">Meditations</router-link>
                     </li>
 
-                    <!-- Calendar -->
-                    <!-- <li class="nav-item me-3">
+                    <li class="nav-item me-3">
                         <router-link to="/calendar"
-                            :class="{ 'nav-link': true, 'active': isCalendar }">Calendar <span class="badge text-bg-secondary">Soon</span></router-link>
-                    </li> -->
+                            :class="{ 'nav-link': true, 'active': isCalendar }">Calendar</router-link>
+                    </li>
+
+                    <li class="nav-item me-3">
+                        <router-link to="/stats"
+                            :class="{ 'nav-link': true, 'active': isStats }">Stats</router-link>
+                    </li>
                 </ul>
 
                 <!-- Login/Signup -->
@@ -106,10 +104,6 @@ export default {
             return this.$store.state.previousUrl;
         },
 
-        isCalendar() {
-            return this.$store.state.currentUrl.includes("calendar");
-        },
-
         isWorkouts() {
             return this.$store.state.currentUrl.includes("workouts");
         },
@@ -120,6 +114,14 @@ export default {
 
         isMeditations() {
             return this.$store.state.currentUrl.includes("meditations");
+        },
+
+        isCalendar() {
+            return this.$store.state.currentUrl.includes("calendar");
+        },
+
+        isStats() {
+            return this.$store.state.currentUrl.includes("stats");
         }
     }
 }

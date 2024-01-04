@@ -10,7 +10,7 @@
             <AlertComponent :message="message" :messageType="messageType" /><br>
         </div>
 
-        <h5>Comming Soon...</h5>
+        <h5>In development</h5>
 
     </div>
 </template>
@@ -26,7 +26,7 @@ export default {
 
     setup() {
         useMeta({
-            title: "Healthy - Reminders",
+            title: "Reminders",
             htmlAttrs: {
                 lang: "en"
             }

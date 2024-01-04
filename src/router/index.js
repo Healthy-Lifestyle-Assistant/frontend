@@ -10,9 +10,6 @@ import LogoutPage from "../auth/pages/LogoutPage.vue";
 // User Settings
 import SettingsPage from "../users/pages/SettingsPage.vue";
 
-// Calendar
-import CalendarPage from "../calendar/pages/CalendarPage.vue";
-
 // Workouts
 import WorkoutsListPage from "../workouts/pages/WorkoutsListPage.vue";
 import WorkoutDefaultDetailsPage from "../workouts/pages/WorkoutDefaultDetailsPage.vue";
@@ -37,6 +34,12 @@ import NutritionPage from "../nutrition/pages/NutritionPage.vue";
 
 // Meditations
 import MeditationsPage from "../meditations/pages/MeditationsPage.vue";
+
+// Calendar
+import CalendarPage from "../calendar/pages/CalendarPage.vue";
+
+// Calendar
+import StatsPage from "../stats/pages/StatsPage.vue";
 
 
 const routes = [
@@ -69,13 +72,6 @@ const routes = [
         path: "/settings",
         name: "SettingsPage",
         component: SettingsPage
-    },
-
-    // Calendar
-    {
-        path: "/calendar",
-        name: "CalendarPage",
-        component: CalendarPage
     },
 
     // Workouts
@@ -153,7 +149,21 @@ const routes = [
         path: "/meditations",
         name: "MeditationsPage",
         component: MeditationsPage
-    }
+    },
+
+    // Calendar
+    {
+        path: "/calendar",
+        name: "CalendarPage",
+        component: CalendarPage
+    },
+
+    // Stats
+    {
+        path: "/stats",
+        name: "StatsPage",
+        component: StatsPage
+    },
 ];
 
 const router = createRouter({

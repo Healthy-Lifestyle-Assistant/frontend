@@ -55,7 +55,7 @@ export default {
 
     setup() {
         useMeta({
-            title: "Healthy - Manage Media",
+            title: "Manage Media",
             htmlAttrs: {
                 lang: "en"
             }

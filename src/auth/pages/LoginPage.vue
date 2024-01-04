@@ -4,28 +4,24 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-center">
-        <h4 class="mb-4">Login</h4>
+        <h4 class="text-muted mb-4">Login</h4>
         
         <AlertComponent :message="message" :messageType="messageType" />
 
         <form @submit.prevent="submitForm" style="width: fit-content;">
             <div class="mb-4">
-                <label for="usernameOrEmail" class="form-label">Username or email<span style="color: red;">*</span></label>
+                <label for="usernameOrEmail" class="form-label">Username or email</label>
                 <input type="text" class="form-control" id="usernameOrEmail" v-model="usernameOrEmail" placeholder="jane-doe@domain.com" required>
             </div>
 
             <div class="mb-4">
-                <label for="password" class="form-label">Password<span style="color: red;">*</span></label>
+                <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" v-model="password" placeholder="********" required>
             </div>
 
             <div class="mb-4">
-                <label for="confirmPassword" class="form-label">Confirm password<span style="color: red;">*</span></label>
+                <label for="confirmPassword" class="form-label">Confirm password</label>
                 <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" placeholder="********" required>
-            </div>
-
-            <div>
-                <span style="color: red;">*</span> Required Fields
             </div>
 
             <button type="submit" class="btn btn-secondary mt-4">Login</button>
