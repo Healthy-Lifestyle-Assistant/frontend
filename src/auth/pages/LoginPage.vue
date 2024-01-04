@@ -11,17 +11,17 @@
         <form @submit.prevent="submitForm" style="width: fit-content;">
             <div class="mb-4">
                 <label for="usernameOrEmail" class="form-label">Username or email</label>
-                <input type="text" class="form-control" id="usernameOrEmail" v-model="usernameOrEmail" placeholder="jane-doe@domain.com" required>
+                <input type="text" class="form-control" id="usernameOrEmail" v-model="usernameOrEmail" placeholder="Enter username/email" required>
             </div>
 
             <div class="mb-4">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" v-model="password" placeholder="********" required>
+                <input type="password" class="form-control" id="password" v-model="password" placeholder="Enter password" required>
             </div>
 
             <div class="mb-4">
                 <label for="confirmPassword" class="form-label">Confirm password</label>
-                <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" placeholder="********" required>
+                <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" placeholder="Confirm password" required>
             </div>
 
             <button type="submit" class="btn btn-secondary mt-4">Login</button>
@@ -73,6 +73,7 @@ export default {
 
             try {
                 const res = await this.loginApi(loginRequestDto);
+                console.log("res", res);
 
                 if (res.status === 200) {
                     localStorage.setItem("token", JSON.stringify(res.body.token).slice(1, -1));
@@ -87,12 +88,16 @@ export default {
                         this.$router.push(this.$store.state.previousUrl);
                     }
                 } else {
-                    this.messageType = "WARNING";
-                    this.message = "An error occurred while signing up. Try again";
+                    let messageBuilder = "";
+					for (const key in res.body) {
+						messageBuilder += `${key}: ${res.body[key]}. `;
+					}
+					this.messageType = "WARNING";
+					this.message = `${messageBuilder}(${res.status})`;
                 }
             } catch (error) {
                 this.messageType = "WARNING";
-                this.message = "An error occurred while signing up. Try again";
+                this.message = `Error: ${error}`;
             }
 
             this.usernameOrEmail = null;
