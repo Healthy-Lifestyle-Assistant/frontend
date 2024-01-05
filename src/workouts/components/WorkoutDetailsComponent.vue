@@ -17,13 +17,15 @@
             }}</small>&nbsp;</span>
         </div>
 
+        <ButtonComponent v-if="isCustom" :link="generateLink()" title="Manage" class="mt-4" />
+
         <h5 v-if="exercises" class="text-secondary mb-4 mt-5">Exercises</h5>
 
         <div v-if="exercises" class="d-flex flex-column">
 
             <div v-for="elt in exercises" :key="elt.id">
                 <ExerciseComponent :id="elt.id" :title="elt.title" :description="elt.description" :bodyParts="elt.bodyParts"
-                    :isCustom="elt.custom" :needsEquipment="elt.needsEquipment" />
+                    :isCustom="elt.isCustom" :needsEquipment="elt.needsEquipment" />
             </div>
 
         </div>
@@ -33,6 +35,7 @@
 
 <script>
 import ExerciseComponent from "../components/ExerciseComponent.vue";
+import ButtonComponent from "../../shared/components/ButtonComponent.vue";
 
 export default {
     name: "WorkoutDetailsComponent",
@@ -48,7 +51,16 @@ export default {
     },
 
     components: {
-        ExerciseComponent
+        ExerciseComponent,
+        ButtonComponent
     },
+
+    methods: {
+        generateLink() {
+            // if (this.isCustom) return `/workouts-manage-workout/${this.id}`;
+            // else return "/";
+            return "/workouts-list";
+        }
+    }
 }
 </script>

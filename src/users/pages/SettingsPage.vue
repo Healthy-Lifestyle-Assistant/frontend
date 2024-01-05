@@ -6,48 +6,48 @@
 	<div class="d-flex flex-column align-items-start">
 		<AlertComponent :message="message" :messageType="messageType" />
 
-		<h4 class="mb-4">Update Profile</h4>
+		<h4 class="mb-4 text-muted">Update Profile</h4>
 
 		<form class="mb-5" @submit.prevent="submitForm" style="width: fit-content">
 			<div class="mb-4">
-				<label for="username" class="form-label"><b>Username:</b> {{ this.usernameLabel }}</label>
-				<input type="text" class="form-control" id="username" v-model="username" placeholder="New Username" />
+				<label for="username" class="form-label">Current username: {{ this.usernameLabel }}</label>
+				<input type="text" class="form-control" id="username" v-model="username" placeholder="Enter new username" />
 			</div>
 
 			<div class="mb-4">
-				<label for="email" class="form-label"><b>Email:</b> {{ this.emailLabel }}</label>
-				<input type="email" class="form-control" id="email" v-model="email" placeholder="New Email" />
+				<label for="email" class="form-label">Current email: {{ this.emailLabel }}</label>
+				<input type="email" class="form-control" id="email" v-model="email" placeholder="Enter new email" />
 			</div>
 
 			<div class="mb-4">
-				<label for="fullName" class="form-label"><b>Full Name:</b> {{ this.fullNameLabel }}</label>
-				<input type="text" class="form-control" id="fullName" v-model="fullName" placeholder="New Full Name" />
+				<label for="fullName" class="form-label">Current full name: {{ this.fullNameLabel }}</label>
+				<input type="text" class="form-control" id="fullName" v-model="fullName" placeholder="Enter new full name" />
 			</div>
 
 			<div class="mb-4">
-				<label for="password" class="form-label"><b>Update Password</b></label>
-				<input type="password" class="form-control" id="password" v-model="password" placeholder="New Password" />
-			</div>
-
-			<div class="mb-4">
-				<label for="confirmPassword" class="form-label"><b>Confirm Update Password</b></label>
-				<input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword"
-					placeholder="New Password" />
-			</div>
-
-			<div class="mb-4">
-				<label for="age" class="form-label"><b>Age:</b> {{ this.ageLabel === null ? "Optional" : this.ageLabel
+				<label for="age" class="form-label">Current age: {{ this.ageLabel === null ? "None" : this.ageLabel
 				}}</label>
-				<input type="age" class="form-control" id="age" v-model="age" placeholder="New Age" />
+				<input type="age" class="form-control" id="age" v-model="age" placeholder="Enter new age" />
 			</div>
 
 			<div v-if="countries" class="mb-4">
-				<label for="countries" class="form-label"><b>Country</b></label>
-				<select id="countries" v-model="countryId" class="form-select" aria-label="Select Country" required>
+				<label for="countries" class="form-label">Current country</label>
+				<select id="countries" v-model="countryId" class="form-select" aria-label="Select new country" required>
 					<option v-for="elt in countries" :key="elt.id" :value="elt.id">
 						{{ elt.name }}
 					</option>
 				</select>
+			</div>
+
+			<div class="mb-4">
+				<label for="password" class="form-label">Update password</label>
+				<input type="password" class="form-control" id="password" v-model="password" placeholder="Enter new password" />
+			</div>
+
+			<div class="mb-4">
+				<label for="confirmPassword" class="form-label">Confirm new password</label>
+				<input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword"
+					placeholder="Enter new password" />
 			</div>
 
 			<button type="submit" class="btn btn-secondary mt-4">Update</button>

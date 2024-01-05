@@ -7,7 +7,7 @@
 
             <p v-if="description" class="card-text">{{ description }}</p>
 
-            <div v-if="isCustom" class="d-flex justify-content-between mt-3 me-4">
+            <div v-if="isCustom" class="d-flex justify-content-end mt-3 me-4">
                 <a :href="generateLink()" class="btn btn-outline-secondary d-block me-3">Manage</a>
                 <a :href="httpRef" class="btn btn-outline-secondary" target="_blank">Visit</a>
             </div>

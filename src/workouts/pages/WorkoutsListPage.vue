@@ -97,27 +97,25 @@ export default {
         } else {
             this.$store.commit("setLogged", true);
 
-            // Retrieve Custom Workouts
+            try {
+                const res = await this.getCustomWorkouts(token);
 
-            // try {
-            //     const res = await this.getCustomWorkouts(token);
-
-            //     if (res.status === 200) {
-            //         this.customWorkouts = res.body;
-            // if (Array.isArray(res.body) && res.body.length === 0) {
-            //             this.messageType = "SECONDARY";
-            //             this.message = "No Custom Workouts Found";
-            //         }
-            //     }
-            //     else if (res.status === 401) {
-            //         this.$router.push("/login");
-            //     }
-            //     else {
-            //         this.message = `An error occured (${res.body.message} ${res.status})`;
-            //     }
-            // } catch (error) {
-            //     this.message = `An error occurred (${error})`;
-            // }
+                if (res.status === 200) {
+                    this.customWorkouts = res.body;
+                    if (Array.isArray(res.body) && res.body.length === 0) {
+                        this.messageType = "SECONDARY";
+                        this.message = "No Custom Workouts Found";
+                    }
+                }
+                else if (res.status === 401) {
+                    this.$router.push("/login");
+                }
+                else {
+                    this.message = `An error occured (${res.body.message} ${res.status})`;
+                }
+            } catch (error) {
+                this.message = `An error occurred (${error})`;
+            }
         }
     },
 
@@ -136,6 +134,25 @@ export default {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
+                }
+            });
+
+            const data = await res.json();
+
+            return {
+                status: res.status,
+                body: data
+            };
+        },
+
+        async getCustomWorkouts(token) {
+            let URL = "/api/v1/workouts";
+
+            const res = await fetch(URL, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 }
             });
 
