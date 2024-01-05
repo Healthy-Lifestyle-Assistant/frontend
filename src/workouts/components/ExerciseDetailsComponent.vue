@@ -26,7 +26,7 @@
         <div v-if="httpRefs && httpRefs.length > 0" class="d-flex flex-column">
 
             <div v-for="elt in httpRefs" :key="elt.id">
-                <MediaComponent :name="elt.name" :description="elt.description" :isCustom="elt.isCustom" :httpRef="elt.ref" />
+                <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.isCustom" :httpRef="elt.ref" />
             </div>
 
         </div>

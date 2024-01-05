@@ -9,19 +9,27 @@
 			<p v-if="description" class="card-text">{{ truncatedDescription }}</p>
 
 			<div v-if="bodyParts" class="card-text mb-4">
-				<span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small class="body-parts">{{ bodyPart.name.toLowerCase()
+				<span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small class="body-parts">{{
+					bodyPart.name.toLowerCase()
 				}}</small>&nbsp;</span>
 			</div>
 
 			<h6 class="card-subtitle mb-2 mt-4 text-body-secondary">Exercises</h6>
 			<div v-if="exercises" class="card-text mb-2">
 				<span v-for="exercise in exercises" :key="exercise.id">
-					<router-link class="media-refs d-inline-block mt-2 mb-2" :to="generateExerciseLink(exercise.id)">{{ exercise.title }}</router-link>
+					<router-link class="media-refs d-inline-block mt-2 mb-2"
+						:to="generateExerciseDetailsLink(exercise.id, exercise.isCustom)">{{ exercise.title }}</router-link>
 					&nbsp;</span>
 			</div>
 
-			<div class="d-flex justify-content-end mb-2 me-4">
-				<router-link :to="generateWorkoutLink(id)" class="btn btn-outline-secondary">Details</router-link>
+			<div v-if="isCustom" class="d-flex justify-content-end mt-3 me-4">
+				<router-link :to="generateWorkoutManageLink()"
+					class="btn btn-outline-secondary d-block me-3">Manage</router-link>
+				<router-link :to="generateWorkoutDetailsLink()" class="btn btn-outline-secondary">Details</router-link>
+			</div>
+
+			<div v-else class="d-flex justify-content-end me-4">
+				<router-link :to="generateWorkoutDetailsLink()" class="btn btn-outline-secondary">Details</router-link>
 			</div>
 		</div>
 	</div>
@@ -44,19 +52,25 @@ export default {
 	},
 
 	methods: {
-       generateExerciseLink(exerciseId) {
-            return `/workouts-exercise-details/default/${exerciseId}`;
-        },
+		generateExerciseDetailsLink(exerciseId, isCustom) {
+			if (isCustom) return `/workouts-exercise-details/custom/${exerciseId}`;
+			return `/workouts-exercise-details/default/${exerciseId}`;
+		},
 
-		generateWorkoutLink(workoutId) {
-			return `/workouts-details/default/${workoutId}`;
+		generateWorkoutDetailsLink() {
+			return `/workouts-details/${this.isCustom ? 'custom' : 'default'}/${this.id}`;
+		},
+
+		generateWorkoutManageLink() {
+			// return `/workouts-manage/${this.isCustom ? 'custom' : 'default'}/${this.id}`;
+			return "/";
 		}
-    },
+	},
 
 	computed: {
-        truncatedDescription() {
-            return truncateStringWithWordBoundary(this.description, 100);
-        },
-    }
+		truncatedDescription() {
+			return truncateStringWithWordBoundary(this.description, 100);
+		},
+	}
 }
 </script>

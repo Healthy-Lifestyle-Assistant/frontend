@@ -7,7 +7,7 @@
 		<h2 class="mt-3 mb-5">Enhance Your Health and Wellbeing</h2>
 
 		<p class="lead">
-			Healthy Lifestyle Assistant is a Ukrainian non-profit startup promoting a healthy lifestyle using digital
+			Healthy Lifestyle Assistant is a startup promoting a healthy lifestyle using digital
 			technologies. Our web application helps people maintain good habits like workouts, nutrition, and mental health
 			activities.
 			<br><br>

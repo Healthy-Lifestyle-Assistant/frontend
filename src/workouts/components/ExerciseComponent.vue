@@ -14,8 +14,13 @@
                 }}</small>&nbsp;</span>
             </div>
 
-            <div class="d-flex justify-content-end mb-2 me-4">
-                <router-link :to="generateLink()" class="btn btn-outline-secondary">Details</router-link>
+            <div v-if="isCustom" class="d-flex justify-content-end mt-3 me-4">
+                <router-link :to="generateLinkManage()" class="btn btn-outline-secondary d-block me-3">Manage</router-link>
+                <router-link :to="generateLinkDetails()" class="btn btn-outline-secondary">Details</router-link>
+            </div>
+
+            <div v-else class="d-flex justify-content-end me-4">
+                <router-link :to="generateLinkDetails()" class="btn btn-outline-secondary">Details</router-link>
             </div>
         </div>
     </div>
@@ -37,9 +42,13 @@ export default {
     },
 
     methods: {
-        generateLink() {
+        generateLinkDetails() {
             return `/workouts-exercise-details/${this.isCustom ? 'custom' : 'default'}/${this.id}`;
-        }
+        },
+
+        generateLinkManage() {
+            return `/workouts-manage-exercise/${this.id}`;
+        },
     },
 
     computed: {

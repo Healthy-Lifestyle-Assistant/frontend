@@ -7,7 +7,6 @@
         <BreadcrumbWorkoutsComponent />
         <AlertComponent :message="message" :messageType="messageType" /> <br>
 
-        <!-- Default Workout Details -->
         <div v-if="workout" class="w-100">
             <WorkoutDetailsComponent :title="workout.title" :description="workout.description"
                 :bodyParts="workout.bodyParts" :isCustom="workout.isCustom" :needsEquipment="workout.needsEquipment"
@@ -29,7 +28,7 @@ export default {
 
     setup() {
         useMeta({
-            title: "Default Workout Details",
+            title: "Workout Details",
             htmlAttrs: {
                 lang: "en"
             }
@@ -45,33 +44,59 @@ export default {
     },
 
     async created() {
-        this.$store.commit("setCurrentUrl", `/workouts-details/default/${this.$route.params.id}`);
+        this.$store.commit("setCurrentUrl", this.$route.path);
 
         const token = await getAndValidateToken();
 
-        if (!token) {
-            this.$store.commit("setLogged", false);
-            this.messageType = "SECONDARY";
-            this.message = "You are unlogged";
-        } else {
-            this.$store.commit("setLogged", true);
+        if (this.$route.path.includes("default")) {
+            if (!token) {
+                this.$store.commit("setLogged", false);
+                this.messageType = "SECONDARY";
+                this.message = "You are unlogged";
+            } else {
+                this.$store.commit("setLogged", true);
+            }
+
+            try {
+                const res = await this.getDefaultWorkout();
+                if (res.status == 200) {
+                    this.workout = res.body;
+                } else {
+                    let messageBuilder = "";
+                    for (const key in res.body) {
+                        messageBuilder += `${key}: ${res.body[key]}. `;
+                    }
+                    this.messageType = "WARNING";
+                    this.message = `An error occured (${messageBuilder}Status ${res.status})`;
+                }
+            } catch (error) {
+                this.messageType = "WARNING";
+                this.message = `An error occurred (${error})`;
+            }
         }
 
-        try {
-            const res = await this.getDefaultWorkout();
-            if (res.status == 200) {
-                this.workout = res.body;
-            } else {
-                let messageBuilder = "";
-                for (const key in res.body) {
-                    messageBuilder += `${key}: ${res.body[key]}. `;
+        if (!token && this.$route.path.includes("custom")) {
+            this.$router.push("/login");
+        }
+
+        if (token && this.$route.path.includes("custom")) {
+            try {
+                const res = await this.getCustomWorkout(token);
+
+                if (res.status == 200) {
+                    this.workout = res.body;
+                } else {
+                    let messageBuilder = "";
+                    for (const key in res.body) {
+                        messageBuilder += `${key}: ${res.body[key]}. `;
+                    }
+                    this.messageType = "WARNING";
+                    this.message = `An error occured (${messageBuilder}Status ${res.status})`;
                 }
+            } catch (error) {
                 this.messageType = "WARNING";
-                this.message = `An error occured (${messageBuilder}Status ${res.status})`;
+                this.message = `An error occurred (${error})`;
             }
-        } catch (error) {
-            this.messageType = "WARNING";
-            this.message = `An error occurred (${error})`;
         }
     },
 
@@ -95,6 +120,25 @@ export default {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
+                }
+            });
+
+            const data = await res.json();
+
+            return {
+                status: res.status,
+                body: data
+            };
+        },
+
+        async getCustomWorkout(token) {
+            let URL = `/api/v1/workouts/${this.$route.params.id}`;
+
+            const res = await fetch(URL, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 }
             });
 

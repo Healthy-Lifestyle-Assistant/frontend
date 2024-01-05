@@ -81,7 +81,7 @@ const routes = [
         component: WorkoutsListPage
     },
     {
-        path: "/workouts-details/default/:id",
+        path: "/workouts-details/:type/:id",
         name: "WorkoutDefaultDetailsPage",
         component: WorkoutDefaultDetailsPage
     },
