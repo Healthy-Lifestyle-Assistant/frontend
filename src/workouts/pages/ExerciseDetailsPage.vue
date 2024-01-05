@@ -48,11 +48,6 @@ export default {
 
         const token = await getAndValidateToken();
 
-        // !token && this.$route.path.contains("default") - request default details and not logged message
-        // token && this.$route.path.contains("default") - request default details
-        // !token && this.$route.path.contains("custom") - redirect to login
-        // token && this.$route.path.contains("custom") - request custom details
-
         if (this.$route.path.includes("default")) {
             if (!token) {
                 this.$store.commit("setLogged", false);

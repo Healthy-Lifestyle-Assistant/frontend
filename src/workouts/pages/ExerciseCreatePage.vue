@@ -10,19 +10,17 @@
             <AlertComponent :message="message" :messageType="messageType" /><br>
         </div>
 
-        <h4 class="mb-4">Create Exercise</h4>
-
-        <AlertComponent :message="message" :messageType="messageType" />
+        <h4 class="mb-4 text-muted">Create Exercise</h4>
 
         <form @submit.prevent="submitForm" style="width: fit-content;" class="mb-5">
             <div class="mb-4">
-                <label for="title" class="form-label">Title<span style="color: red;">*</span></label>
-                <input type="text" class="form-control" id="title" v-model="title" placeholder="My Exercise" required>
+                <label for="title" class="form-label">Title<span class="span-color"> *</span></label>
+                <input type="text" class="form-control" id="title" v-model="title" placeholder="Enter title" required>
             </div>
 
             <div class="mb-4">
                 <label for="description" class="form-label">Description</label>
-                <input type="text" class="form-control" id="description" v-model="description" placeholder="Description">
+                <input type="text" class="form-control" id="description" v-model="description" placeholder="Enter description">
             </div>
 
             <div class="form-check mb-4">
@@ -31,23 +29,23 @@
             </div>
 
             <div v-if="bodyParts" class="mb-5">
-                <label for="bodyParts" class="form-label">Body Parts (Hold Ctrl to select multiple)</label>
-                <select id="bodyParts" v-model="bodyPartIds" class="form-select" multiple aria-label="Select body parts"
+                <label for="bodyParts" class="form-label">Select body parts (hold Ctrl to select multiple)<span class="span-color"> *</span></label>
+                <select id="bodyParts" v-model="bodyPartIds" class="form-select" multiple aria-label="Select body parts" :size="bodyParts.length"
                     required>
                     <option v-for="elt in bodyParts" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
                 </select>
             </div>
 
             <div v-if="httpRefs" class="mb-4">
-                <label for="httpRefs" class="form-label">Media (Hold Ctrl to select multiple)</label>
+                <label for="httpRefs" class="form-label">Select media (hold Ctrl to select multiple)</label>
                 <select id="httpRefs" v-model="httpRefIds" class="form-select" multiple
-                    aria-label="Select media references">
+                    aria-label="Select media references" :size="httpRefs.length">
                     <option v-for="elt in httpRefs" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
                 </select>
             </div>
 
             <div>
-                <span style="color: red;">*</span> Required Fields
+                <span class="span-color">* </span><i>Required fields</i>
             </div>
 
             <button type="submit" class="btn btn-secondary mt-4">Create</button>
