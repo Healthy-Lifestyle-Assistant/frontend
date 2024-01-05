@@ -11,21 +11,21 @@
         </div>
 
         <!-- Update Media -->
-        <h4 v-if="!isDeleted" class="mb-4">Update Media</h4>
+        <h4 v-if="!isDeleted" class="mb-4 text-muted">Manage Media</h4>
 
         <form v-if="!isDeleted" class="mb-5" @submit.prevent="submitForm" style="width: fit-content;">
             <div class="mb-4">
-                <label for="name" class="form-label">{{ this.nameLabel }}</label>
-                <input type="text" class="form-control" id="name" v-model="name" placeholder="New Media">
+                <label for="name" class="form-label">Current title: {{ this.nameLabel }}</label>
+                <input type="text" class="form-control" id="name" v-model="name" placeholder="Enter new title">
             </div>
 
             <div class="mb-4">
-                <label for="description" class="form-label">{{ this.descriptionLabel ? this.descriptionLabel : "Description" }}</label>
-                <input type="text" class="form-control" id="description" v-model="description" placeholder="New Description">
+                <label for="description" class="form-label">Current description: {{ this.descriptionLabel ? this.descriptionLabel : "None" }}</label>
+                <input type="text" class="form-control" id="description" v-model="description" placeholder="Enter new description">
             </div>
 
             <div class="mb-4">
-                <label for="ref" class="form-label">Http Reference</label>
+                <label for="ref" class="form-label">Http reference</label>
                 <input type="text" class="form-control" id="ref" v-model="ref" placeholder="https://new.com">
             </div>
 

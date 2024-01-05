@@ -11,19 +11,19 @@
         </div>
 
         <!-- Update Exercise -->
-        <h4 v-if="!isDeleted" class="mb-4">Update Exercise</h4>
+        <h4 v-if="!isDeleted" class="mb-4 text-muted">Manage Exercise</h4>
 
         <form v-if="!isDeleted" class="mb-5" @submit.prevent="submitForm" style="width: fit-content;">
             <div class="mb-4">
-                <label for="title" class="form-label">{{ this.titleLabel }}</label>
-                <input type="text" class="form-control" id="title" v-model="title" placeholder="New Title">
+                <label for="title" class="form-label">Current title: {{ this.titleLabel }}</label>
+                <input type="text" class="form-control" id="title" v-model="title" placeholder="Enter new title">
             </div>
 
             <div class="mb-4">
-                <label for="description" class="form-label">{{ this.descriptionLabel ? this.descriptionLabel : "Description"
+                <label for="description" class="form-label">Current descirption: {{ this.descriptionLabel ? this.descriptionLabel : "None"
                 }}</label>
                 <input type="text" class="form-control" id="description" v-model="description"
-                    placeholder="New Description">
+                    placeholder="Enter new description">
             </div>
 
             <div class="form-check mb-4">
@@ -33,8 +33,8 @@
             </div>
 
             <div v-if="exerciseBodyParts" class="mb-4">
-                <label for="bodyParts" class="form-label">Body Parts (Hold Ctrl to select multiple)</label>
-                <select id="bodyParts" v-model="bodyPartIds" class="form-select" multiple aria-label="Select Body Parts"
+                <label for="bodyParts" class="form-label">Select body parts (hold Ctrl to select multiple)</label>
+                <select id="bodyParts" v-model="bodyPartIds" class="form-select" multiple aria-label="Select Body Parts" :size="exerciseBodyParts.length"
                     required>
                     <option v-for="bodyPart in exerciseBodyParts" :key="bodyPart.id" :value="bodyPart.id">{{ bodyPart.name
                     }}</option>
@@ -42,8 +42,8 @@
             </div>
 
             <div v-if="exerciseHttpRefs" class="mb-4">
-                <label for="httpRefs" class="form-label">Media (Hold Ctrl to select multiple)</label>
-                <select id="httpRefs" v-model="httpRefIds" class="form-select" multiple aria-label="Select Media" required>
+                <label for="httpRefs" class="form-label">Select media (hold Ctrl to select multiple)</label>
+                <select id="httpRefs" v-model="httpRefIds" class="form-select" multiple aria-label="Select Media" :size="exerciseHttpRefs.length" required>
                     <option v-for="httpRef in exerciseHttpRefs" :key="httpRef.id" :value="httpRef.id">{{ httpRef.name }}
                     </option>
                 </select>

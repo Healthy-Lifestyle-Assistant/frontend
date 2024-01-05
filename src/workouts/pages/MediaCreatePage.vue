@@ -10,26 +10,26 @@
             <AlertComponent :message="message" :messageType="messageType" /><br>
         </div>
 
-        <h4 class="mb-4">Create Media</h4>
+        <h4 class="mb-4 text-muted">Create Media</h4>
 
         <form @submit.prevent="submitForm" style="width: fit-content;">
             <div class="mb-4">
-                <label for="name" class="form-label">Name<span style="color: red;">*</span></label>
-                <input type="text" class="form-control" id="name" v-model="name" placeholder="My Media" required>
+                <label for="name" class="form-label">Name<span class="span-color"> *</span></label>
+                <input type="text" class="form-control" id="name" v-model="name" placeholder="Enter title" required>
             </div>
 
             <div class="mb-4">
                 <label for="description" class="form-label">Description</label>
-                <input type="text" class="form-control" id="description" v-model="description" placeholder="Description">
+                <input type="text" class="form-control" id="description" v-model="description" placeholder="Enter description">
             </div>
 
             <div class="mb-4">
-                <label for="ref" class="form-label">Http Reference<span style="color: red;">*</span></label>
-                <input type="text" class="form-control" id="ref" v-model="ref" placeholder="https://google.com" required>
+                <label for="ref" class="form-label">Http reference<span class="span-color"> *</span></label>
+                <input type="text" class="form-control" id="ref" v-model="ref" placeholder="https://domain.com" required>
             </div>
 
             <div>
-                <span style="color: red;">*</span> Required Fields
+                <span class="span-color">* </span><i>Required fields</i>
             </div>
 
             <button type="submit" class="btn btn-secondary mt-4">Create</button>

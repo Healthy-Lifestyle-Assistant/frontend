@@ -43,6 +43,10 @@
     color: lightcoral;
 }
 
+.select-option-height {
+    height: 30px;
+}
+
 /* Styles for screen size range [0; 800] */
 @media screen and (max-width: 800px) {
     .container-custom {

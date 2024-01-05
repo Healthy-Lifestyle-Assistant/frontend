@@ -10,30 +10,35 @@
             <AlertComponent :message="message" :messageType="messageType" /><br>
         </div>
 
-        <h4 class="mb-4">Create Workout</h4>
+        <h4 class="mb-4 text-muted">Create Workout</h4>
 
         <form @submit.prevent="submitForm" style="width: fit-content;" class="mb-5">
             <div class="mb-4">
-                <label for="title" class="form-label">Title<span style="color: red;">*</span></label>
-                <input type="text" class="form-control" id="title" v-model="title" placeholder="Workout Title" required>
+                <label for="title" class="form-label">Title<span class="span-color"> *</span></label>
+                <input type="text" class="form-control" id="title" v-model="title" placeholder="Enter title" required>
             </div>
 
             <div class="mb-4">
                 <label for="description" class="form-label">Description</label>
-                <input type="text" class="form-control" id="description" v-model="description" placeholder="Workout Description">
+                <input type="text" class="form-control" id="description" v-model="description"
+                    placeholder="Enter description">
             </div>
 
 
             <div v-if="exercises" class="mb-4">
-                <label for="exercises" class="form-label">Exercises<span style="color: red;">*</span></label>
-                <select id="exercises" v-model="exerciseIds" class="form-select" multiple aria-label="Select Exercises"
-                    required>
-                    <option v-for="exercise in exercises" :key="exercise.id" :value="exercise.id">{{ exercise.title }}</option>
+                <label for="exercises" class="form-label">Select exercises (hold Ctrl to select multiple)<span class="span-color"> *</span></label>
+                <select id="exercises" v-model="exerciseIds" class="form-select" multiple aria-label="Select exercises"
+                    :size="exercises.length" required>
+                    <option class="select-option-height" v-for="exercise in exercises" :key="exercise.id"
+                        :value="exercise.id">{{ exercise.title }}
+                        ({{ exercise.bodyParts.map(part =>
+                            part.name.charAt(0).toLowerCase() + part.name.slice(1)).join(', ') }})
+                    </option>
                 </select>
             </div>
 
             <div>
-                <span style="color: red;">*</span> Required Fields
+                <span class="span-color">* </span><i>Required fields</i>
             </div>
 
             <button type="submit" class="btn btn-secondary mt-4">Create</button>
@@ -76,7 +81,7 @@ export default {
         AlertComponent,
         BreadcrumbWorkoutsComponent
     },
-    
+
     async created() {
         this.$store.commit("setCurrentUrl", "/workouts-create-workout");
 
