@@ -13,9 +13,9 @@
         </div>
 
         <!-- Custom Workouts -->
-        <h6 v-if="customWorkouts" class="text-secondary mt-3 mb-4">Custom Workouts</h6>
+        <h6 v-if="customWorkouts && customWorkouts.length > 0" class="text-secondary mt-3 mb-4">Custom Workouts</h6>
 
-        <div v-if="customWorkouts" class="d-flex flex-column w-100">
+        <div v-if="customWorkouts && customWorkouts.length > 0" class="d-flex flex-column w-100">
 
             <div v-for="workout  in  customWorkouts" :key="workout.id">
                 <WorkoutComponent :id="workout.id" :title="workout.title" :description="workout.description"
