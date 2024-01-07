@@ -53,7 +53,7 @@
 			<button type="submit" class="btn btn-secondary mt-4">Update</button>
 		</form>
 
-		<h4 class="mb-2">Delete Profile</h4>
+		<h4 class="mb-2 text-muted">Delete Profile</h4>
 
 		<form @submit.prevent="submitFormDelete" style="min-width: 13rem; width: fit-content" class="mb-5">
 			<button type="submit" class="btn btn-warning mt-4">Delete</button>

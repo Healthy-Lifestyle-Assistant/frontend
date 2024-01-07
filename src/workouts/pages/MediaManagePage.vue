@@ -11,7 +11,7 @@
         </div>
 
         <!-- Update Media -->
-        <h4 v-if="!isDeleted" class="mb-4 text-muted">Manage Media</h4>
+        <h4 v-if="!isDeleted" class="mb-4 text-muted">Update Media</h4>
 
         <form v-if="!isDeleted" class="mb-5" @submit.prevent="submitForm" style="width: fit-content;">
             <div class="mb-4">
@@ -33,7 +33,7 @@
         </form>
 
         <!-- Delete media -->
-        <h4 v-if="!isDeleted" class="mb-2">Delete Media</h4>
+        <h4 v-if="!isDeleted" class="mb-2 text-muted">Delete Media</h4>
 
         <form v-if="!isDeleted" @submit.prevent="submitFormDelete" style="min-width: 13rem; width: fit-content;"
             class="mb-5">

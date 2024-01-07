@@ -12,8 +12,9 @@ import SettingsPage from "../users/pages/SettingsPage.vue";
 
 // Workouts
 import WorkoutsListPage from "../workouts/pages/WorkoutsListPage.vue";
-import WorkoutDefaultDetailsPage from "../workouts/pages/WorkoutDefaultDetailsPage.vue";
+import WorkoutDetailsPage from "../workouts/pages/WorkoutDetailsPage.vue";
 import WorkoutCreateCustomPage from "../workouts/pages/WorkoutCreateCustomPage.vue";
+import WorkoutManagePage from "../workouts/pages/WorkoutManagePage.vue";
 
 // Exercises
 import ExercisesListPage from "../workouts/pages/ExercisesListPage.vue";
@@ -82,13 +83,18 @@ const routes = [
     },
     {
         path: "/workouts-details/:type/:id",
-        name: "WorkoutDefaultDetailsPage",
-        component: WorkoutDefaultDetailsPage
+        name: "WorkoutDetailsPage",
+        component: WorkoutDetailsPage
     },
     {
         path: "/workouts-create-workout",
         name: "WorkoutCreateCustomPage",
         component: WorkoutCreateCustomPage
+    },
+    {
+        path: "/workouts-manage-workout/:id",
+        name: "WorkoutManagePage",
+        component: WorkoutManagePage
     },
 
     // Exercises
