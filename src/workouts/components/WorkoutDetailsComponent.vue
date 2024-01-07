@@ -57,9 +57,7 @@ export default {
 
     methods: {
         generateLink() {
-            // if (this.isCustom) return `/workouts-manage-workout/${this.id}`;
-            // else return "/";
-            return "/workouts-list";
+            return `/workouts-manage-workout/${this.id}`;
         }
     }
 }

@@ -62,8 +62,7 @@ export default {
 		},
 
 		generateWorkoutManageLink() {
-			// return `/workouts-manage/${this.isCustom ? 'custom' : 'default'}/${this.id}`;
-			return "/";
+			return `/workouts-manage-workout/${this.id}`;
 		}
 	},
 
