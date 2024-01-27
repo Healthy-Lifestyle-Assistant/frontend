@@ -20,22 +20,23 @@
             </div>
 
             <div class="mb-4">
-                <label for="description" class="form-label">Current descirption: {{ this.descriptionLabel ? this.descriptionLabel : "None"
+                <label for="description" class="form-label">Current descirption: {{ this.descriptionLabel ?
+                    this.descriptionLabel : "None"
                 }}</label>
-                <input type="text" class="form-control" id="description" v-model="description"
-                    placeholder="Enter new description">
+                <textarea rows="3" class="form-control" id="description" v-model="description"
+                    placeholder="Enter new description"></textarea>
             </div>
 
             <div class="form-check mb-4">
                 <input type="checkbox" value="" class="form-check-input" id="needsEquipment" v-model="needsEquipment"
-                    @change="handleCheckboxChange">
+                    @change="onCheckboxChange">
                 <label for="needsEquipment" class="form-check-label">Needs Equipment</label>
             </div>
 
             <div v-if="exerciseBodyParts" class="mb-4">
                 <label for="bodyParts" class="form-label">Select body parts (hold Ctrl to select multiple)</label>
-                <select id="bodyParts" v-model="bodyPartIds" class="form-select" multiple aria-label="Select Body Parts" :size="exerciseBodyParts.length"
-                    required>
+                <select id="bodyParts" v-model="bodyPartIds" class="form-select" multiple aria-label="Select Body Parts"
+                    :size="exerciseBodyParts.length" required>
                     <option v-for="bodyPart in exerciseBodyParts" :key="bodyPart.id" :value="bodyPart.id">{{ bodyPart.name
                     }}</option>
                 </select>
@@ -43,7 +44,8 @@
 
             <div v-if="exerciseHttpRefs" class="mb-4">
                 <label for="httpRefs" class="form-label">Select media (hold Ctrl to select multiple)</label>
-                <select id="httpRefs" v-model="httpRefIds" class="form-select" multiple aria-label="Select Media" :size="exerciseHttpRefs.length" required>
+                <select id="httpRefs" v-model="httpRefIds" class="form-select" multiple aria-label="Select Media"
+                    :size="exerciseHttpRefs.length" required>
                     <option v-for="httpRef in exerciseHttpRefs" :key="httpRef.id" :value="httpRef.id">{{ httpRef.name }}
                     </option>
                 </select>
@@ -112,18 +114,19 @@ export default {
 
     async created() {
         this.$store.commit("setCurrentUrl", `/workouts-manage-exercise/${this.$route.params.id}`);
-
         const token = await getAndValidateToken();
-
         if (!token) {
             this.$store.commit("setLogged", false);
             this.$router.push("/login");
         } else {
             this.$store.commit("setLogged", true);
             await this.getExerciseDetails(this.$route.params.id);
-            await this.getAllBodyParts();
-            await this.getAllUserHttpRefs();
-            await this.getDefaultHttpRefs();
+
+            let responseBodyParts = await this.getBodyParts();
+            this.allBodyParts = responseBodyParts.body;
+
+            let responseHttpRefs = await this.getHttpRefs();
+            this.allHttpRefs = responseHttpRefs.body.content;
 
             this.exerciseBodyParts = this.exerciseBodyParts.concat(
                 this.allBodyParts.filter(item => !this.exerciseBodyParts.some(elt => elt.id === item.id))
@@ -224,7 +227,7 @@ export default {
             this.httpRefIds = this.exerciseHttpRefs.map(httpRef => httpRef.id);
         },
 
-        async getAllBodyParts() {
+        async getBodyParts() {
             let URL = "/api/v1/workouts/bodyParts";
 
             const res = await fetch(URL, {
@@ -235,14 +238,15 @@ export default {
             });
 
             const data = await res.json();
-
-            this.allBodyParts = this.allBodyParts.concat(data);
+            return {
+                status: res.status,
+                body: data
+            };
         },
 
-        async getAllUserHttpRefs() {
-            let URL = "/api/v1/workouts/httpRefs";
+        async getHttpRefs() {
+            let URL = "/api/v1/workouts/httpRefs?pageSize=1000";
             let token = getToken();
-
             const res = await fetch(URL, {
                 method: "GET",
                 headers: {
@@ -250,25 +254,11 @@ export default {
                     "Authorization": `Bearer ${token}`
                 }
             });
-
             const data = await res.json();
-
-            this.allHttpRefs = this.allHttpRefs.concat(data);
-        },
-
-        async getDefaultHttpRefs() {
-            let URL = "/api/v1/workouts/httpRefs/default";
-
-            const res = await fetch(URL, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-
-            const data = await res.json();
-
-            this.allHttpRefs = this.allHttpRefs.concat(data);
+            return {
+                status: res.status,
+                body: data
+            };
         },
 
         async updateExercise(requestBody) {
@@ -309,7 +299,7 @@ export default {
             };
         },
 
-        handleCheckboxChange() {
+        onCheckboxChange() {
             this.needsEquipmentChanged = !this.needsEquipmentChanged;
         }
     }

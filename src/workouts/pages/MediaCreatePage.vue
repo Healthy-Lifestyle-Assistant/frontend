@@ -20,7 +20,8 @@
 
             <div class="mb-4">
                 <label for="description" class="form-label">Description</label>
-                <input type="text" class="form-control" id="description" v-model="description" placeholder="Enter description">
+                <textarea rows="3" class="form-control" id="description" v-model="description"
+                    placeholder="Enter description (optional)"></textarea>
             </div>
 
             <div class="mb-4">

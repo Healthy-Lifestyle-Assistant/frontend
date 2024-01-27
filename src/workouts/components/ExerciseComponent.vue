@@ -1,7 +1,7 @@
 <template>
-    <div class="card mb-5">
+    <div class="card mb-3 me-3 exercise-card-width">
         <div class="card-body">
-            <h5 class="card-title">{{ title }}</h5>
+            <h5 class="card-title">{{ truncatedTitle }}</h5>
 
             <h6 class="card-subtitle mb-2 text-body-secondary">{{ isCustom ? "Custom" : "Default" }}, {{ needsEquipment ?
                 "With Equipment" : "Without Equipment" }}</h6>
@@ -52,9 +52,13 @@ export default {
     },
 
     computed: {
+        truncatedTitle() {
+            return truncateStringWithWordBoundary(this.title, 23);
+        },
+
         truncatedDescription() {
             return truncateStringWithWordBoundary(this.description, 100);
-        },
+        }
     }
 }
 </script>

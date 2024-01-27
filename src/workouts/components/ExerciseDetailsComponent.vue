@@ -8,7 +8,7 @@
                 {{ needsEquipment ? "With Equipment" : "Without Equipment" }}
             </h6>
 
-            <p v-if="description" class="card-text" style="font-style: italic; text-align: justify; word-wrap: break-word;">
+            <p v-if="description" class="card-text description-width" style="font-style: italic; text-align: justify; word-wrap: break-word;">
                 {{ description }}
             </p>
 
@@ -22,13 +22,10 @@
         <ButtonComponent v-if="isCustom" :link="generateLink()" title="Manage" class="mt-4" />
 
         <h5 v-if="httpRefs && httpRefs.length > 0" class="text-secondary mb-4 mt-5">Media</h5>
-
-        <div v-if="httpRefs && httpRefs.length > 0" class="d-flex flex-column">
-
+        <div v-if="httpRefs && httpRefs.length > 0" class="d-flex flex-row flex-wrap">
             <div v-for="elt in httpRefs" :key="elt.id">
                 <MediaComponent :id="elt.id" :name="elt.name" :description="elt.description" :isCustom="elt.isCustom" :httpRef="elt.ref" />
             </div>
-
         </div>
 
 </div>

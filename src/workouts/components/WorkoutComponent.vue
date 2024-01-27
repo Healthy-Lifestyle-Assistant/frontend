@@ -1,7 +1,7 @@
 <template>
-	<div class="card mb-5">
+	<div class="card mb-3 me-3 workout-card-width">
 		<div class="card-body">
-			<h5 class="card-title">{{ title }}</h5>
+			<h5 class="card-title">{{ truncatedTitle }}</h5>
 
 			<h6 class="card-subtitle mb-2 text-body-secondary">{{ isCustom ? "Custom" : "Default" }}, {{ needsEquipment ?
 				"With Equipment" : "Without Equipment" }}</h6>
@@ -14,13 +14,13 @@
 				}}</small>&nbsp;</span>
 			</div>
 
-			<h6 class="card-subtitle mb-2 mt-4 text-body-secondary">Exercises</h6>
+			<!-- <h6 class="card-subtitle mb-2 mt-4 text-body-secondary">Exercises</h6>
 			<div v-if="exercises" class="card-text mb-2">
 				<span v-for="exercise in exercises" :key="exercise.id">
 					<router-link class="media-refs d-inline-block mt-2 mb-2"
 						:to="generateExerciseDetailsLink(exercise.id, exercise.isCustom)">{{ exercise.title }}</router-link>
 					&nbsp;</span>
-			</div>
+			</div> -->
 
 			<div v-if="isCustom" class="d-flex justify-content-end mt-3 me-4">
 				<router-link :to="generateWorkoutManageLink()"
@@ -67,9 +67,13 @@ export default {
 	},
 
 	computed: {
+		truncatedTitle() {
+            return truncateStringWithWordBoundary(this.title, 23);
+        },
+
 		truncatedDescription() {
 			return truncateStringWithWordBoundary(this.description, 100);
-		},
+		}
 	}
 }
 </script>

@@ -20,7 +20,9 @@
 
             <div class="mb-4">
                 <label for="description" class="form-label">Description</label>
-                <input type="text" class="form-control" id="description" v-model="description" placeholder="Enter description">
+                <textarea rows="3" class="form-control" id="description" v-model="description"
+                    placeholder="Enter description (optional)">
+                </textarea>
             </div>
 
             <div class="form-check mb-4">
@@ -29,17 +31,18 @@
             </div>
 
             <div v-if="bodyParts" class="mb-5">
-                <label for="bodyParts" class="form-label">Select body parts (hold Ctrl to select multiple)<span class="span-color"> *</span></label>
-                <select id="bodyParts" v-model="bodyPartIds" class="form-select" multiple aria-label="Select body parts" :size="bodyParts.length"
-                    required>
+                <label for="bodyParts" class="form-label">Select body parts (hold Ctrl to select multiple)<span
+                        class="span-color"> *</span></label>
+                <select id="bodyParts" v-model="bodyPartIds" class="form-select" multiple aria-label="Select body parts"
+                    :size="bodyParts.length" required>
                     <option v-for="elt in bodyParts" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
                 </select>
             </div>
 
             <div v-if="httpRefs" class="mb-4">
                 <label for="httpRefs" class="form-label">Select media (hold Ctrl to select multiple)</label>
-                <select id="httpRefs" v-model="httpRefIds" class="form-select" multiple
-                    aria-label="Select media references" :size="httpRefs.length">
+                <select id="httpRefs" v-model="httpRefIds" class="form-select" multiple aria-label="Select media references"
+                    :size="httpRefs.length">
                     <option v-for="elt in httpRefs" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
                 </select>
             </div>
@@ -91,7 +94,7 @@ export default {
         AlertComponent,
         BreadcrumbWorkoutsComponent
     },
-    
+
     async created() {
         this.$store.commit("setCurrentUrl", "/workouts-create-exercise");
 
@@ -107,7 +110,7 @@ export default {
             this.bodyParts = bodyPartsResponse.body;
 
             let httpRefsResponse = await this.getHttpRefs();
-            this.httpRefs = httpRefsResponse.body;
+            this.httpRefs = httpRefsResponse.body.content;
         }
     },
 
@@ -157,7 +160,6 @@ export default {
             });
 
             const data = await res.json();
-
             return {
                 status: res.status,
                 body: data
@@ -173,9 +175,7 @@ export default {
                     "Content-Type": "application/json"
                 }
             });
-
             const data = await res.json();
-
             return {
                 status: res.status,
                 body: data
@@ -183,7 +183,7 @@ export default {
         },
 
         async getHttpRefs() {
-            let URL = "/api/v1/workouts/httpRefs/default";
+            let URL = "/api/v1/workouts/httpRefs/default?pageSize=1000";
 
             const res = await fetch(URL, {
                 method: "GET",
@@ -191,9 +191,7 @@ export default {
                     "Content-Type": "application/json"
                 }
             });
-
             const data = await res.json();
-
             return {
                 status: res.status,
                 body: data

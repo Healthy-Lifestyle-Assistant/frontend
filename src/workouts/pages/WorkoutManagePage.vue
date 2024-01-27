@@ -22,8 +22,8 @@
             <div class="mb-4">
                 <label for="description" class="form-label">Current descirption: {{ this.descriptionLabel ? this.descriptionLabel : "None"
                 }}</label>
-                <input type="text" class="form-control" id="description" v-model="description"
-                    placeholder="Enter new description">
+                <textarea rows="3" class="form-control" id="description" v-model="description"
+                    placeholder="Enter new description"></textarea>
             </div>
 
             <div v-if="allExercises && allExercises.length > 0" class="mb-4">
@@ -94,32 +94,29 @@ export default {
 
     async created() {
         this.$store.commit("setCurrentUrl", `/workouts-manage-workout/${this.$route.params.id}`);
-
         const token = await getAndValidateToken();
-
         if (!token) {
             this.$store.commit("setLogged", false);
             this.$router.push("/login");
         } else {
             this.$store.commit("setLogged", true);
-
             try {
-                let res = await this.getWorkoutDetails(this.$route.params.id, token);
-                await this.getAllDefaultExercises();
-                await this.getAllCustomExercises(token);
+                let responseWorkoutDetails = await this.getWorkoutDetails(this.$route.params.id, token);
+                let responseExercises = await this.getAllExercises(token);
+                this.allExercises = responseExercises.body.content;
 
-                if (res.status === 200) {
-                    this.titleLabel = res.body.title;
-                    this.descriptionLabel = res.body.description;
-                    this.exercises = res.body.exercises;
+                if (responseWorkoutDetails.status === 200) {
+                    this.titleLabel = responseWorkoutDetails.body.title;
+                    this.descriptionLabel = responseWorkoutDetails.body.description;
+                    this.exercises = responseWorkoutDetails.body.exercises;
                     this.exercisesIds = this.exercises.map(exercise => exercise.id);
                 }
-                else if (res.status === 401) {
+                else if (responseWorkoutDetails.status === 401) {
                     this.$router.push("/login");
                 }
                 else {
                     this.messageType = "WARNING";
-                    this.message = `Error: ${res.body.message} (${res.status})`;
+                    this.message = `Error: ${responseWorkoutDetails.body.message} (${responseWorkoutDetails.status})`;
                 }
             } catch (error) {
                 this.messageType = "WARNING";
@@ -193,31 +190,15 @@ export default {
                     "Authorization": `Bearer ${token}`
                 }
             });
-
             const data = await res.json();
-
             return {
                 status: res.status,
                 body: data
             };
         },
 
-        async getAllDefaultExercises() {
-            let URL = "/api/v1/workouts/exercises/default";
-
-            const res = await fetch(URL, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-
-            const data = await res.json();
-            this.allExercises = this.allExercises.concat(data);
-        },
-
-        async getAllCustomExercises(token) {
-            let URL = "/api/v1/workouts/exercises";
+        async getAllExercises(token) {
+            let URL = "/api/v1/workouts/exercises?pageSize=1000";
 
             const res = await fetch(URL, {
                 method: "GET",
@@ -226,9 +207,11 @@ export default {
                     "Authorization": `Bearer ${token}`
                 }
             });
-
             const data = await res.json();
-            this.allExercises = this.allExercises.concat(data);
+            return {
+                status: res.status,
+                body: data
+            };
         },
 
         async updateWorkout(requestBody, token) {
@@ -244,7 +227,6 @@ export default {
             });
 
             const data = await res.json();
-
             return {
                 status: res.status,
                 body: data
@@ -261,7 +243,6 @@ export default {
                     "Authorization": `Bearer ${token}`
                 }
             });
-
             return {
                 status: res.status
             };

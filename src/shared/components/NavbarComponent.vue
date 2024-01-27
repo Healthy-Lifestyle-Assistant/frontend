@@ -39,26 +39,50 @@
                         </ul>
                     </li> -->
 
-                    <li class="nav-item me-3">
-                        <router-link to="/workouts-list" :class="{ 'nav-link': true, 'active': isWorkouts }">Workouts</router-link>
-                    </li>
+                    <!-- <li class="nav-item me-3">
+                        <router-link to="/workouts-list"
+                        :class="{ 'nav-link': true, 'active': isWorkouts }">Workouts</router-link>
+                    </li> -->
 
                     <li class="nav-item me-3">
-                        <router-link to="/nutrition" :class="{ 'nav-link': true, 'active': isNutrition }">Nutrition</router-link>
+                        <a href="/workouts-list"
+                        :class="{ 'nav-link': true, 'active': isWorkouts }">Workouts</a>
                     </li>
 
+                    <!-- <li class="nav-item me-3">
+                        <router-link to="/nutrition" 
+                        :class="{ 'nav-link': true, 'active': isNutrition }">Nutrition</router-link>
+                    </li> -->
                     <li class="nav-item me-3">
-                        <router-link to="/meditations" :class="{ 'nav-link': true, 'active': isMeditations }">Meditations</router-link>
+                        <a href="/nutrition" 
+                        :class="{ 'nav-link': true, 'active': isNutrition }">Nutrition</a>
                     </li>
 
+                    <!-- <li class="nav-item me-3">
+                        <router-link to="/meditations" 
+                        :class="{ 'nav-link': true, 'active': isMeditations }">Meditations</router-link>
+                    </li> -->
                     <li class="nav-item me-3">
+                        <a href="/meditations" 
+                        :class="{ 'nav-link': true, 'active': isMeditations }">Meditations</a>
+                    </li>
+
+                    <!-- <li class="nav-item me-3">
                         <router-link to="/calendar"
-                            :class="{ 'nav-link': true, 'active': isCalendar }">Calendar</router-link>
+                        :class="{ 'nav-link': true, 'active': isCalendar }">Calendar</router-link>
+                    </li> -->
+                    <li class="nav-item me-3">
+                        <a href="/calendar"
+                        :class="{ 'nav-link': true, 'active': isCalendar }">Calendar</a>
                     </li>
 
-                    <li class="nav-item me-3">
+                    <!-- <li class="nav-item me-3">
                         <router-link to="/stats"
-                            :class="{ 'nav-link': true, 'active': isStats }">Stats</router-link>
+                        :class="{ 'nav-link': true, 'active': isStats }">Stats</router-link>
+                    </li> -->
+                    <li class="nav-item me-3">
+                        <a href="/stats"
+                        :class="{ 'nav-link': true, 'active': isStats }">Stats</a>
                     </li>
                 </ul>
 

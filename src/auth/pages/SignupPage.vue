@@ -54,7 +54,7 @@
                 <span class="span-color">*</span> <i>Required fields</i>
             </div>
 
-            <button type="submit" class="btn btn-secondary mt-4">Sign Up</button>
+            <button id="signupButton" type="submit" class="btn btn-secondary mt-4">Sign Up</button>
             <br><br>
         </form>
     </div>
@@ -69,7 +69,7 @@ export default {
 
     setup() {
         useMeta({
-            title: "Healthy - Signup",
+            title: "Signup",
             htmlAttrs: {
                 lang: "en"
             }
@@ -118,15 +118,18 @@ export default {
                 const res = await this.signupApi(signupRequestDto);
 
                 if (res.status === 201) {
-                    this.messageType = "SUCCESS";
-                    this.message = "User account has been created successfully! Now you can login to your account.";
+                    this.$router.push("/login");
+                    this.$store.commit("setSharedMessageType", "SUCCESS");
+                    this.$store.commit("setSharedMessage", "Signup successful! Please log in.");
+                    // this.messageType = "SUCCESS";
+                    // this.message = "Signup successful! Please log in.";
                 } else {
                     let messageBuilder = "";
 					for (const key in res.body) {
 						messageBuilder += `${key}: ${res.body[key]}. `;
 					}
 					this.messageType = "WARNING";
-					this.message = `${messageBuilder}(${res.status})`;
+					this.message = `${messageBuilder} - ${res.status}`;
                 }
             } catch (error) {
                 this.messageType = "WARNING";
