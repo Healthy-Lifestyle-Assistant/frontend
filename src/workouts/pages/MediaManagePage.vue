@@ -20,8 +20,10 @@
             </div>
 
             <div class="mb-4">
-                <label for="description" class="form-label">Current description: {{ this.descriptionLabel ? this.descriptionLabel : "None" }}</label>
-                <input type="text" class="form-control" id="description" v-model="description" placeholder="Enter new description">
+                <label for="description" class="form-label">Current description: {{ this.descriptionLabel ?
+                    this.descriptionLabel : "None" }}</label>
+                <textarea rows="3" class="form-control" id="description" v-model="description"
+                    placeholder="Enter new description"></textarea>
             </div>
 
             <div class="mb-4">

@@ -7,7 +7,7 @@
             {{ needsEquipment ? "With Equipment" : "Without Equipment" }}
         </h6>
 
-        <p v-if="description" class="card-text" style="font-style: italic; text-align: justify; word-wrap: break-word;">
+        <p v-if="description" class="card-text description-width" style="font-style: italic; text-align: justify; word-wrap: break-word;">
             {{ description }}
         </p>
 
@@ -20,14 +20,11 @@
         <ButtonComponent v-if="isCustom" :link="generateLink()" title="Manage" class="mt-4" />
 
         <h5 v-if="exercises" class="text-secondary mb-4 mt-5">Exercises</h5>
-
-        <div v-if="exercises" class="d-flex flex-column">
-
+        <div v-if="exercises" class="d-flex flex-row flex-wrap">
             <div v-for="elt in exercises" :key="elt.id">
                 <ExerciseComponent :id="elt.id" :title="elt.title" :description="elt.description" :bodyParts="elt.bodyParts"
                     :isCustom="elt.isCustom" :needsEquipment="elt.needsEquipment" />
             </div>
-
         </div>
 
     </div>

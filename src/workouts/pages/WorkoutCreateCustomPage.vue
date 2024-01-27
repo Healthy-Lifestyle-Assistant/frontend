@@ -20,13 +20,13 @@
 
             <div class="mb-4">
                 <label for="description" class="form-label">Description</label>
-                <input type="text" class="form-control" id="description" v-model="description"
-                    placeholder="Enter description">
+                <textarea rows="3" class="form-control" id="description" v-model="description"
+                    placeholder="Enter description (optional)"></textarea>
             </div>
 
-
             <div v-if="exercises" class="mb-4">
-                <label for="exercises" class="form-label">Select exercises (hold Ctrl to select multiple)<span class="span-color"> *</span></label>
+                <label for="exercises" class="form-label">Select exercises (hold Ctrl to select multiple)<span
+                        class="span-color"> *</span></label>
                 <select id="exercises" v-model="exerciseIds" class="form-select" multiple aria-label="Select exercises"
                     :size="exercises.length" required>
                     <option class="select-option-height" v-for="exercise in exercises" :key="exercise.id"
@@ -84,20 +84,14 @@ export default {
 
     async created() {
         this.$store.commit("setCurrentUrl", "/workouts-create-workout");
-
         const token = await getAndValidateToken();
-
         if (!token) {
             this.$store.commit("setLogged", false);
             this.$router.push("/login");
         } else {
             this.$store.commit("setLogged", true);
-
-            let defaultExercisesResponse = await this.getDefaultExercises();
-            this.exercises = defaultExercisesResponse.body;
-
-            let customExercisesResponse = await this.getCustomExercises(token);
-            this.exercises = this.exercises.concat(customExercisesResponse.body);
+            let response = await this.getExercises(token);
+            this.exercises = response.body.content;
         }
     },
 
@@ -111,7 +105,6 @@ export default {
 
             try {
                 const res = await this.createWorkout(requestDto);
-
                 if (res.status === 201) {
                     this.messageType = "SUCCESS";
                     this.message = "Workout has been created successfully";
@@ -123,7 +116,6 @@ export default {
                 this.messageType = "WARNING";
                 this.message = `An error occurred (${error})`;
             }
-
             this.title = null;
             this.description = null;
             this.exerciseIds = [];
@@ -143,33 +135,14 @@ export default {
             });
 
             const data = await res.json();
-
             return {
                 status: res.status,
                 body: data
             };
         },
 
-        async getDefaultExercises() {
-            let URL = "/api/v1/workouts/exercises/default";
-
-            const res = await fetch(URL, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-
-            const data = await res.json();
-
-            return {
-                status: res.status,
-                body: data
-            };
-        },
-
-        async getCustomExercises(token) {
-            let URL = "/api/v1/workouts/exercises";
+        async getExercises(token) {
+            let URL = "/api/v1/workouts/exercises?pageSize=1000";
 
             const res = await fetch(URL, {
                 method: "GET",
@@ -178,9 +151,7 @@ export default {
                     "Authorization": `Bearer ${token}`
                 }
             });
-
             const data = await res.json();
-
             return {
                 status: res.status,
                 body: data

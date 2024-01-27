@@ -1,6 +1,6 @@
 <template>
 	<NavbarComponent />
-	<div class="container container-custom">
+	<div class="container global-margins container-custom">
 		<router-view></router-view>
 	</div>
 </template>

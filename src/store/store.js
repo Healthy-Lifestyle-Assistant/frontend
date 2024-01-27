@@ -5,7 +5,9 @@ const store = createStore({
 		return {
 			isLogged: false,
 			currentUrl: "",
-			previousUrl: ""
+			previousUrl: "",
+			sharedMessage: "",
+			sharedMessageType: ""
 		}
 	},
 
@@ -13,9 +15,18 @@ const store = createStore({
 		setLogged(state, value) {
 			state.isLogged = value;
 		},
+
 		setCurrentUrl(state, value) {
 			state.previousUrl = state.currentUrl;
 			state.currentUrl = value;
+		},
+
+		setSharedMessage(state, value) {
+			state.sharedMessage = value;
+		},
+
+		setSharedMessageType(state, value) {
+			state.sharedMessageType = value;
 		}
 	}
 });

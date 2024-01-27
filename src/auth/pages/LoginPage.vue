@@ -5,23 +5,28 @@
 
     <div class="d-flex flex-column align-items-center">
         <h4 class="text-muted mb-4">Login</h4>
-        
+
         <AlertComponent :message="message" :messageType="messageType" />
+        <AlertComponent id="sharedMessage" v-if="$store.state.sharedMessage !== ''" :message="$store.state.sharedMessage"
+            :messageType="$store.state.sharedMessageType" />
 
         <form @submit.prevent="submitForm" style="width: fit-content;">
             <div class="mb-4">
                 <label for="usernameOrEmail" class="form-label">Username or email</label>
-                <input type="text" class="form-control" id="usernameOrEmail" v-model="usernameOrEmail" placeholder="Enter username/email" required>
+                <input type="text" class="form-control" id="usernameOrEmail" v-model="usernameOrEmail"
+                    placeholder="Enter username/email" required>
             </div>
 
             <div class="mb-4">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" v-model="password" placeholder="Enter password" required>
+                <input type="password" class="form-control" id="password" v-model="password" placeholder="Enter password"
+                    required>
             </div>
 
             <div class="mb-4">
                 <label for="confirmPassword" class="form-label">Confirm password</label>
-                <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" placeholder="Confirm password" required>
+                <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword"
+                    placeholder="Confirm password" required>
             </div>
 
             <button type="submit" class="btn btn-secondary mt-4">Login</button>
@@ -38,7 +43,7 @@ export default {
 
     setup() {
         useMeta({
-            title: "Healthy - Login",
+            title: "Login",
             htmlAttrs: {
                 lang: "en"
             }
@@ -65,6 +70,11 @@ export default {
 
     methods: {
         async submitForm() {
+            if (this.$store.state.sharedMessage !== "") {
+                this.$store.commit("setSharedMessage", "");
+                this.$store.commit("setSharedMessageType", "");
+            }
+
             const loginRequestDto = {
                 usernameOrEmail: this.usernameOrEmail,
                 password: this.password,
@@ -82,17 +92,17 @@ export default {
 
                     if (this.$store.state.previousUrl === null || this.$store.state.previousUrl === "" ||
                         this.$store.state.previousUrl === "/login") {
-                        this.$router.push("/workouts");
+                        this.$router.push("/workouts-list");
                     } else {
                         this.$router.push(this.$store.state.previousUrl);
                     }
                 } else {
                     let messageBuilder = "";
-					for (const key in res.body) {
-						messageBuilder += `${key}: ${res.body[key]}. `;
-					}
-					this.messageType = "WARNING";
-					this.message = `${messageBuilder}(${res.status})`;
+                    for (const key in res.body) {
+                        messageBuilder += `${key}: ${res.body[key]}. `;
+                    }
+                    this.messageType = "WARNING";
+                    this.message = `${messageBuilder}(${res.status})`;
                 }
             } catch (error) {
                 this.messageType = "WARNING";
