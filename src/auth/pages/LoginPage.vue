@@ -10,7 +10,7 @@
         <AlertComponent id="sharedMessage" v-if="$store.state.sharedMessage !== ''" :message="$store.state.sharedMessage"
             :messageType="$store.state.sharedMessageType" />
 
-        <form @submit.prevent="submitForm" style="width: fit-content;">
+        <form @submit.prevent="onSubmitForm" style="width: fit-content;">
             <div class="mb-4">
                 <label for="usernameOrEmail" class="form-label">Username or email</label>
                 <input type="text" class="form-control" id="usernameOrEmail" v-model="usernameOrEmail"
@@ -23,12 +23,6 @@
                     required>
             </div>
 
-            <div class="mb-4">
-                <label for="confirmPassword" class="form-label">Confirm password</label>
-                <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword"
-                    placeholder="Confirm password" required>
-            </div>
-
             <button type="submit" class="btn btn-secondary mt-4">Login</button>
         </form>
     </div>
@@ -36,6 +30,8 @@
   
 <script>
 import { useMeta } from "vue-meta";
+import { LOGIN } from "../../shared/URL.js";
+import { WARNING, SUCCESS, LOGIN_SUCCESSFULL } from "../../shared/MESSAGE.js";
 import AlertComponent from "../../shared/components/AlertComponent.vue";
 
 export default {
@@ -54,7 +50,6 @@ export default {
         return {
             usernameOrEmail: "",
             password: "",
-            confirmPassword: "",
             message: "",
             messageType: ""
         };
@@ -69,7 +64,7 @@ export default {
     },
 
     methods: {
-        async submitForm() {
+        async onSubmitForm() {
             if (this.$store.state.sharedMessage !== "") {
                 this.$store.commit("setSharedMessage", "");
                 this.$store.commit("setSharedMessageType", "");
@@ -77,21 +72,20 @@ export default {
 
             const loginRequestDto = {
                 usernameOrEmail: this.usernameOrEmail,
-                password: this.password,
-                confirmPassword: this.confirmPassword
+                password: this.password
             };
 
             try {
-                const res = await this.loginApi(loginRequestDto);
+                const res = await this.login(loginRequestDto);
 
                 if (res.status === 200) {
                     localStorage.setItem("token", JSON.stringify(res.body.token).slice(1, -1));
                     this.$store.commit('setLogged', true);
-                    this.messageType = "SUCCESS";
-                    this.message = "Login successful";
+                    this.messageType = SUCCESS;
+                    this.message = LOGIN_SUCCESSFULL;
 
                     if (this.$store.state.previousUrl === null || this.$store.state.previousUrl === "" ||
-                        this.$store.state.previousUrl === "/login") {
+                        this.$store.state.previousUrl === "/login" || this.$store.state.previousUrl === "/signup") {
                         this.$router.push("/workouts-list");
                     } else {
                         this.$router.push(this.$store.state.previousUrl);
@@ -101,11 +95,11 @@ export default {
                     for (const key in res.body) {
                         messageBuilder += `${key}: ${res.body[key]}. `;
                     }
-                    this.messageType = "WARNING";
-                    this.message = `${messageBuilder}(${res.status})`;
+                    this.messageType = WARNING;
+                    this.message = messageBuilder;
                 }
             } catch (error) {
-                this.messageType = "WARNING";
+                this.messageType = WARNING;
                 this.message = `Error: ${error}`;
             }
 
@@ -114,17 +108,15 @@ export default {
             this.confirmPassword = null;
         },
 
-        async loginApi(requestBody) {
-            const res = await fetch("/api/v1/users/auth/login", {
+        async login(requestBody) {
+            const res = await fetch(LOGIN, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(requestBody)
             });
-
             const data = await res.json();
-
             return {
                 status: res.status,
                 body: data

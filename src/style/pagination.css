@@ -1,0 +1,19 @@
+.pagination>li>a {
+    background-color: white;
+    color: grey;
+}
+
+.pagination>li>a:focus,
+.pagination>li>a:hover,
+.pagination>li>span:focus,
+.pagination>li>span:hover {
+    color: grey;
+    background-color: #eee;
+    border-color: grey;
+    box-shadow: none;
+}
+
+.active>.page-link {
+    background-color: grey;
+    border-color: grey;
+}

@@ -12,7 +12,7 @@
 
         <h4 class="mb-4 text-muted">Create Exercise</h4>
 
-        <form @submit.prevent="submitForm" style="width: fit-content;" class="mb-5">
+        <form @submit.prevent="onSubmitForm" class="mb-5 form-width">
             <div class="mb-4">
                 <label for="title" class="form-label">Title<span class="span-color"> *</span></label>
                 <input type="text" class="form-control" id="title" v-model="title" placeholder="Enter title" required>
@@ -30,21 +30,22 @@
                 <label for="needsEquipment" class="form-check-label">Needs Equipment</label>
             </div>
 
-            <div v-if="bodyParts" class="mb-5">
-                <label for="bodyParts" class="form-label">Select body parts (hold Ctrl to select multiple)<span
-                        class="span-color"> *</span></label>
-                <select id="bodyParts" v-model="bodyPartIds" class="form-select" multiple aria-label="Select body parts"
-                    :size="bodyParts.length" required>
-                    <option v-for="elt in bodyParts" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
-                </select>
+            <div class="mb-2">Body parts<span class="span-color"> *</span></div>
+            <div v-if="bodyParts && bodyParts.length > 0" class="d-flex flex-row flex-wrap mb-4">
+                <div v-for="bodyPart in bodyParts" :key="bodyPart.id" class="me-2">
+                    <input type="checkbox" value="" class="form-check-input" :id="bodyPart.name"
+                        @click="onClickBodyPartCheckbox(bodyPart.id)" :checked="bodyPartsStates[bodyPart.id]">
+                    <label :for="bodyPart.name" class="form-check-label">{{ bodyPart.name }}</label>
+                </div>
             </div>
 
-            <div v-if="httpRefs" class="mb-4">
-                <label for="httpRefs" class="form-label">Select media (hold Ctrl to select multiple)</label>
-                <select id="httpRefs" v-model="httpRefIds" class="form-select" multiple aria-label="Select media references"
-                    :size="httpRefs.length">
-                    <option v-for="elt in httpRefs" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
-                </select>
+            <div class="mb-2">Media references (optional)</div>
+            <div v-if="httpRefs && httpRefs.length > 0" class="d-flex flex-row flex-wrap mb-4">
+                <div v-for="httpRef in httpRefs" :key="httpRef.id" class="me-4 mb-2">
+                    <input type="checkbox" value="" class="form-check-input" :id="httpRef.name"
+                        @click="onClickHttpRefCheckbox(httpRef.id)" :checked="httpRefsStates[httpRef.id]">
+                    <label :for="httpRef.name" class="form-check-label">{{ httpRef.name }}</label>
+                </div>
             </div>
 
             <div>
@@ -59,8 +60,10 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getToken } from "../../shared/js/common.js";
-import { getAndValidateToken } from "../../shared/js/common.js";
+import { getToken } from "../../shared/js/auth.js";
+import { getAndValidateToken } from "../../shared/js/auth.js";
+import { SUCCESS, WARNING, EXERCISE_CREATED_SUCCESSFULLY } from "../../shared/MESSAGE.js";
+import { EXERCISES, BODY_PARTS, HTTP_REFS, PAGE_SIZE } from "../../shared/URL.js";
 import AlertComponent from "../../shared/components/AlertComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
 
@@ -86,7 +89,9 @@ export default {
             message: "",
             messageType: "",
             bodyParts: [],
-            httpRefs: []
+            bodyPartsStates: {},
+            httpRefs: [],
+            httpRefsStates: {}
         };
     },
 
@@ -97,9 +102,7 @@ export default {
 
     async created() {
         this.$store.commit("setCurrentUrl", "/workouts-create-exercise");
-
         const token = await getAndValidateToken();
-
         if (!token) {
             this.$store.commit("setLogged", false);
             this.$router.push("/login");
@@ -115,7 +118,7 @@ export default {
     },
 
     methods: {
-        async submitForm() {
+        async onSubmitForm() {
             const requestDto = {
                 title: this.title,
                 description: this.description,
@@ -124,33 +127,57 @@ export default {
                 httpRefs: this.httpRefIds
             };
 
-            try {
+            if (this.bodyPartIds === null || this.bodyPartIds.length === 0) {
+                alert("Exercise should be associated with at least one body part.")
+            } else {
                 const res = await this.createExercise(requestDto);
-
                 if (res.status === 201) {
-                    this.messageType = "SUCCESS";
-                    this.message = "Exercise has been created successfully";
+                    this.messageType = SUCCESS;
+                    this.message = EXERCISE_CREATED_SUCCESSFULLY;
                 } else {
-                    this.messageType = "WARNING";
-                    this.message = `An error occured (${res.body.message} ${res.status})`;
+                    let messageBuilder = "";
+                    for (const key in res.body) {
+                        messageBuilder += `${key}: ${res.body[key]}. `;
+                    }
+                    this.messageType = WARNING;
+                    this.message = messageBuilder;
                 }
-            } catch (error) {
-                this.messageType = "WARNING";
-                this.message = `An error occurred (${error})`;
-            }
 
-            this.title = "";
-            this.description = "";
-            this.bodyPartIds = [];
-            this.httpRefIds = [];
-            this.needsEquipment = false;
+                this.title = "";
+                this.description = "";
+                this.bodyPartIds = [];
+                this.httpRefIds = [];
+                this.needsEquipment = false;
+                this.bodyPartsStates = {};
+                this.httpRefsStates = {};
+            }
+        },
+
+        onClickBodyPartCheckbox(id) {
+            if (this.bodyPartIds.includes(id)) {
+                let index = this.bodyPartIds.indexOf(id);
+                this.bodyPartIds.splice(index, 1);
+                delete this.bodyPartsStates[id];
+            } else {
+                this.bodyPartIds.push(id);
+                this.bodyPartsStates[id] = true;
+            }
+        },
+
+        onClickHttpRefCheckbox(id) {
+            if (this.httpRefIds.includes(id)) {
+                let index = this.httpRefIds.indexOf(id);
+                this.httpRefIds.splice(index, 1);
+                delete this.httpRefsStates[id];
+            } else {
+                this.httpRefIds.push(id);
+                this.httpRefsStates[id] = true;
+            }
         },
 
         async createExercise(requestBody) {
-            let URL = "/api/v1/workouts/exercises";
             let token = getToken();
-
-            const res = await fetch(URL, {
+            const res = await fetch(EXERCISES, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -158,7 +185,6 @@ export default {
                 },
                 body: JSON.stringify(requestBody)
             });
-
             const data = await res.json();
             return {
                 status: res.status,
@@ -167,9 +193,7 @@ export default {
         },
 
         async getBodyParts() {
-            let URL = "/api/v1/workouts/bodyParts";
-
-            const res = await fetch(URL, {
+            const res = await fetch(BODY_PARTS, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -183,12 +207,12 @@ export default {
         },
 
         async getHttpRefs() {
-            let URL = "/api/v1/workouts/httpRefs/default?pageSize=1000";
-
-            const res = await fetch(URL, {
+            let token = getToken();
+            const res = await fetch(HTTP_REFS + PAGE_SIZE, {
                 method: "GET",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 }
             });
             const data = await res.json();

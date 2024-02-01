@@ -12,7 +12,7 @@
 
         <h4 class="mb-4 text-muted">Create Media</h4>
 
-        <form @submit.prevent="submitForm" style="width: fit-content;">
+        <form @submit.prevent="onSubmitForm" class="form-width">
             <div class="mb-4">
                 <label for="name" class="form-label">Name<span class="span-color"> *</span></label>
                 <input type="text" class="form-control" id="name" v-model="name" placeholder="Enter title" required>
@@ -40,8 +40,10 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getToken } from "../../shared/js/common.js";
-import { getAndValidateToken } from "../../shared/js/common.js";
+import { getToken } from "../../shared/js/auth.js";
+import { getAndValidateToken } from "../../shared/js/auth.js";
+import { HTTP_REFS } from "../../shared/URL.js";
+import { SUCCESS, WARNING, MEDIA_CREATED_SUCCESSFULLY } from "../../shared/MESSAGE.js";
 import AlertComponent from "../../shared/components/AlertComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
 
@@ -59,9 +61,9 @@ export default {
 
     data() {
         return {
-            name: "",
-            description: "",
-            ref: "",
+            name: null,
+            description: null,
+            ref: null,
             message: "",
             messageType: ""
         };
@@ -74,9 +76,7 @@ export default {
 
     async created() {
         this.$store.commit("setCurrentUrl", "/workouts-create-media");
-
         const token = await getAndValidateToken();
-
         if (!token) {
             this.$store.commit("setLogged", false);
             this.$router.push("/login");
@@ -86,7 +86,7 @@ export default {
     },
 
     methods: {
-        async submitForm() {
+        async onSubmitForm() {
             const requestDto = {
                 name: this.name,
                 description: this.description,
@@ -97,19 +97,19 @@ export default {
                 const res = await this.createMedia(requestDto);
 
                 if (res.status === 201) {
-                    this.messageType = "SUCCESS";
-                    this.message = "Media has been created successfully";
+                    this.messageType = SUCCESS;
+                    this.message = MEDIA_CREATED_SUCCESSFULLY;
                 } else {
                     let messageBuilder = "";
                     for (const key in res.body) {
                         messageBuilder += `${key}: ${res.body[key]}. `;
                     }
-                    this.messageType = "WARNING";
-                    this.message = `An error occured (${messageBuilder}Status ${res.status})`;
+                    this.messageType = WARNING;
+                    this.message = messageBuilder;
                 }
             } catch (error) {
-                this.messageType = "WARNING";
-                this.message = `An error occurred (${error})`;
+                this.messageType = WARNING;
+                this.message = `Error: ${error}`;
             }
 
             this.name = "";
@@ -118,10 +118,8 @@ export default {
         },
 
         async createMedia(requestBody) {
-            let URL = "/api/v1/workouts/httpRefs";
             let token = getToken();
-
-            const res = await fetch(URL, {
+            const res = await fetch(HTTP_REFS, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -129,9 +127,7 @@ export default {
                 },
                 body: JSON.stringify(requestBody)
             });
-
             const data = await res.json();
-
             return {
                 status: res.status,
                 body: data

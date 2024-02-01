@@ -17,7 +17,8 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getAndValidateToken } from "../../shared/js/common.js";
+import { getAndValidateToken } from "../../shared/js/auth.js";
+import { SECONDARY, YOUR_ARE_UNLOGGED } from "../../shared/MESSAGE.js";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue"
 import AlertComponent from "../../shared/components/AlertComponent.vue";
 
@@ -47,13 +48,11 @@ export default {
 
     async created() {
         this.$store.commit("setCurrentUrl", "/workouts-reminders-list");
-
         const token = await getAndValidateToken();
-
         if (!token) {
             this.$store.commit("setLogged", false);
-            this.messageType = "SECONDARY";
-            this.message = "You are unlogged";
+            this.messageType = SECONDARY;
+            this.message = YOUR_ARE_UNLOGGED;
         } else {
             this.$store.commit("setLogged", true);
         }

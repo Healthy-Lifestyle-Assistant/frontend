@@ -13,47 +13,59 @@
         <!-- Update Workout -->
         <h4 v-if="!isDeleted" class="mb-4 text-muted">Update Workout</h4>
 
-        <form v-if="!isDeleted" class="mb-5" @submit.prevent="submitForm" style="width: fit-content;">
+        <form v-if="!isDeleted" class="mb-5 form-width" @submit.prevent="onSubmitUpdateForm">
             <div class="mb-4">
                 <label for="title" class="form-label">Current title: {{ this.titleLabel }}</label>
                 <input type="text" class="form-control" id="title" v-model="title" placeholder="Enter new title">
             </div>
 
             <div class="mb-4">
-                <label for="description" class="form-label">Current descirption: {{ this.descriptionLabel ? this.descriptionLabel : "None"
+                <label for="description" class="form-label">Current descirption: {{ this.descriptionLabel ?
+                    this.descriptionLabel : "None"
                 }}</label>
                 <textarea rows="3" class="form-control" id="description" v-model="description"
                     placeholder="Enter new description"></textarea>
             </div>
 
-            <div v-if="allExercises && allExercises.length > 0" class="mb-4">
-                <label for="exercises" class="form-label">Select exercises (hold Ctrl to select multiple)</label>
-                <select id="exercises" v-model="exercisesIds" class="form-select" multiple aria-label="Select exercises" :size="allExercises.length" required>
-                    <option v-for="exercise in allExercises" :key="exercise.id" :value="exercise.id">{{ exercise.title }}
+            <div class="mb-2">Exercises<span class="span-color"> *</span></div>
+            <div v-if="allExercises && allExercises.length > 0" class="d-flex flex-row flex-wrap mb-4">
+                <div v-for="exercise in allExercises" :key="exercise.id" class="me-2 mb-2">
+                    <input type="checkbox" value="" class="form-check-input" :id="exercise.title"
+                        @click="onClickExerciseCheckbox(exercise.id)" :checked="exercisesStates[exercise.id]">
+                    <label :for="exercise.title" class="form-check-label">{{ exercise.title }}
                         ({{ exercise.bodyParts.map(part =>
                             part.name.charAt(0).toLowerCase() + part.name.slice(1)).join(', ') }})
-                    </option>
-                </select>
+                    </label>
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-secondary mt-4">Update</button>
+            <button type="submit" class="btn btn-secondary mt-2">Update</button>
         </form>
 
         <!-- Delete workout -->
-        <h4 v-if="!isDeleted" class="mb-2 text-muted">Delete Workout</h4>
+        <div v-if="!isDeleted" class="form-width">
+            <h4 class="mb-2 text-muted">Delete Workout</h4>
+            <div class="mb-2">Deletion of the workout will not affect associated exercises and media references.</div>
+            <div class="d-flex">
+                <input type="checkbox" value="" class="form-check-input" id="confirmDeletion" v-model="confirmDeletion">
+                <label for="confirmDeletion" class="form-check-label ms-2"><span class="span-color">Confirm deletion. This
+                        action cannot be undone.</span></label>
+            </div>
 
-        <form v-if="!isDeleted" @submit.prevent="submitFormDelete" style="min-width: 13rem; width: fit-content;"
-            class="mb-5">
-            <button type="submit" class="btn btn-warning mt-4">Delete</button>
-        </form>
-        <br>
+            <form @submit.prevent="onSubmitDeleteForm" style="min-width: 13rem; width: fit-content;" class="mb-5">
+                <button :disabled="!confirmDeletion" type="submit" class="btn btn-warning mt-4">Delete</button>
+            </form>
+            <br>
+        </div>
     </div>
 </template>
 
 <script>
 import { useMeta } from "vue-meta";
-import { getToken } from "../../shared/js/common.js";
-import { getAndValidateToken } from "../../shared/js/common.js";
+import { getToken } from "../../shared/js/auth.js";
+import { getAndValidateToken } from "../../shared/js/auth.js";
+import { WORKOUTS_SLASH, EXERCISES, PAGE_SIZE } from "../../shared/URL.js";
+import { SUCCESS, WARNING, WORKOUT_UPDATED_SUCCESSFULLY, WORKOUT_DELETED_SUCCESSFULLY } from "../../shared/MESSAGE.js";
 import AlertComponent from "../../shared/components/AlertComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
 
@@ -80,10 +92,12 @@ export default {
             allExercises: [],
 
             exercisesIds: [],
+            exercisesStates: {},
 
             message: "",
             messageType: "",
-            isDeleted: false
+            isDeleted: false,
+            confirmDeletion: false
         };
     },
 
@@ -100,46 +114,44 @@ export default {
             this.$router.push("/login");
         } else {
             this.$store.commit("setLogged", true);
-            try {
-                let responseWorkoutDetails = await this.getWorkoutDetails(this.$route.params.id, token);
-                let responseExercises = await this.getAllExercises(token);
-                this.allExercises = responseExercises.body.content;
+            let responseWorkoutDetails = await this.getWorkoutDetails(this.$route.params.id, token);
+            let responseExercises = await this.getAllExercises(token);
+            this.allExercises = responseExercises.body.content;
 
-                if (responseWorkoutDetails.status === 200) {
-                    this.titleLabel = responseWorkoutDetails.body.title;
-                    this.descriptionLabel = responseWorkoutDetails.body.description;
-                    this.exercises = responseWorkoutDetails.body.exercises;
-                    this.exercisesIds = this.exercises.map(exercise => exercise.id);
-                }
-                else if (responseWorkoutDetails.status === 401) {
-                    this.$router.push("/login");
-                }
-                else {
-                    this.messageType = "WARNING";
-                    this.message = `Error: ${responseWorkoutDetails.body.message} (${responseWorkoutDetails.status})`;
-                }
-            } catch (error) {
-                this.messageType = "WARNING";
-                this.message = `Error: ${error}`;
+            if (responseWorkoutDetails.status === 200) {
+                this.titleLabel = responseWorkoutDetails.body.title;
+                this.descriptionLabel = responseWorkoutDetails.body.description;
+                this.exercises = responseWorkoutDetails.body.exercises;
+                this.exercisesIds = this.exercises.map(exercise => exercise.id);
+                this.exercisesIds.forEach(id => {
+                    this.exercisesStates[id] = true;
+                });
+            } else if (responseWorkoutDetails.status === 401) {
+                this.$router.push("/login");
+            } else {
+                this.messageType = WARNING;
+                this.message = `Error: ${responseWorkoutDetails.body.message}`;
             }
         }
     },
 
     methods: {
-        async submitForm() {
+        async onSubmitUpdateForm() {
             const requestDto = {
                 title: this.title,
                 description: this.description,
                 exerciseIds: this.exercisesIds
             };
 
-            try {
+            if (this.exercisesIds === null || this.exercisesIds.length === 0) {
+                alert("Workout should be associated with at least one exercise.")
+            } else {
                 const token = getToken();
                 const res = await this.updateWorkout(requestDto, token);
 
                 if (res.status === 200) {
-                    this.messageType = "SUCCESS";
-                    this.message = "Workout has been updated successfully";
+                    this.messageType = SUCCESS;
+                    this.message = WORKOUT_UPDATED_SUCCESSFULLY;
 
                     this.titleLabel = res.body.title;
                     this.descriptionLabel = res.body.description;
@@ -152,37 +164,44 @@ export default {
                     for (const key in res.body) {
                         messageBuilder += `${key}: ${res.body[key]}. `;
                     }
-                    this.messageType = "WARNING";
-                    this.message = `Error: ${messageBuilder}(status ${res.status})`;
+                    this.messageType = WARNING;
+                    this.message = messageBuilder;
                 }
-            } catch (error) {
-                this.messageType = "WARNING";
-                this.message = `Error: ${error}`;
             }
         },
 
-        async submitFormDelete() {
+        async onSubmitDeleteForm() {
             try {
                 const token = getToken();
                 const res = await this.deleteWorkout(this.$route.params.id, token);
 
                 if (res.status === 204) {
-                    this.messageType = "SUCCESS";
-                    this.message = "Workout has been deleted successfully";
+                    this.messageType = SUCCESS;
+                    this.message = WORKOUT_DELETED_SUCCESSFULLY;
                     this.isDeleted = true;
                 } else {
-                    this.messageType = "WARNING";
-                    this.message = `Error: ${res.status}`;
+                    this.messageType = WARNING;
+                    this.message = "Error occured";
                 }
             } catch (error) {
-                this.messageType = "WARNING";
+                this.messageType = WARNING;
                 this.message = `Error: ${error}`;
             }
         },
 
-        async getWorkoutDetails(id, token) {
-            let URL = `/api/v1/workouts/${id}`;
+        onClickExerciseCheckbox(id) {
+            if (this.exercisesIds.includes(id)) {
+                let index = this.exercisesIds.indexOf(id);
+                this.exercisesIds.splice(index, 1);
+                delete this.exercisesStates[id];
+            } else {
+                this.exercisesIds.push(id);
+                this.exercisesStates[id] = true;
+            }
+        },
 
+        async getWorkoutDetails(id, token) {
+            let URL = WORKOUTS_SLASH + id;
             const res = await fetch(URL, {
                 method: "GET",
                 headers: {
@@ -198,8 +217,7 @@ export default {
         },
 
         async getAllExercises(token) {
-            let URL = "/api/v1/workouts/exercises?pageSize=1000";
-
+            let URL = EXERCISES + PAGE_SIZE;
             const res = await fetch(URL, {
                 method: "GET",
                 headers: {
@@ -215,8 +233,7 @@ export default {
         },
 
         async updateWorkout(requestBody, token) {
-            let URL = `/api/v1/workouts/${this.$route.params.id}`;
-
+            let URL = WORKOUTS_SLASH + this.$route.params.id;
             const res = await fetch(URL, {
                 method: "PATCH",
                 headers: {
@@ -225,7 +242,6 @@ export default {
                 },
                 body: JSON.stringify(requestBody)
             });
-
             const data = await res.json();
             return {
                 status: res.status,
@@ -234,8 +250,7 @@ export default {
         },
 
         async deleteWorkout(id, token) {
-            let URL = `/api/v1/workouts/${id}`;
-
+            let URL = WORKOUTS_SLASH + id;
             const res = await fetch(URL, {
                 method: "DELETE",
                 headers: {

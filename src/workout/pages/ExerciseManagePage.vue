@@ -13,7 +13,7 @@
         <!-- Update Exercise -->
         <h4 v-if="!isDeleted" class="mb-4 text-muted">Update Exercise</h4>
 
-        <form v-if="!isDeleted" class="mb-5" @submit.prevent="submitForm" style="width: fit-content;">
+        <form v-if="!isDeleted" class="mb-5 form-width" @submit.prevent="onSubmitUpdateForm">
             <div class="mb-4">
                 <label for="title" class="form-label">Current title: {{ this.titleLabel }}</label>
                 <input type="text" class="form-control" id="title" v-model="title" placeholder="Enter new title">
@@ -29,46 +29,56 @@
 
             <div class="form-check mb-4">
                 <input type="checkbox" value="" class="form-check-input" id="needsEquipment" v-model="needsEquipment"
-                    @change="onCheckboxChange">
+                    @change="onNeedsEquipmentCheckboxChange">
                 <label for="needsEquipment" class="form-check-label">Needs Equipment</label>
             </div>
 
-            <div v-if="exerciseBodyParts" class="mb-4">
-                <label for="bodyParts" class="form-label">Select body parts (hold Ctrl to select multiple)</label>
-                <select id="bodyParts" v-model="bodyPartIds" class="form-select" multiple aria-label="Select Body Parts"
-                    :size="exerciseBodyParts.length" required>
-                    <option v-for="bodyPart in exerciseBodyParts" :key="bodyPart.id" :value="bodyPart.id">{{ bodyPart.name
-                    }}</option>
-                </select>
+            <div class="mb-2">Body parts</div>
+            <div v-if="exerciseBodyParts && exerciseBodyParts.length > 0" class="d-flex flex-row flex-wrap mb-4">
+                <div v-for="bodyPart in exerciseBodyParts" :key="bodyPart.id" class="me-2">
+                    <input type="checkbox" value="" class="form-check-input" :id="bodyPart.name"
+                        @click="onClickBodyPartCheckbox(bodyPart.id)" :checked="bodyPartsStates[bodyPart.id]">
+                    <label :for="bodyPart.name" class="form-check-label">{{ bodyPart.name }}</label>
+                </div>
             </div>
 
-            <div v-if="exerciseHttpRefs" class="mb-4">
-                <label for="httpRefs" class="form-label">Select media (hold Ctrl to select multiple)</label>
-                <select id="httpRefs" v-model="httpRefIds" class="form-select" multiple aria-label="Select Media"
-                    :size="exerciseHttpRefs.length" required>
-                    <option v-for="httpRef in exerciseHttpRefs" :key="httpRef.id" :value="httpRef.id">{{ httpRef.name }}
-                    </option>
-                </select>
+            <div class="mb-2">Media references</div>
+            <div v-if="exerciseHttpRefs && exerciseHttpRefs.length > 0" class="d-flex flex-row flex-wrap mb-4">
+                <div v-for="httpRef in exerciseHttpRefs" :key="httpRef.id" class="me-2 mb-2">
+                    <input type="checkbox" value="" class="form-check-input" :id="httpRef.name"
+                        @click="onClickHttpRefCheckbox(httpRef.id)" :checked="httpRefsStates[httpRef.id]">
+                    <label :for="httpRef.name" class="form-check-label">{{ httpRef.name }}</label>
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-secondary mt-4">Update</button>
+            <button type="submit" class="btn btn-secondary mt-2">Update</button>
         </form>
 
-        <!-- Delete media -->
-        <h4 v-if="!isDeleted" class="mb-2 text-muted">Delete Exercise</h4>
+        <!-- Delete Exercise -->
+        <div v-if="!isDeleted" class="form-width">
+            <h4 class="mb-2 text-muted">Delete Exercise</h4>
+            <div class="mb-2">Deletion of the exercise will not affect associated workouts and media references.</div>
+            <div class="d-flex">
+                <input type="checkbox" value="" class="form-check-input" id="confirmDeletion" v-model="confirmDeletion">
+                <label for="confirmDeletion" class="form-check-label ms-2"><span class="span-color">Confirm deletion. This
+                        action cannot be undone.</span></label>
+            </div>
 
-        <form v-if="!isDeleted" @submit.prevent="submitFormDelete" style="min-width: 13rem; width: fit-content;"
-            class="mb-5">
-            <button type="submit" class="btn btn-warning mt-4">Delete</button>
-        </form>
-        <br>
+            <form @submit.prevent="onSubmitDeleteForm" style="min-width: 13rem; width: fit-content;" class="mb-5">
+                <button :disabled="!confirmDeletion" type="submit" class="btn btn-warning mt-4">Delete</button>
+            </form>
+            <br>
+        </div>
+
     </div>
 </template>
 
 <script>
 import { useMeta } from "vue-meta";
-import { getToken } from "../../shared/js/common.js";
-import { getAndValidateToken } from "../../shared/js/common.js";
+import { getToken } from "../../shared/js/auth.js";
+import { getAndValidateToken } from "../../shared/js/auth.js";
+import { EXERCISES_SLASH, BODY_PARTS, HTTP_REFS, PAGE_SIZE } from "../../shared/URL.js";
+import { SUCCESS, WARNING, EXERCISE_UPDATED_SUCCESSFULLY, EXERCISE_DELETED_SUCCESSFULLY } from "../../shared/MESSAGE.js";
 import AlertComponent from "../../shared/components/AlertComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
 
@@ -101,9 +111,13 @@ export default {
             bodyPartIds: [],
             httpRefIds: [],
 
+            bodyPartsStates: {},
+            httpRefsStates: {},
+
             message: "",
             messageType: "",
-            isDeleted: false
+            isDeleted: false,
+            confirmDeletion: false
         };
     },
 
@@ -138,7 +152,7 @@ export default {
     },
 
     methods: {
-        async submitForm() {
+        async onSubmitUpdateForm() {
             const requestDto = {
                 title: this.title,
                 description: this.description,
@@ -147,18 +161,21 @@ export default {
                 httpRefIds: this.httpRefIds
             };
 
-            try {
+            if (this.bodyPartIds === null || this.bodyPartIds.length === 0) {
+                alert("Exercise should be associated with at least one body part.")
+            } else {
                 const res = await this.updateExercise(requestDto);
 
                 if (res.status === 200) {
-                    this.messageType = "SUCCESS";
-                    this.message = "Exercise has been updated successfully";
+                    this.messageType = SUCCESS;
+                    this.message = EXERCISE_UPDATED_SUCCESSFULLY;
 
                     this.titleLabel = res.body.title;
                     this.descriptionLabel = res.body.description;
                     this.title = null;
                     this.description = null;
                     this.needsEquipment = res.body.needsEquipment;
+                    this.needsEquipmentChanged = false;
                     this.exerciseBodyParts = res.body.bodyParts;
                     this.exerciseHttpRefs = res.body.httpRefs;
 
@@ -176,37 +193,59 @@ export default {
                     for (const key in res.body) {
                         messageBuilder += `${key}: ${res.body[key]}. `;
                     }
-                    this.messageType = "WARNING";
-                    this.message = `An error occured (${messageBuilder}Status ${res.status})`;
+                    this.messageType = WARNING;
+                    this.message = messageBuilder;
                 }
-            } catch (error) {
-                this.messageType = "WARNING";
-                this.message = `An error occurred (${error})`;
             }
         },
 
-        async submitFormDelete() {
+        async onSubmitDeleteForm() {
             try {
                 const res = await this.deleteExercise(this.$route.params.id);
 
                 if (res.status === 204) {
-                    this.messageType = "SUCCESS";
-                    this.message = "Exercise has been deleted successfully";
+                    this.messageType = SUCCESS;
+                    this.message = EXERCISE_DELETED_SUCCESSFULLY;
                     this.isDeleted = true;
                 } else {
-                    this.messageType = "WARNING";
-                    this.message = `An error occurred (${res.status})`;
+                    this.messageType = WARNING;
+                    this.message = "Error occured";
                 }
             } catch (error) {
-                this.messageType = "WARNING";
-                this.message = `An error occurred (${error})`;
+                this.messageType = WARNING;
+                this.message = `Error: ${error}`;
+            }
+        },
+
+        onNeedsEquipmentCheckboxChange() {
+            this.needsEquipmentChanged = !this.needsEquipmentChanged;
+        },
+
+        onClickBodyPartCheckbox(id) {
+            if (this.bodyPartIds.includes(id)) {
+                let index = this.bodyPartIds.indexOf(id);
+                this.bodyPartIds.splice(index, 1);
+                delete this.bodyPartsStates[id];
+            } else {
+                this.bodyPartIds.push(id);
+                this.bodyPartsStates[id] = true;
+            }
+        },
+
+        onClickHttpRefCheckbox(id) {
+            if (this.httpRefIds.includes(id)) {
+                let index = this.httpRefIds.indexOf(id);
+                this.httpRefIds.splice(index, 1);
+                delete this.httpRefsStates[id];
+            } else {
+                this.httpRefIds.push(id);
+                this.httpRefsStates[id] = true;
             }
         },
 
         async getExerciseDetails(id) {
-            let URL = `/api/v1/workouts/exercises/${id}`;
+            let URL = EXERCISES_SLASH + id;
             let token = getToken();
-
             const res = await fetch(URL, {
                 method: "GET",
                 headers: {
@@ -214,29 +253,30 @@ export default {
                     "Authorization": `Bearer ${token}`
                 }
             });
-
             const data = await res.json();
-
             this.titleLabel = data.title;
             this.descriptionLabel = data.description;
             this.needsEquipment = data.needsEquipment;
             this.exerciseBodyParts = data.bodyParts;
             this.exerciseHttpRefs = data.httpRefs;
-
             this.bodyPartIds = this.exerciseBodyParts.map(bodyPart => bodyPart.id);
             this.httpRefIds = this.exerciseHttpRefs.map(httpRef => httpRef.id);
+
+            this.bodyPartIds.forEach(id => {
+                this.bodyPartsStates[id] = true;
+            });
+            this.httpRefIds.forEach(id => {
+                this.httpRefsStates[id] = true;
+            });
         },
 
         async getBodyParts() {
-            let URL = "/api/v1/workouts/bodyParts";
-
-            const res = await fetch(URL, {
+            const res = await fetch(BODY_PARTS, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 }
             });
-
             const data = await res.json();
             return {
                 status: res.status,
@@ -245,7 +285,7 @@ export default {
         },
 
         async getHttpRefs() {
-            let URL = "/api/v1/workouts/httpRefs?pageSize=1000";
+            let URL = HTTP_REFS + PAGE_SIZE;
             let token = getToken();
             const res = await fetch(URL, {
                 method: "GET",
@@ -262,9 +302,8 @@ export default {
         },
 
         async updateExercise(requestBody) {
-            let URL = `/api/v1/workouts/exercises/${this.$route.params.id}`;
+            let URL = EXERCISES_SLASH + this.$route.params.id;
             let token = getToken();
-
             const res = await fetch(URL, {
                 method: "PATCH",
                 headers: {
@@ -273,9 +312,7 @@ export default {
                 },
                 body: JSON.stringify(requestBody)
             });
-
             const data = await res.json();
-
             return {
                 status: res.status,
                 body: data
@@ -283,9 +320,8 @@ export default {
         },
 
         async deleteExercise(id) {
-            let URL = `/api/v1/workouts/exercises/${id}`;
+            let URL = EXERCISES_SLASH + id;
             let token = getToken();
-
             const res = await fetch(URL, {
                 method: "DELETE",
                 headers: {
@@ -293,14 +329,9 @@ export default {
                     "Authorization": `Bearer ${token}`
                 }
             });
-
             return {
                 status: res.status
             };
-        },
-
-        onCheckboxChange() {
-            this.needsEquipmentChanged = !this.needsEquipmentChanged;
         }
     }
 };

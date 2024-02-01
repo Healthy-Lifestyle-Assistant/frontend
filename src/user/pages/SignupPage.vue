@@ -11,18 +11,19 @@
         <form @submit.prevent="submitForm" style="width: fit-content;" class="mb-5">
             <div class="mb-4">
                 <label for="username" class="form-label">Username<span class="span-color"> *</span></label>
-                <input type="text" class="form-control" id="username" v-model="username" placeholder="Enter username" required>
-            </div>
-
-            <div class="mb-4">
-                <label for="email" class="form-label">Email<span class="span-color"> *</span></label>
-                <input type="email" class="form-control" id="email" v-model="email" placeholder="Enter email"
+                <input type="text" class="form-control" id="username" v-model="username" placeholder="Enter username"
                     required>
             </div>
 
             <div class="mb-4">
+                <label for="email" class="form-label">Email<span class="span-color"> *</span></label>
+                <input type="email" class="form-control" id="email" v-model="email" placeholder="Enter email" required>
+            </div>
+
+            <div class="mb-4">
                 <label for="fullName" class="form-label">Name<span class="span-color"> *</span></label>
-                <input type="text" class="form-control" id="fullName" v-model="fullName" placeholder="Enter full name" required>
+                <input type="text" class="form-control" id="fullName" v-model="fullName" placeholder="Enter full name"
+                    required>
             </div>
 
             <div class="mb-4">
@@ -47,7 +48,7 @@
 
             <div class="mb-4">
                 <label for="age" class="form-label">Age</label>
-                <input type="age" class="form-control" id="age" v-model="age" placeholder="Enter age (optional)">
+                <input type="number" min="16" max="120" step="1" class="form-control" id="age" v-model="age" placeholder="Enter age (optional)">
             </div>
 
             <div>
@@ -62,6 +63,8 @@
   
 <script>
 import { useMeta } from "vue-meta";
+import { USERS, COUNTRIES } from "../../shared/URL.js";
+import { SUCCESS, WARNING, SIGNUP_SUCCESSFULL } from "../../shared/MESSAGE.js";
 import AlertComponent from "../../shared/components/AlertComponent.vue";
 
 export default {
@@ -97,7 +100,6 @@ export default {
 
     async created() {
         this.$store.commit("setCurrentUrl", "/signup");
-
         let countriesResponse = await this.getCountries();
         this.countries = countriesResponse.body;
     },
@@ -115,24 +117,21 @@ export default {
             };
 
             try {
-                const res = await this.signupApi(signupRequestDto);
-
+                const res = await this.signup(signupRequestDto);
                 if (res.status === 201) {
                     this.$router.push("/login");
-                    this.$store.commit("setSharedMessageType", "SUCCESS");
-                    this.$store.commit("setSharedMessage", "Signup successful! Please log in.");
-                    // this.messageType = "SUCCESS";
-                    // this.message = "Signup successful! Please log in.";
+                    this.$store.commit("setSharedMessageType", SUCCESS);
+                    this.$store.commit("setSharedMessage", SIGNUP_SUCCESSFULL);
                 } else {
                     let messageBuilder = "";
-					for (const key in res.body) {
-						messageBuilder += `${key}: ${res.body[key]}. `;
-					}
-					this.messageType = "WARNING";
-					this.message = `${messageBuilder} - ${res.status}`;
+                    for (const key in res.body) {
+                        messageBuilder += `${key}: ${res.body[key]}. `;
+                    }
+                    this.messageType = WARNING;
+                    this.message = messageBuilder;
                 }
             } catch (error) {
-                this.messageType = "WARNING";
+                this.messageType = WARNING;
                 this.message = `Error: ${error}`;
             }
 
@@ -145,8 +144,8 @@ export default {
             this.age = null;
         },
 
-        async signupApi(requestBody) {
-            const res = await fetch("/api/v1/users/auth/signup", {
+        async signup(requestBody) {
+            const res = await fetch(USERS, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -170,17 +169,13 @@ export default {
         },
 
         async getCountries() {
-            let URL = "/api/v1/users/countries";
-
-            const res = await fetch(URL, {
+            const res = await fetch(COUNTRIES, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 }
             });
-
             const data = await res.json();
-
             return {
                 status: res.status,
                 body: data
