@@ -17,69 +17,26 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                    <!-- Workouts Dropdown -->
-                    <!-- <li class="nav-item dropdown me-3">
-                        <a :class="{ 'nav-link': true, 'dropdown-toggle': true, 'active': isWorkouts }" href=""
-                            role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true">
-                            Workouts <span class="badge text-bg-success">New</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="nav-item">
-                                <a href="/workouts" class="dropdown-item">Workouts</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/workouts-exercises" class="dropdown-item">Exercises</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/workouts-reminders" class="dropdown-item">Reminders</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/workouts-media" class="dropdown-item">Media</a>
-                            </li>
-                        </ul>
-                    </li> -->
-
-                    <!-- <li class="nav-item me-3">
-                        <router-link to="/workouts-list"
-                        :class="{ 'nav-link': true, 'active': isWorkouts }">Workouts</router-link>
-                    </li> -->
-
                     <li class="nav-item me-3">
                         <a href="/workouts-list"
-                        :class="{ 'nav-link': true, 'active': isWorkouts }">Workouts</a>
+                        :class="{ 'nav-link': true, 'active': isWorkouts }">Workout</a>
                     </li>
 
-                    <!-- <li class="nav-item me-3">
-                        <router-link to="/nutrition" 
-                        :class="{ 'nav-link': true, 'active': isNutrition }">Nutrition</router-link>
-                    </li> -->
                     <li class="nav-item me-3">
                         <a href="/nutrition" 
                         :class="{ 'nav-link': true, 'active': isNutrition }">Nutrition</a>
                     </li>
 
-                    <!-- <li class="nav-item me-3">
-                        <router-link to="/meditations" 
-                        :class="{ 'nav-link': true, 'active': isMeditations }">Meditations</router-link>
-                    </li> -->
                     <li class="nav-item me-3">
                         <a href="/meditations" 
-                        :class="{ 'nav-link': true, 'active': isMeditations }">Meditations</a>
+                        :class="{ 'nav-link': true, 'active': isMeditations }">Meditation</a>
                     </li>
 
-                    <!-- <li class="nav-item me-3">
-                        <router-link to="/calendar"
-                        :class="{ 'nav-link': true, 'active': isCalendar }">Calendar</router-link>
-                    </li> -->
                     <li class="nav-item me-3">
                         <a href="/calendar"
                         :class="{ 'nav-link': true, 'active': isCalendar }">Calendar</a>
                     </li>
 
-                    <!-- <li class="nav-item me-3">
-                        <router-link to="/stats"
-                        :class="{ 'nav-link': true, 'active': isStats }">Stats</router-link>
-                    </li> -->
                     <li class="nav-item me-3">
                         <a href="/stats"
                         :class="{ 'nav-link': true, 'active': isStats }">Stats</a>
@@ -91,7 +48,6 @@
                     <!-- <div class="me-2">isLogged: {{ isLogged }}</div>
                     <div class="me-2">curUrl: {{ getCurrentUrl }}</div>
                     <div class="me-2">prevUrl: {{ getPreviousUrl }}</div> -->
-
                     <router-link to="/settings" class="btn btn-outline-secondary me-2" role="button">Settings</router-link>
                     <router-link to="/logout" class="btn btn-outline-secondary me-2" role="button">Logout</router-link>
                 </div>
@@ -100,7 +56,6 @@
                     <!-- <div class="me-2">isLogged: {{ isLogged }} </div>
                     <div class="me-2">curUrl: {{ getCurrentUrl }}</div>
                     <div class="me-2">prevUrl: {{ getPreviousUrl }}</div> -->
-
                     <router-link to="/login" class="btn btn-outline-secondary me-2" role="button">Login</router-link>
                     <router-link to="/signup" class="btn btn-secondary me-2" role="button">Sign-Up</router-link>
                 </div>

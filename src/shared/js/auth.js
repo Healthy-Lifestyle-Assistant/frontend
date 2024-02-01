@@ -1,3 +1,5 @@
+import { VALIDATE } from "../URL.js";
+
 export function getToken() {
     const token = localStorage.getItem("token");
     if (token === null || token === "") return null;
@@ -6,17 +8,13 @@ export function getToken() {
 
 export async function getAndValidateToken() {
     const token = localStorage.getItem("token");
-
     if (token === null) return null;
-
     if (token === "") {
         localStorage.removeItem("token");
         return null;
     }
 
-    let URL = "/api/v1/users/auth/validate";
-
-    const res = await fetch(URL, {
+    const res = await fetch(VALIDATE, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -25,8 +23,6 @@ export async function getAndValidateToken() {
     });
 
     if (res.status === 200) return token;
-
     localStorage.removeItem("token");
-    
     return null;
 }

@@ -9,18 +9,10 @@
 			<p v-if="description" class="card-text">{{ truncatedDescription }}</p>
 
 			<div v-if="bodyParts" class="card-text mb-4">
-				<span v-for="bodyPart in bodyParts" :key="bodyPart.id"><small class="body-parts">{{
+				<span class="body-parts-span" v-for="bodyPart in bodyParts" :key="bodyPart.id"><small class="body-parts">{{
 					bodyPart.name.toLowerCase()
 				}}</small>&nbsp;</span>
 			</div>
-
-			<!-- <h6 class="card-subtitle mb-2 mt-4 text-body-secondary">Exercises</h6>
-			<div v-if="exercises" class="card-text mb-2">
-				<span v-for="exercise in exercises" :key="exercise.id">
-					<router-link class="media-refs d-inline-block mt-2 mb-2"
-						:to="generateExerciseDetailsLink(exercise.id, exercise.isCustom)">{{ exercise.title }}</router-link>
-					&nbsp;</span>
-			</div> -->
 
 			<div v-if="isCustom" class="d-flex justify-content-end mt-3 me-4">
 				<router-link :to="generateWorkoutManageLink()"

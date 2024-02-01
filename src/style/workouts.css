@@ -1,0 +1,29 @@
+.description-width {
+    width: 90%;
+}
+
+.http-ref-card-width {
+    width: 300px;
+}
+
+.exercise-card-width {
+    width: 300px;
+}
+
+.workout-card-width {
+    width: 300px;
+}
+
+.body-parts {
+    background-color: lightgray;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 2px;
+    padding-bottom: 5px;
+    border-radius: 12px;
+}
+
+.body-parts-span {
+    display: inline-block;
+    margin-bottom: 8px; 
+}

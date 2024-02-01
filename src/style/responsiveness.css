@@ -1,0 +1,21 @@
+/* Styles for screen size range [0; 800] */
+@media screen and (max-width: 800px) {
+    .container-custom {
+        width: 100%;
+    }
+
+    .form-width {
+        width: 100%;
+    }
+}
+
+/* For screen widths from 801px to 1000px */
+@media screen and (min-width: 801px) and (max-width: 1000px) {
+    .container-custom {
+        width: 75%;
+    }
+
+    .form-width {
+        width: 75%;
+    }
+}

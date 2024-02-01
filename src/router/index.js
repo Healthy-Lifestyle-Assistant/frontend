@@ -3,38 +3,38 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "../home/pages/HomePage.vue";
 
 // Auth
-import SignupPage from "../auth/pages/SignupPage.vue";
 import LoginPage from "../auth/pages/LoginPage.vue";
 import LogoutPage from "../auth/pages/LogoutPage.vue";
 
-// User Settings
-import SettingsPage from "../users/pages/SettingsPage.vue";
+// User
+import SignupPage from "../user/pages/SignupPage.vue";
+import SettingsPage from "../user/pages/SettingsPage.vue";
 
-// Workouts
-import WorkoutsListPage from "../workouts/pages/WorkoutsListPage.vue";
-import WorkoutDetailsPage from "../workouts/pages/WorkoutDetailsPage.vue";
-import WorkoutCreateCustomPage from "../workouts/pages/WorkoutCreateCustomPage.vue";
-import WorkoutManagePage from "../workouts/pages/WorkoutManagePage.vue";
+// Workout
+import WorkoutsListPage from "../workout/pages/WorkoutsListPage.vue";
+import WorkoutDetailsPage from "../workout/pages/WorkoutDetailsPage.vue";
+import WorkoutCreatePage from "../workout/pages/WorkoutCreatePage.vue";
+import WorkoutManagePage from "../workout/pages/WorkoutManagePage.vue";
 
-// Exercises
-import ExercisesListPage from "../workouts/pages/ExercisesListPage.vue";
-import ExerciseDetailsPage from "../workouts/pages/ExerciseDetailsPage.vue";
-import ExerciseCreatePage from "../workouts/pages/ExerciseCreatePage.vue";
-import ExerciseManagePage from "../workouts/pages/ExerciseManagePage.vue";
+// Exercise
+import ExercisesListPage from "../workout/pages/ExercisesListPage.vue";
+import ExerciseDetailsPage from "../workout/pages/ExerciseDetailsPage.vue";
+import ExerciseCreatePage from "../workout/pages/ExerciseCreatePage.vue";
+import ExerciseManagePage from "../workout/pages/ExerciseManagePage.vue";
 
 // Media
-import MediasListPage from "../workouts/pages/MediasListPage.vue";
-import MediaCreatePage from "../workouts/pages/MediaCreatePage.vue";
-import MediaManagePage from "../workouts/pages/MediaManagePage.vue";
+import MediasListPage from "../workout/pages/MediasListPage.vue";
+import MediaCreatePage from "../workout/pages/MediaCreatePage.vue";
+import MediaManagePage from "../workout/pages/MediaManagePage.vue";
 
-// Reminders
-import RemindersWorkoutsPage from "../workouts/pages/RemindersWorkoutsPage.vue";
+// Reminder
+import RemindersWorkoutsPage from "../workout/pages/RemindersWorkoutsPage.vue";
 
 // Nutrition
 import NutritionPage from "../nutrition/pages/NutritionPage.vue";
 
-// Meditations
-import MeditationsPage from "../meditations/pages/MeditationsPage.vue";
+// Meditation
+import MeditationsPage from "../meditation/pages/MeditationsPage.vue";
 
 // Calendar
 import CalendarPage from "../calendar/pages/CalendarPage.vue";
@@ -53,11 +53,6 @@ const routes = [
 
     // Auth
     {
-        path: "/signup",
-        name: "SignupPage",
-        component: SignupPage
-    },
-    {
         path: "/login",
         name: "LoginPage",
         component: LoginPage
@@ -68,14 +63,19 @@ const routes = [
         component: LogoutPage
     },
 
-    // User Settings
+    // User
+    {
+        path: "/signup",
+        name: "SignupPage",
+        component: SignupPage
+    },
     {
         path: "/settings",
         name: "SettingsPage",
         component: SettingsPage
     },
 
-    // Workouts
+    // Workout
     {
         path: "/workouts-list",
         name: "WorkoutsListPage",
@@ -88,8 +88,8 @@ const routes = [
     },
     {
         path: "/workouts-create-workout",
-        name: "WorkoutCreateCustomPage",
-        component: WorkoutCreateCustomPage
+        name: "WorkoutCreatePage",
+        component: WorkoutCreatePage
     },
     {
         path: "/workouts-manage-workout/:id",
@@ -97,7 +97,7 @@ const routes = [
         component: WorkoutManagePage
     },
 
-    // Exercises
+    // Exercise
     {
         path: "/workouts-exercises-list",
         name: "ExercisesListPage",
@@ -136,7 +136,7 @@ const routes = [
         component: MediaManagePage
     },
 
-    // Reminders
+    // Reminder
     {
         path: "/workouts-reminders-list",
         name: "RemindersWorkoutsPage",
@@ -150,7 +150,7 @@ const routes = [
         component: NutritionPage
     },
 
-    // Meditations
+    // Meditation
     {
         path: "/meditations",
         name: "MeditationsPage",
