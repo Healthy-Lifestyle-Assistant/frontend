@@ -3,55 +3,101 @@
 		<template v-slot:title="{ content }">{{ content }}</template>
 	</metainfo>
 
-	<div class="d-flex flex-column" style="width: 90%;">
-		<h2 class="mt-3 mb-5">Enhance Your Health and Wellbeing</h2>
+	<div class="d-flex flex-column align-items-center">
 
-		<p class="lead">
-			Healthy Lifestyle Assistant is a startup promoting a healthy lifestyle using digital
-			technologies. Our web application helps people maintain good habits like workouts, nutrition, and mental health
-			activities.
-			<br><br>
-			A healthy lifestyle is a way of living that lowers the risk of being seriously ill or dying early. Not all
+		<h1 class="mt-2 mb-4">Enhance Your Health and Wellbeing</h1>
+
+		<div id="carouselExampleIndicators" class="carousel slide mb-3 home-page-width" data-bs-ride="carousel">
+			<div class="carousel-indicators">
+				<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+					aria-current="true" aria-label="Slide 1"></button>
+				<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+					aria-label="Slide 2"></button>
+				<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+					aria-label="Slide 3"></button>
+			</div>
+			<div class="carousel-inner">
+				<div class="carousel-item active">
+					<img src="./../../assets/image-1.jpg" class="d-block w-100" alt="...">
+				</div>
+				<div class="carousel-item">
+					<img src="./../../assets/image-2.jpg" class="d-block w-100" alt="...">
+				</div>
+				<div class="carousel-item">
+					<img src="./../../assets/image-3.jpg" class="d-block w-100" alt="...">
+				</div>
+			</div>
+			<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+				data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+			<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+				data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+		</div>
+
+		<div class="mb-4 home-page-width" style="font-size: large;">
+			We promote a healthy lifestyle using digital technologies.
+			Our web application helps people manage their workouts, nutrition, and mental activities.
+		</div>
+
+		<h4 class="mb-4">Benefits of Healthy Life</h4>
+
+		<div class="d-flex flex-row flex-wrap justify-content-center mb-3 home-page-width">
+			<HealthComponent title="Reduce Risks of Diseases" description="Not all
 			diseases are preventable, but a large portion of deaths, particularly those from coronary heart disease and lung
-			cancer, can be avoided. Scientific studies have identified certain types of behavior that contribute to the
-			development of noncommunicable diseases and early death. Health is not just about avoiding disease. It’s also
-			about physical, mental and social wellbeing. When a healthy lifestyle is adopted, a more positive model is
-			provided for other people in the family, particularly children.
-			<br><br>
-			Web application aims to support people to change their behavior and improve their health in order to live
-			healthier, longer lives.
-		</p>
+			cancer, can be avoided." />
 
-		<!-- Contact -->
-		<p class="lead mt-3">
-			<b>Contact Us</b><br>
-			<a href="https://www.linkedin.com/in/olegkdev/" class="me-5" style="text-decoration: none; color: #343a40;">
-				LinkedIn
-				<img src="../../assets/linkedin-icon.svg" alt="" width="20" height="20" class="d-inline-block">
-			</a><br>
+			<HealthComponent title="Social Wellbeing" description="When a healthy lifestyle is adopted, a more positive model is
+			provided for other people in the family, particularly children." />
 
-			Email: <span>office@healthy-lifestyle-assistant.com</span>
-		</p>
+			<HealthComponent title="Longevity and Productivity"
+				description="It is not just about living longer but also about enhancing the 
+				quality of life and achieving more in the time we have. We can maximize our potential and become meaningful contributors to the life." />
+		</div>
 
-		<!-- Organization -->
-		<p class="lead mt-3">
-			<b>Organization</b><br>
-			<a href="https://www.linkedin.com/company/healthy-lifestyle-assistant/" class="me-5" style="text-decoration: none; color: #343a40;">
-				LinkedIn
-				<img src="../../assets/linkedin-icon.svg" alt="" width="20" height="20" class="d-inline-block">
-			</a><br>
+		<div v-if="!isLogged" class="mb-4 mt-3">
+			<router-link to="/login" class="btn btn-outline-secondary me-2" role="button">Login</router-link>
+			<router-link to="/signup" class="btn btn-secondary me-2" role="button">Sign-Up</router-link>
+		</div>
 
-			<a href="https://github.com/Healthy-Lifestyle-Assistant/" class="me-5" style="text-decoration: none; color: #343a40;">
-				GitHub
-				<img src="../../assets/github-icon.svg" alt="" width="20" height="20" class="d-inline-block">
-			</a><br>
+		<div class="mt-5">
+			<h6 class="mb-3 text-muted">Business Contacts</h6>
 
-		</p>
+			<div class="mb-2">
+				<a href="https://www.linkedin.com/in/oleg-kucherenko/" class="me-5"
+					style="text-decoration: none; color: #343a40;">
+					LinkedIn
+					<img src="../../assets/linkedin-icon.svg" alt="" width="20" height="20" class="d-inline-block">
+				</a>
+			</div>
+
+			<div class="mb-2">
+				Email: <span>office@healthy-lifestyle-assistant.com</span>
+			</div>
+
+			<div class="d-flex flex-row flex-wrap">
+				<a href="https://www.linkedin.com/company/healthy-lifestyle-assistant/" class="me-2"
+					style="text-decoration: none; color: #343a40;">
+					Organization at LinkedIn
+					<img src="../../assets/linkedin-icon.svg" alt="" width="20" height="20" class="d-inline-block">
+				</a>
+
+				<a href="https://github.com/Healthy-Lifestyle-Assistant/" style="text-decoration: none; color: #343a40;">
+					GitHub
+					<img src="../../assets/github-icon.svg" alt="" width="20" height="20" class="d-inline-block">
+				</a>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script>
 import { useMeta } from "vue-meta";
+import HealthComponent from "../components/HealthComponent.vue";
 
 export default {
 	name: "HomePage",
@@ -63,6 +109,10 @@ export default {
 				lang: "en"
 			}
 		})
+	},
+
+	components: {
+		HealthComponent
 	},
 
 	async created() {

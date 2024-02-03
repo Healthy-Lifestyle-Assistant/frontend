@@ -3,10 +3,10 @@
 
         <div class="container-fluid">
             <!-- Logo -->
-            <router-link to="/" class="navbar-brand me-5">
-                <img src="../../assets/logo.png" alt="Logo" class="d-inline-block align-text-top logo-custom-size">
-                Healthy Life
-            </router-link>
+            <a href="/" class="navbar-brand me-5">
+                <!-- <img src="../../assets/logo.png" alt="Logo" class="d-inline-block align-text-top logo-custom-size"> -->
+                Healthy Lifestyle
+            </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,28 +18,23 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
                     <li class="nav-item me-3">
-                        <a href="/workouts-list"
-                        :class="{ 'nav-link': true, 'active': isWorkouts }">Workout</a>
+                        <a href="/workouts-list" :class="{ 'nav-link': true, 'active': isWorkouts }">Workout</a>
                     </li>
 
                     <li class="nav-item me-3">
-                        <a href="/nutrition" 
-                        :class="{ 'nav-link': true, 'active': isNutrition }">Nutrition</a>
+                        <a href="/nutrition" :class="{ 'nav-link': true, 'active': isNutrition }">Nutrition</a>
                     </li>
 
                     <li class="nav-item me-3">
-                        <a href="/meditations" 
-                        :class="{ 'nav-link': true, 'active': isMeditations }">Meditation</a>
+                        <a href="/meditations" :class="{ 'nav-link': true, 'active': isMeditations }">Meditation</a>
                     </li>
 
                     <li class="nav-item me-3">
-                        <a href="/calendar"
-                        :class="{ 'nav-link': true, 'active': isCalendar }">Calendar</a>
+                        <a href="/calendar" :class="{ 'nav-link': true, 'active': isCalendar }">Calendar</a>
                     </li>
 
                     <li class="nav-item me-3">
-                        <a href="/stats"
-                        :class="{ 'nav-link': true, 'active': isStats }">Stats</a>
+                        <a href="/stats" :class="{ 'nav-link': true, 'active': isStats }">Stats</a>
                     </li>
                 </ul>
 
@@ -48,16 +43,16 @@
                     <!-- <div class="me-2">isLogged: {{ isLogged }}</div>
                     <div class="me-2">curUrl: {{ getCurrentUrl }}</div>
                     <div class="me-2">prevUrl: {{ getPreviousUrl }}</div> -->
-                    <router-link to="/settings" class="btn btn-outline-secondary me-2" role="button">Settings</router-link>
-                    <router-link to="/logout" class="btn btn-outline-secondary me-2" role="button">Logout</router-link>
+                    <a href="/settings" class="btn btn-outline-secondary me-2" role="button">Settings</a>
+                    <a href="/logout" class="btn btn-outline-secondary me-2" role="button">Logout</a>
                 </div>
 
                 <div v-else class="d-flex align-items-center">
                     <!-- <div class="me-2">isLogged: {{ isLogged }} </div>
                     <div class="me-2">curUrl: {{ getCurrentUrl }}</div>
                     <div class="me-2">prevUrl: {{ getPreviousUrl }}</div> -->
-                    <router-link to="/login" class="btn btn-outline-secondary me-2" role="button">Login</router-link>
-                    <router-link to="/signup" class="btn btn-secondary me-2" role="button">Sign-Up</router-link>
+                    <a href="/login" class="btn btn-outline-secondary me-2" role="button">Login</a>
+                    <a href="/signup" class="btn btn-secondary me-2" role="button">Sign-Up</a>
                 </div>
 
             </div>
