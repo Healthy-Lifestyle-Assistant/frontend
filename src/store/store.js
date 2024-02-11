@@ -6,8 +6,9 @@ const store = createStore({
 			isLogged: false,
 			currentUrl: "",
 			previousUrl: "",
-			sharedMessage: "",
-			sharedMessageType: ""
+			sharedMessage: null,
+			sharedMessageType: null,
+			userFullName: null
 		}
 	},
 
@@ -27,6 +28,10 @@ const store = createStore({
 
 		setSharedMessageType(state, value) {
 			state.sharedMessageType = value;
+		},
+
+		setUserFullName(state, value) {
+			state.userFullName = value;
 		}
 	}
 });

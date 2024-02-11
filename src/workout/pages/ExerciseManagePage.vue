@@ -7,7 +7,8 @@
 
         <div>
             <BreadcrumbWorkoutsComponent />
-            <AlertComponent :message="message" :messageType="messageType" /><br>
+            <AlertListComponent :alerts="alerts" />
+            <AlertComponent :message="message" :messageType="messageType" />
         </div>
 
         <!-- Update Exercise -->
@@ -15,42 +16,54 @@
 
         <form v-if="!isDeleted" class="mb-5 form-width" @submit.prevent="onSubmitUpdateForm">
             <div class="mb-4">
-                <label for="title" class="form-label">Current title: {{ this.titleLabel }}</label>
-                <input type="text" class="form-control" id="title" v-model="title" placeholder="Enter new title">
+                <label for="title" class="form-label">Current title: {{ exercise.title }}</label>
+                <div class="d-flex align-items-center mb-2 me-3">
+                    <input type="text" class="form-control me-1" id="title" v-model="formTitle" placeholder="Enter new title">
+                    <TooltipComponent :text="getTooltipText('title')" />
+                </div>
             </div>
 
             <div class="mb-4">
-                <label for="description" class="form-label">Current descirption: {{ this.descriptionLabel ?
-                    this.descriptionLabel : "None"
-                }}</label>
-                <textarea rows="3" class="form-control" id="description" v-model="description"
-                    placeholder="Enter new description"></textarea>
+                <label for="description" class="form-label">Current descirption:
+                    {{ exercise.description ? exercise.description : "None" }}
+                </label>
+                <div class="d-flex align-items-center mb-2 me-3">
+                    <textarea rows="3" class="form-control me-1" id="description" v-model="formDescription"
+                        placeholder="Enter new description"></textarea>
+                    <TooltipComponent :text="getTooltipText('description')" />
+                </div>
             </div>
 
             <div class="form-check mb-4">
-                <input type="checkbox" value="" class="form-check-input" id="needsEquipment" v-model="needsEquipment"
+                <input type="checkbox" value="" class="form-check-input" id="needsEquipment" v-model="formNeedsEquipment"
                     @change="onNeedsEquipmentCheckboxChange">
                 <label for="needsEquipment" class="form-check-label">Needs Equipment</label>
             </div>
 
             <div class="mb-2">Body parts</div>
-            <div v-if="exerciseBodyParts && exerciseBodyParts.length > 0" class="d-flex flex-row flex-wrap mb-4">
-                <div v-for="bodyPart in exerciseBodyParts" :key="bodyPart.id" class="me-2">
-                    <input type="checkbox" value="" class="form-check-input" :id="bodyPart.name"
-                        @click="onClickBodyPartCheckbox(bodyPart.id)" :checked="bodyPartsStates[bodyPart.id]">
-                    <label :for="bodyPart.name" class="form-check-label">{{ bodyPart.name }}</label>
+            <div v-if="allBodyParts && allBodyParts.length > 0" class="d-flex flex-row flex-wrap mb-4 elements-border">
+                <div v-for="bodyPart in allBodyParts" :key="bodyPart.id" class="me-2">
+                    <input type="checkbox" value="" class="form-check-input me-1 elements-border" 
+                        :id="bodyPart.name"
+                        @click="onClickBodyPartCheckbox(bodyPart.id)"
+                        :checked="formSelectedBodyPartsCheckboxesStates[bodyPart.id]">
+                    <label :for="bodyPart.name" class="form-check-label body-part-checkbox-width">{{ bodyPart.name }}</label>
                 </div>
             </div>
 
             <div class="mb-2">Media references</div>
-            <div v-if="exerciseHttpRefs && exerciseHttpRefs.length > 0" class="d-flex flex-row flex-wrap mb-4">
-                <div v-for="httpRef in exerciseHttpRefs" :key="httpRef.id" class="me-2 mb-2">
-                    <input type="checkbox" value="" class="form-check-input" :id="httpRef.name"
-                        @click="onClickHttpRefCheckbox(httpRef.id)" :checked="httpRefsStates[httpRef.id]">
-                    <label :for="httpRef.name" class="form-check-label">{{ httpRef.name }}</label>
+            <div v-if="allHttpRefs && allHttpRefs.length > 0" class="d-flex flex-row flex-wrap mb-4 checkboxes-scroll elements-border">
+                <div v-for="httpRef in allHttpRefs" :key="httpRef.id" class="me-2 mb-2">
+                    <input type="checkbox" value="" class="form-check-input me-1" :id="httpRef.name"
+                        @click="onClickHttpRefCheckbox(httpRef.id)"
+                        :checked="formSelectedHttpRefsCheckboxesStates[httpRef.id]">
+                    <label :for="httpRef.name" class="form-check-label http-ref-checkbox-width">
+                        {{ getTruncatedString(httpRef.name, 40) }}
+                    </label>
                 </div>
             </div>
 
+            <button @click.prevent="onClearForm" class="btn btn-outline-secondary mt-2 me-2">Clear</button>
             <button type="submit" class="btn btn-secondary mt-2">Update</button>
         </form>
 
@@ -75,15 +88,29 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getToken } from "../../shared/js/auth.js";
-import { getAndValidateToken } from "../../shared/js/auth.js";
-import { EXERCISES_SLASH, BODY_PARTS, HTTP_REFS, PAGE_SIZE } from "../../shared/URL.js";
-import { SUCCESS, WARNING, EXERCISE_UPDATED_SUCCESSFULLY, EXERCISE_DELETED_SUCCESSFULLY } from "../../shared/MESSAGE.js";
-import AlertComponent from "../../shared/components/AlertComponent.vue";
+import { getAndValidateToken, getToken, on401, redirectToLoginSessionExpired } from "@/shared/js/auth";
+import { getStringOrNull, truncateStringWithWordBoundary } from "@/shared/js/stringUtils";
+import { buildAlertsList } from "@/shared/js/exceptions";
+import { BODY_PARTS, EXERCISES_SLASH, HTTP_REFS, PAGE_SIZE } from "@/shared/URL";
+import {
+    EXERCISE_DELETED_SUCCESSFULLY, EXERCISE_SHOULD_HAVE_BODY_PARTS, EXERCISE_UPDATED_SUCCESSFULLY,
+    SUCCESS, WARNING
+} from "@/shared/Messages";
+import { DESCRIPTION_TOOLTIP, TITLE_TOOLTIP } from "@/shared/Tooltips";
+import AlertComponent from "@/shared/components/AlertComponent.vue";
+import AlertListComponent from "@/shared/components/AlertListComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
+import TooltipComponent from "@/shared/components/TooltipComponent.vue";
 
 export default {
     name: "ExerciseManagePage",
+
+    components: {
+        AlertComponent,
+        AlertListComponent,
+        BreadcrumbWorkoutsComponent,
+        TooltipComponent
+    },
 
     setup() {
         useMeta({
@@ -96,207 +123,212 @@ export default {
 
     data() {
         return {
-            titleLabel: "",
-            descriptionLabel: "",
+            formTitle: null,
+            formDescription: null,
+            formNeedsEquipment: null,
+            formSelectedBodyPartIds: [],
+            formSelectedHttpRefIds: [],
+            formSelectedBodyPartsCheckboxesStates: {},
+            formSelectedHttpRefsCheckboxesStates: {},
+            formNeedsEquipmentChanged: false,
 
-            title: null,
-            description: null,
-            needsEquipment: null,
-            exerciseBodyParts: [],
-            exerciseHttpRefs: [],
+            exercise: {},
             allBodyParts: [],
             allHttpRefs: [],
 
-            needsEquipmentChanged: false,
-            bodyPartIds: [],
-            httpRefIds: [],
+            message: null,
+            messageType: null,
+            alerts: [],
 
-            bodyPartsStates: {},
-            httpRefsStates: {},
-
-            message: "",
-            messageType: "",
             isDeleted: false,
             confirmDeletion: false
         };
     },
 
-    components: {
-        AlertComponent,
-        BreadcrumbWorkoutsComponent
-    },
-
     async created() {
         this.$store.commit("setCurrentUrl", `/workouts-manage-exercise/${this.$route.params.id}`);
-        const token = await getAndValidateToken();
+        const token = await getAndValidateToken(this);
+
         if (!token) {
-            this.$store.commit("setLogged", false);
-            this.$router.push("/login");
+            redirectToLoginSessionExpired(this);
         } else {
             this.$store.commit("setLogged", true);
-            await this.getExerciseDetails(this.$route.params.id);
+            let responseExercise = await this.getExerciseDetails(this.$route.params.id);
+            let responseBodyParts = await this.getDefaultBodyParts();
+            let responseHttpRefs = await this.getDefaultAndCustomHttpRefs();
 
-            let responseBodyParts = await this.getBodyParts();
-            this.allBodyParts = responseBodyParts.body;
-
-            let responseHttpRefs = await this.getHttpRefs();
-            this.allHttpRefs = responseHttpRefs.body.content;
-
-            this.exerciseBodyParts = this.exerciseBodyParts.concat(
-                this.allBodyParts.filter(item => !this.exerciseBodyParts.some(elt => elt.id === item.id))
-            );
-            this.exerciseHttpRefs = this.exerciseHttpRefs.concat(
-                this.allHttpRefs.filter(item => !this.exerciseHttpRefs.some(elt => elt.id === item.id))
-            );
+            if (responseExercise.status === 200 && responseBodyParts.status === 200 && responseHttpRefs.status === 200) {
+                this.exercise = responseExercise.body;
+                this.formNeedsEquipment = this.exercise.needsEquipment;
+                this.allBodyParts = responseBodyParts.body;
+                this.allHttpRefs = responseHttpRefs.body.content;
+                this.formSelectedBodyPartIds = this.exercise.bodyParts.map(bodyPart => bodyPart.id);
+                this.formSelectedHttpRefIds = this.exercise.httpRefs.map(httpRef => httpRef.id);
+                this.formSelectedBodyPartIds.forEach(id => {
+                    this.formSelectedBodyPartsCheckboxesStates[id] = true;
+                });
+                this.formSelectedHttpRefIds.forEach(id => {
+                    this.formSelectedHttpRefsCheckboxesStates[id] = true;
+                });
+            } else if (responseExercise.status === 401 || responseHttpRefs.status === 401) {
+                on401(this);
+            } else {
+                if (responseExercise.status !== 200) {
+                    this.alerts = this.alerts.concat(buildAlertsList(responseExercise.body, WARNING));
+                }
+                if (responseHttpRefs.status !== 200) {
+                    this.alerts = this.alerts.concat(buildAlertsList(responseHttpRefs.body, WARNING));
+                }
+            }
         }
     },
 
     methods: {
         async onSubmitUpdateForm() {
             const requestDto = {
-                title: this.title,
-                description: this.description,
-                needsEquipment: this.needsEquipmentChanged ? this.needsEquipment : null,
-                bodyPartIds: this.bodyPartIds,
-                httpRefIds: this.httpRefIds
+                title: getStringOrNull(this.formTitle),
+                description: getStringOrNull(this.formDescription),
+                needsEquipment: this.formNeedsEquipmentChanged ? this.formNeedsEquipment : null,
+                bodyPartIds: this.formSelectedBodyPartIds,
+                httpRefIds: this.formSelectedHttpRefIds
             };
 
-            if (this.bodyPartIds === null || this.bodyPartIds.length === 0) {
-                alert("Exercise should be associated with at least one body part.")
+            if (this.formSelectedBodyPartIds === null || this.formSelectedBodyPartIds.length === 0) {
+                alert(EXERCISE_SHOULD_HAVE_BODY_PARTS);
             } else {
-                const res = await this.updateExercise(requestDto);
-
-                if (res.status === 200) {
+                const response = await this.updateExercise(requestDto);
+                if (response.status === 200) {
+                    this.exercise = response.body;
+                    this.onClearForm();
                     this.messageType = SUCCESS;
                     this.message = EXERCISE_UPDATED_SUCCESSFULLY;
-
-                    this.titleLabel = res.body.title;
-                    this.descriptionLabel = res.body.description;
-                    this.title = null;
-                    this.description = null;
-                    this.needsEquipment = res.body.needsEquipment;
-                    this.needsEquipmentChanged = false;
-                    this.exerciseBodyParts = res.body.bodyParts;
-                    this.exerciseHttpRefs = res.body.httpRefs;
-
-                    this.bodyPartIds = this.exerciseBodyParts.map(bodyPart => bodyPart.id);
-                    this.httpRefIds = this.exerciseHttpRefs.map(httpRef => httpRef.id);
-
-                    this.exerciseBodyParts = this.exerciseBodyParts.concat(
-                        this.allBodyParts.filter(item => !this.exerciseBodyParts.some(elt => elt.id === item.id))
-                    );
-                    this.exerciseHttpRefs = this.exerciseHttpRefs.concat(
-                        this.allHttpRefs.filter(item => !this.exerciseHttpRefs.some(elt => elt.id === item.id))
-                    );
+                } else if (response.status === 401) {
+                    on401(this);
                 } else {
-                    let messageBuilder = "";
-                    for (const key in res.body) {
-                        messageBuilder += `${key}: ${res.body[key]}. `;
-                    }
-                    this.messageType = WARNING;
-                    this.message = messageBuilder;
+                    this.message = null;
+                    this.messageType = null;
+                    this.alerts = buildAlertsList(response.body, WARNING);
                 }
             }
         },
 
         async onSubmitDeleteForm() {
-            try {
-                const res = await this.deleteExercise(this.$route.params.id);
-
-                if (res.status === 204) {
-                    this.messageType = SUCCESS;
-                    this.message = EXERCISE_DELETED_SUCCESSFULLY;
-                    this.isDeleted = true;
-                } else {
-                    this.messageType = WARNING;
-                    this.message = "Error occured";
-                }
-            } catch (error) {
-                this.messageType = WARNING;
-                this.message = `Error: ${error}`;
+            const response = await this.deleteExercise(this.$route.params.id);
+            if (response.status === 204) {
+                this.messageType = SUCCESS;
+                this.message = EXERCISE_DELETED_SUCCESSFULLY;
+                this.isDeleted = true;
+            } else if (response.status === 401) {
+                on401(this);
+            } else {
+                this.alerts = buildAlertsList(response.body, WARNING);
             }
         },
 
+        onClearForm() {
+            this.formTitle = null;
+            this.formDescription = null;
+            this.formNeedsEquipment = this.exercise.needsEquipment;
+            this.formNeedsEquipmentChanged = false;
+            this.formSelectedBodyPartIds = this.exercise.bodyParts.map(bodyPart => bodyPart.id);
+            this.formSelectedHttpRefIds = this.exercise.httpRefs.map(httpRef => httpRef.id);
+            this.formSelectedBodyPartsCheckboxesStates = {};
+            this.formSelectedBodyPartIds.forEach(id => {
+                this.formSelectedBodyPartsCheckboxesStates[id] = true;
+            });
+            this.formSelectedHttpRefsCheckboxesStates = {};
+            this.formSelectedHttpRefIds.forEach(id => {
+                this.formSelectedHttpRefsCheckboxesStates[id] = true;
+            });
+            this.message = null;
+            this.messageType = null;
+            this.alerts = [];
+        },
+
         onNeedsEquipmentCheckboxChange() {
-            this.needsEquipmentChanged = !this.needsEquipmentChanged;
+            console.log(this.formNeedsEquipmentChanged);
+            this.formNeedsEquipmentChanged = !this.formNeedsEquipmentChanged;
         },
 
         onClickBodyPartCheckbox(id) {
-            if (this.bodyPartIds.includes(id)) {
-                let index = this.bodyPartIds.indexOf(id);
-                this.bodyPartIds.splice(index, 1);
-                delete this.bodyPartsStates[id];
+            if (this.formSelectedBodyPartIds.includes(id)) {
+                let index = this.formSelectedBodyPartIds.indexOf(id);
+                this.formSelectedBodyPartIds.splice(index, 1);
+                delete this.formSelectedBodyPartsCheckboxesStates[id];
             } else {
-                this.bodyPartIds.push(id);
-                this.bodyPartsStates[id] = true;
+                this.formSelectedBodyPartIds.push(id);
+                this.formSelectedBodyPartsCheckboxesStates[id] = true;
             }
         },
 
         onClickHttpRefCheckbox(id) {
-            if (this.httpRefIds.includes(id)) {
-                let index = this.httpRefIds.indexOf(id);
-                this.httpRefIds.splice(index, 1);
-                delete this.httpRefsStates[id];
+            if (this.formSelectedHttpRefIds.includes(id)) {
+                let index = this.formSelectedHttpRefIds.indexOf(id);
+                this.formSelectedHttpRefIds.splice(index, 1);
+                delete this.formSelectedHttpRefsCheckboxesStates[id];
             } else {
-                this.httpRefIds.push(id);
-                this.httpRefsStates[id] = true;
+                this.formSelectedHttpRefIds.push(id);
+                this.formSelectedHttpRefsCheckboxesStates[id] = true;
             }
+        },
+
+        getTooltipText(fieldName) {
+            if (fieldName === "title") {
+                return TITLE_TOOLTIP;
+            }
+            if (fieldName === "description") {
+                return DESCRIPTION_TOOLTIP;
+            }
+        },
+
+        getTruncatedString(string, maxLength) {
+            return truncateStringWithWordBoundary(string, maxLength);
         },
 
         async getExerciseDetails(id) {
             let URL = EXERCISES_SLASH + id;
             let token = getToken();
-            const res = await fetch(URL, {
+            const response = await fetch(URL, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 }
             });
-            const data = await res.json();
-            this.titleLabel = data.title;
-            this.descriptionLabel = data.description;
-            this.needsEquipment = data.needsEquipment;
-            this.exerciseBodyParts = data.bodyParts;
-            this.exerciseHttpRefs = data.httpRefs;
-            this.bodyPartIds = this.exerciseBodyParts.map(bodyPart => bodyPart.id);
-            this.httpRefIds = this.exerciseHttpRefs.map(httpRef => httpRef.id);
-
-            this.bodyPartIds.forEach(id => {
-                this.bodyPartsStates[id] = true;
-            });
-            this.httpRefIds.forEach(id => {
-                this.httpRefsStates[id] = true;
-            });
+            const data = await response.json();
+            return {
+                status: response.status,
+                body: data
+            };
         },
 
-        async getBodyParts() {
-            const res = await fetch(BODY_PARTS, {
+        async getDefaultBodyParts() {
+            const response = await fetch(BODY_PARTS, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 }
             });
-            const data = await res.json();
+            const data = await response.json();
             return {
-                status: res.status,
+                status: response.status,
                 body: data
             };
         },
 
-        async getHttpRefs() {
+        async getDefaultAndCustomHttpRefs() {
             let URL = HTTP_REFS + PAGE_SIZE;
             let token = getToken();
-            const res = await fetch(URL, {
+            const response = await fetch(URL, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 }
             });
-            const data = await res.json();
+            const data = await response.json();
             return {
-                status: res.status,
+                status: response.status,
                 body: data
             };
         },
@@ -304,7 +336,7 @@ export default {
         async updateExercise(requestBody) {
             let URL = EXERCISES_SLASH + this.$route.params.id;
             let token = getToken();
-            const res = await fetch(URL, {
+            const response = await fetch(URL, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -312,9 +344,9 @@ export default {
                 },
                 body: JSON.stringify(requestBody)
             });
-            const data = await res.json();
+            const data = await response.json();
             return {
-                status: res.status,
+                status: response.status,
                 body: data
             };
         },
@@ -322,7 +354,7 @@ export default {
         async deleteExercise(id) {
             let URL = EXERCISES_SLASH + id;
             let token = getToken();
-            const res = await fetch(URL, {
+            const response = await fetch(URL, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -330,7 +362,7 @@ export default {
                 }
             });
             return {
-                status: res.status
+                status: response.status
             };
         }
     }

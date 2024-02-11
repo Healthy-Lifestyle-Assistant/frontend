@@ -4,8 +4,11 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-start">
-        <BreadcrumbWorkoutsComponent />
-        <AlertComponent :message="message" :messageType="messageType" /> <br>
+        <div>
+            <BreadcrumbWorkoutsComponent />
+            <AlertListComponent :alerts="alerts" />
+            <AlertComponent :message="message" :messageType="messageType" />
+        </div>
 
         <div v-if="exercise" class="w-100">
             <ExerciseDetailsComponent :id="exercise.id" :title="exercise.title" :description="exercise.description"
@@ -18,15 +21,24 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getAndValidateToken } from "../../shared/js/auth.js";
-import { EXERCISES_DEFAULT_SLASH, EXERCISES_SLASH } from "../../shared/URL";
-import { SECONDARY, YOUR_ARE_UNLOGGED, WARNING } from "../../shared/MESSAGE.js";
+import { getAndValidateToken, on401 } from "@/shared/js/auth";
+import { buildAlertsList } from "@/shared/js/exceptions";
+import { EXERCISES_DEFAULT_SLASH, EXERCISES_SLASH } from "@/shared/URL";
+import { SECONDARY, YOUR_ARE_UNLOGGED, WARNING } from "@/shared/Messages";
+import AlertComponent from "@/shared/components/AlertComponent.vue";
+import AlertListComponent from "@/shared/components/AlertListComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
 import ExerciseDetailsComponent from "../components/ExerciseDetailsComponent.vue";
-import AlertComponent from "../../shared/components/AlertComponent.vue";
 
 export default {
     name: "ExerciseDetailsPage",
+
+    components: {
+        BreadcrumbWorkoutsComponent,
+        ExerciseDetailsComponent,
+        AlertComponent,
+        AlertListComponent
+    },
 
     setup() {
         useMeta({
@@ -40,14 +52,16 @@ export default {
     data() {
         return {
             exercise: null,
-            message: "",
-            messageType: ""
+
+            message: null,
+            messageType: null,
+            alerts: []
         };
     },
 
     async created() {
         this.$store.commit("setCurrentUrl", this.$route.path);
-        const token = await getAndValidateToken();
+        const token = await getAndValidateToken(this);
 
         if (this.$route.path.includes("default")) {
             if (!token) {
@@ -58,21 +72,11 @@ export default {
                 this.$store.commit("setLogged", true);
             }
 
-            try {
-                const res = await this.getDefaultExercise();
-                if (res.status == 200) {
-                    this.exercise = res.body;
-                } else {
-                    let messageBuilder = "";
-                    for (const key in res.body) {
-                        messageBuilder += `${key}: ${res.body[key]}. `;
-                    }
-                    this.messageType = WARNING;
-                    this.message = messageBuilder;
-                }
-            } catch (error) {
-                this.messageType = WARNING;
-                this.message = `Error: ${error}`;
+            const response = await this.getDefaultExercise();
+            if (response.status === 200) {
+                this.exercise = response.body;
+            } else {
+                this.alerts = buildAlertsList(response.body, WARNING);
             }
         }
 
@@ -81,30 +85,15 @@ export default {
         }
 
         if (token && this.$route.path.includes("custom")) {
-            try {
-                const res = await this.getCustomExercise(token);
-
-                if (res.status == 200) {
-                    this.exercise = res.body;
-                } else {
-                    let messageBuilder = "";
-                    for (const key in res.body) {
-                        messageBuilder += `${key}: ${res.body[key]}. `;
-                    }
-                    this.messageType = WARNING;
-                    this.message = messageBuilder;
-                }
-            } catch (error) {
-                this.messageType = WARNING;
-                this.message = `Error: ${error}`;
+            const response = await this.getCustomExercise(token);
+            if (response.status === 200) {
+                this.exercise = response.body;
+            } else if (response.status === 401) {
+                on401(this);
+            } else {
+                this.alerts = buildAlertsList(response.body, WARNING);
             }
         }
-    },
-
-    components: {
-        BreadcrumbWorkoutsComponent,
-        ExerciseDetailsComponent,
-        AlertComponent
     },
 
     methods: {

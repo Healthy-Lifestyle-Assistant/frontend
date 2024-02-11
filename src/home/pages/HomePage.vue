@@ -97,6 +97,7 @@
 
 <script>
 import { useMeta } from "vue-meta";
+import { getAndValidateToken } from "@/shared/js/auth";
 import HealthComponent from "../components/HealthComponent.vue";
 
 export default {
@@ -117,6 +118,12 @@ export default {
 
 	async created() {
 		this.$store.commit("setCurrentUrl", "/");
+		const token = await getAndValidateToken(this);
+        if (!token) {
+            this.$store.commit("setLogged", false);
+        } else {
+			this.$store.commit("setLogged", true);
+		}
 	},
 
 	computed: {

@@ -6,55 +6,82 @@
     <div class="d-flex flex-column align-items-center">
         <h4 class="text-muted mb-4">Register</h4>
 
-        <AlertComponent :message="message" :messageType="messageType" />
+        <AlertComponent id="sharedMessage" v-if="isSharedMessageVisible" :message="$store.state.sharedMessage"
+            :messageType="$store.state.sharedMessageType" />
+        <AlertListComponent :alerts="alerts" />
 
-        <form @submit.prevent="submitForm" style="width: fit-content;" class="mb-5">
+        <form @submit.prevent="onSubmitForm" class="mb-5" style="width: fit-content;">
             <div class="mb-4">
                 <label for="username" class="form-label">Username<span class="span-color"> *</span></label>
-                <input type="text" class="form-control" id="username" v-model="username" placeholder="Enter username"
-                    required>
+                <div class="d-flex justify-content-between align-items-center">
+                    <input type="text" class="form-control me-1" id="username" v-model="formUsername"
+                        placeholder="Enter username" required>
+                    <TooltipComponent :text="getTooltipText('username')" />
+                </div>
             </div>
 
             <div class="mb-4">
                 <label for="email" class="form-label">Email<span class="span-color"> *</span></label>
-                <input type="email" class="form-control" id="email" v-model="email" placeholder="Enter email" required>
+                <div class="d-flex justify-content-between align-items-center">
+                    <input type="email" class="form-control me-1" id="email" v-model="formEmail" placeholder="Enter email"
+                        required>
+                    <TooltipComponent :text="getTooltipText('email')" />
+                </div>
             </div>
 
             <div class="mb-4">
-                <label for="fullName" class="form-label">Name<span class="span-color"> *</span></label>
-                <input type="text" class="form-control" id="fullName" v-model="fullName" placeholder="Enter full name"
-                    required>
+                <label for="fullName" class="form-label">Full Name<span class="span-color"> *</span></label>
+                <div class="d-flex justify-content-between align-items-center">
+                    <input type="text" class="form-control me-1" id="fullName" v-model="formFullName"
+                        placeholder="Enter full name" required>
+                    <TooltipComponent :text="getTooltipText('fullName')" />
+                </div>
             </div>
 
-            <div class="mb-4">
-                <label for="password" class="form-label">Password<span class="span-color"> *</span></label>
-                <input type="password" class="form-control" id="password" v-model="password" placeholder="Enter password"
-                    required>
-            </div>
-
-            <div class="mb-4">
-                <label for="confirmPassword" class="form-label">Confirm Password<span class="span-color"> *</span></label>
-                <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword"
-                    placeholder="Confirm password" required>
-            </div>
-
-            <div v-if="countries" class="mb-4">
+            <div v-if="countries && countries.length > 0" class="mb-4">
                 <label for="countries" class="form-label">Country<span class="span-color"> *</span></label>
-                <select id="countries" v-model="countryId" class="form-select" aria-label="Select Country" required>
-                    <option :value="null" disabled>Select country</option>
-                    <option v-for="elt in countries" :key="elt.id" :value="elt.id">{{ elt.name }}</option>
-                </select>
+                <div class="d-flex justify-content-between align-items-center">
+                    <select id="countries" v-model="formCountryId" class="form-select me-1" aria-label="Select Country" required>
+                        <option :value="null" disabled>Select country</option>
+                        <option v-for="country in countries" :key="country.id" :value="country.id">{{ country.name }}
+                        </option>
+                    </select>
+                    <TooltipComponent :text="getTooltipText('country')" />
+                </div>
             </div>
 
             <div class="mb-4">
                 <label for="age" class="form-label">Age</label>
-                <input type="number" min="16" max="120" step="1" class="form-control" id="age" v-model="age" placeholder="Enter age (optional)">
+                <div class="d-flex justify-content-between align-items-center">
+                    <input type="number" min="16" max="120" step="1" class="form-control me-1" id="age" v-model="formAge"
+                        placeholder="Enter age (optional)">
+                    <TooltipComponent :text="getTooltipText('age')" />
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="form-label">Password<span class="span-color"> *</span></label>
+                <div class="d-flex justify-content-between align-items-center">
+                    <input type="password" class="form-control me-1" id="password" v-model="formPassword"
+                        placeholder="Enter password" required>
+                    <TooltipComponent :text="getTooltipText('password')" />
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="confirmPassword" class="form-label">Confirm Password<span class="span-color"> *</span></label>
+                <div class="d-flex justify-content-between align-items-center">
+                    <input type="password" class="form-control me-1" id="confirmPassword" v-model="formConfirmPassword"
+                        placeholder="Confirm password" required>
+                    <TooltipComponent :text="getTooltipText('password')" />
+                </div>
             </div>
 
             <div>
                 <span class="span-color">*</span> <i>Required fields</i>
             </div>
 
+            <button @click.prevent="onClearForm" class="btn btn-outline-secondary mt-4 me-2">Clear</button>
             <button id="signupButton" type="submit" class="btn btn-secondary mt-4">Sign Up</button>
             <br><br>
         </form>
@@ -63,12 +90,25 @@
   
 <script>
 import { useMeta } from "vue-meta";
-import { USERS, COUNTRIES } from "../../shared/URL.js";
-import { SUCCESS, WARNING, SIGNUP_SUCCESSFULL } from "../../shared/MESSAGE.js";
-import AlertComponent from "../../shared/components/AlertComponent.vue";
+import { getStringOrNull } from "@/shared/js/stringUtils";
+import { buildAlertsList } from "@/shared/js/exceptions";
+import { USERS, COUNTRIES } from "@/shared/URL";
+import {
+    SUCCESS, WARNING, SIGNUP_SUCCESSFUL, COUNTRY_SHOULD_BE_SELECTED
+} from "@/shared/Messages";
+import { USERNAME_TOOLTIP, EMAIL_TOOLTIP, FULL_NAME_TOOLTIP, AGE_TOOLTIP, COUNTRY_TOOLTIP, PASSWORD_TOOLTIP } from "@/shared/Tooltips";
+import AlertComponent from "@/shared/components/AlertComponent.vue";
+import AlertListComponent from "@/shared/components/AlertListComponent.vue";
+import TooltipComponent from "@/shared/components/TooltipComponent.vue";
 
 export default {
     name: "SignupPage",
+
+    components: {
+        AlertComponent,
+        AlertListComponent,
+        TooltipComponent
+    },
 
     setup() {
         useMeta({
@@ -81,106 +121,137 @@ export default {
 
     data() {
         return {
-            username: "",
-            email: "",
-            fullName: "",
-            password: "",
-            confirmPassword: "",
-            countryId: null,
-            countries: null,
-            age: null,
-            message: "",
-            messageType: ""
-        };
-    },
+            formUsername: null,
+            formEmail: null,
+            formFullName: null,
+            formPassword: null,
+            formConfirmPassword: null,
+            formCountryId: null,
+            formAge: null,
 
-    components: {
-        AlertComponent
+            countries: [],
+
+            alerts: []
+        };
     },
 
     async created() {
         this.$store.commit("setCurrentUrl", "/signup");
         let countriesResponse = await this.getCountries();
-        this.countries = countriesResponse.body;
+
+        if (countriesResponse.status === 200) {
+            this.countries = countriesResponse.body;
+        } else {
+            this.alerts = buildAlertsList(countriesResponse.body, WARNING);
+        }
     },
 
     methods: {
-        async submitForm() {
-            const signupRequestDto = {
-                username: this.username,
-                email: this.email,
-                fullName: this.fullName,
-                password: this.password,
-                confirmPassword: this.confirmPassword,
-                countryId: this.countryId,
-                age: this.age,
-            };
-
-            try {
-                const res = await this.signup(signupRequestDto);
-                if (res.status === 201) {
-                    this.$router.push("/login");
-                    this.$store.commit("setSharedMessageType", SUCCESS);
-                    this.$store.commit("setSharedMessage", SIGNUP_SUCCESSFULL);
-                } else {
-                    let messageBuilder = "";
-                    for (const key in res.body) {
-                        messageBuilder += `${key}: ${res.body[key]}. `;
-                    }
-                    this.messageType = WARNING;
-                    this.message = messageBuilder;
-                }
-            } catch (error) {
-                this.messageType = WARNING;
-                this.message = `Error: ${error}`;
+        async onSubmitForm() {
+            if (this.isSharedMessageVisible()) {
+                this.$store.commit("setSharedMessage", null);
+                this.$store.commit("setSharedMessageType", null);
             }
 
-            this.username = "";
-            this.email = "";
-            this.fullName = "";
-            this.password = "";
-            this.confirmPassword = "";
-            this.countryId = null;
-            this.age = null;
+            if (this.formCountryId === null || this.formCountryId === 0) {
+                alert(COUNTRY_SHOULD_BE_SELECTED);
+            } else {
+                const requestDto = {
+                    username: getStringOrNull(this.formUsername),
+                    email: getStringOrNull(this.formEmail),
+                    fullName: getStringOrNull(this.formFullName),
+                    password: getStringOrNull(this.formPassword),
+                    confirmPassword: getStringOrNull(this.formConfirmPassword),
+                    countryId: this.formCountryId,
+                    age: this.formAge,
+                };
+
+                const response = await this.signup(requestDto);
+                if (response.status === 201) {
+                    this.$store.commit("setSharedMessageType", SUCCESS);
+                    this.$store.commit("setSharedMessage", SIGNUP_SUCCESSFUL);
+                    this.$router.push("/login");
+                } else {
+                    this.alerts = buildAlertsList(response.body, WARNING);
+                }
+            }
         },
 
-        async signup(requestBody) {
-            const res = await fetch(USERS, {
+        onClearForm() {
+            this.formUsername = null;
+            this.formEmail = null;
+            this.formFullName = null;
+            this.formPassword = null;
+            this.formConfirmPassword = null;
+            this.formCountryId = null;
+            this.formAge = null;
+            this.alerts = [];
+            this.$store.commit("setSharedMessage", null);
+            this.$store.commit("setSharedMessageType", null);
+        },
+
+        isSharedMessageVisible() {
+            return this.$store.state.sharedMessage !== null;
+        },
+
+        getTooltipText(fieldName) {
+            if (fieldName === "username") {
+                return USERNAME_TOOLTIP;
+            }
+            if (fieldName === "email") {
+                return EMAIL_TOOLTIP;
+            }
+            if (fieldName === "fullName") {
+                return FULL_NAME_TOOLTIP;
+            }
+            if (fieldName === "age") {
+                return AGE_TOOLTIP;
+            }
+            if (fieldName === "country") {
+                return COUNTRY_TOOLTIP;
+            }
+            if (fieldName === "password") {
+                return PASSWORD_TOOLTIP;
+            }
+        },
+
+        async signup(requestDto) {
+            const response = await fetch(USERS, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(requestBody)
+                body: JSON.stringify(requestDto)
             });
 
-            const contentType = res.headers.get("content-type");
+            const contentType = response.headers.get("content-type");
             if (contentType && contentType.includes("application/json")) {
-                const data = await res.json();
+                const data = await response.json();
                 return {
-                    status: res.status,
+                    status: response.status,
                     body: data
                 };
             } else {
                 return {
-                    status: res.status,
+                    status: response.status,
                     body: null
                 };
             }
         },
 
         async getCountries() {
-            const res = await fetch(COUNTRIES, {
+            const response = await fetch(COUNTRIES, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 }
             });
-            const data = await res.json();
+            const data = await response.json();
             return {
-                status: res.status,
+                status: response.status,
                 body: data
             };
-        },
+        }
     }
 };
 </script>

@@ -17,10 +17,10 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getAndValidateToken } from "../../shared/js/auth.js";
-import { SECONDARY, YOUR_ARE_UNLOGGED } from "../../shared/MESSAGE.js";
+import { getAndValidateToken } from "@/shared/js/auth";
+import { SECONDARY, YOUR_ARE_UNLOGGED } from "@/shared/Messages";
+import AlertComponent from "@/shared/components/AlertComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue"
-import AlertComponent from "../../shared/components/AlertComponent.vue";
 
 export default {
     name: "RemindersWorkoutsPage",
@@ -48,7 +48,7 @@ export default {
 
     async created() {
         this.$store.commit("setCurrentUrl", "/workouts-reminders-list");
-        const token = await getAndValidateToken();
+        const token = await getAndValidateToken(this);
         if (!token) {
             this.$store.commit("setLogged", false);
             this.messageType = SECONDARY;

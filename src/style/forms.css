@@ -9,3 +9,11 @@
 .form-width {
     width: 60%;
 }
+
+.tooltip-question-mark {
+    width: 21px;
+    height: 20px;
+    background-color: lightgrey;
+    border-radius: 50%;
+    font-size: 12px;
+}

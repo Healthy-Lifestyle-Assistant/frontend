@@ -6,23 +6,30 @@
     <div class="d-flex flex-column align-items-center">
         <h4 class="text-muted mb-4">Login</h4>
 
-        <AlertComponent :message="message" :messageType="messageType" />
-        <AlertComponent id="sharedMessage" v-if="$store.state.sharedMessage !== ''" :message="$store.state.sharedMessage"
+        <AlertComponent id="sharedMessage" v-if="isSharedMessageVisible" :message="$store.state.sharedMessage"
             :messageType="$store.state.sharedMessageType" />
+        <AlertListComponent :alerts="alerts" />
 
         <form @submit.prevent="onSubmitForm" style="width: fit-content;">
             <div class="mb-4">
                 <label for="usernameOrEmail" class="form-label">Username or email</label>
-                <input type="text" class="form-control" id="usernameOrEmail" v-model="usernameOrEmail"
-                    placeholder="Enter username/email" required>
+                <div class="d-flex justify-content-between align-items-center">
+                    <input type="text" class="form-control me-1" id="usernameOrEmail" v-model="usernameOrEmail"
+                        placeholder="Enter username/email" required>
+                    <TooltipComponent :text="getTooltipText('usernameOrEmail')" />
+                </div>
             </div>
 
             <div class="mb-4">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" v-model="password" placeholder="Enter password"
-                    required>
+                <div class="d-flex justify-content-between align-items-center">
+                    <input type="password" class="form-control me-1" id="password" v-model="password"
+                        placeholder="Enter password" required>
+                    <TooltipComponent :text="getTooltipText('password')" />
+                </div>
             </div>
 
+            <button @click.prevent="onClearForm" class="btn btn-outline-secondary mt-4 me-2">Clear</button>
             <button type="submit" class="btn btn-secondary mt-4">Login</button>
         </form>
     </div>
@@ -30,12 +37,23 @@
   
 <script>
 import { useMeta } from "vue-meta";
-import { LOGIN } from "../../shared/URL.js";
-import { WARNING, SUCCESS, LOGIN_SUCCESSFULL } from "../../shared/MESSAGE.js";
-import AlertComponent from "../../shared/components/AlertComponent.vue";
+import { getStringOrNull } from "@/shared/js/stringUtils";
+import { buildAlertsList } from "@/shared/js/exceptions";
+import { WARNING } from "@/shared/Messages";
+import { LOGIN } from "@/shared/URL";
+import { USERNAME_OR_EMAIL_TOOLTIP, PASSWORD_TOOLTIP } from "@/shared/Tooltips";
+import AlertComponent from "@/shared/components/AlertComponent.vue";
+import AlertListComponent from "@/shared/components/AlertListComponent.vue";
+import TooltipComponent from "@/shared/components/TooltipComponent.vue";
 
 export default {
     name: "LoginPage",
+
+    components: {
+        AlertComponent,
+        AlertListComponent,
+        TooltipComponent
+    },
 
     setup() {
         useMeta({
@@ -48,15 +66,11 @@ export default {
 
     data() {
         return {
-            usernameOrEmail: "",
-            password: "",
-            message: "",
-            messageType: ""
-        };
-    },
+            usernameOrEmail: null,
+            password: null,
 
-    components: {
-        AlertComponent
+            alerts: []
+        };
     },
 
     async created() {
@@ -65,47 +79,55 @@ export default {
 
     methods: {
         async onSubmitForm() {
-            if (this.$store.state.sharedMessage !== "") {
-                this.$store.commit("setSharedMessage", "");
-                this.$store.commit("setSharedMessageType", "");
+            if (this.isSharedMessageVisible()) {
+                this.$store.commit("setSharedMessage", null);
+                this.$store.commit("setSharedMessageType", null);
             }
 
             const loginRequestDto = {
-                usernameOrEmail: this.usernameOrEmail,
-                password: this.password
+                usernameOrEmail: getStringOrNull(this.usernameOrEmail),
+                password: getStringOrNull(this.password)
             };
 
-            try {
-                const res = await this.login(loginRequestDto);
+            const response = await this.login(loginRequestDto);
+            if (response.status === 200) {
+                this.setToken(response.body.token);
+                this.$store.commit("setLogged", true);
 
-                if (res.status === 200) {
-                    localStorage.setItem("token", JSON.stringify(res.body.token).slice(1, -1));
-                    this.$store.commit('setLogged', true);
-                    this.messageType = SUCCESS;
-                    this.message = LOGIN_SUCCESSFULL;
-
-                    if (this.$store.state.previousUrl === null || this.$store.state.previousUrl === "" ||
-                        this.$store.state.previousUrl === "/login" || this.$store.state.previousUrl === "/signup") {
-                        this.$router.push("/workouts-list");
-                    } else {
-                        this.$router.push(this.$store.state.previousUrl);
-                    }
+                if (this.$store.state.previousUrl === null || this.$store.state.previousUrl === "" ||
+                    this.$store.state.previousUrl === "/login" || this.$store.state.previousUrl === "/signup") {
+                    this.$router.push("/workouts-list");
                 } else {
-                    let messageBuilder = "";
-                    for (const key in res.body) {
-                        messageBuilder += `${key}: ${res.body[key]}. `;
-                    }
-                    this.messageType = WARNING;
-                    this.message = messageBuilder;
+                    this.$router.push(this.$store.state.previousUrl);
                 }
-            } catch (error) {
-                this.messageType = WARNING;
-                this.message = `Error: ${error}`;
+            } else {
+                this.alerts = buildAlertsList(response.body, WARNING);
             }
+        },
 
+        setToken(token) {
+            localStorage.setItem("token", JSON.stringify(token).slice(1, -1));
+        },
+
+        onClearForm() {
             this.usernameOrEmail = null;
             this.password = null;
-            this.confirmPassword = null;
+            this.alerts = null;
+            this.$store.commit("setSharedMessage", null);
+            this.$store.commit("setSharedMessageType", null);
+        },
+
+        isSharedMessageVisible() {
+            return this.$store.state.sharedMessage !== null;
+        },
+
+        getTooltipText(fieldName) {
+            if (fieldName === "usernameOrEmail") {
+                return USERNAME_OR_EMAIL_TOOLTIP;
+            }
+            if (fieldName === "password") {
+                return PASSWORD_TOOLTIP;
+            }
         },
 
         async login(requestBody) {
