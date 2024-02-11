@@ -3,7 +3,7 @@
         {{ title }}
     </router-link>
 </template>
-  
+
 <script>
 export default {
     name: "ButtonComponent",

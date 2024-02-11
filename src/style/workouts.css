@@ -27,3 +27,26 @@
     display: inline-block;
     margin-bottom: 8px; 
 }
+
+.body-part-checkbox-width {
+    width: 120px;
+}
+
+.http-ref-checkbox-width {
+    width: 180px;
+}
+
+.exercise-checkbox-width {
+    width: 220px;
+}
+
+.checkboxes-scroll {
+    height: 300px; 
+    overflow: auto;
+}
+
+.elements-border {
+    border: 1px solid lightgrey;
+    padding: 6px;
+    border-radius: 6px;
+}

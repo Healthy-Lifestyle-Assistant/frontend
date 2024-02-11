@@ -26,7 +26,7 @@
                     </li>
 
                     <li class="nav-item me-3">
-                        <a href="/meditations" :class="{ 'nav-link': true, 'active': isMeditations }">Meditation</a>
+                        <a href="/meditations" :class="{ 'nav-link': true, 'active': isMeditations }">Mental</a>
                     </li>
 
                     <li class="nav-item me-3">
@@ -40,17 +40,35 @@
 
                 <!-- Login/Signup -->
                 <div v-if="isLogged" class="d-flex align-items-center">
-                    <!-- <div class="me-2">isLogged: {{ isLogged }}</div>
-                    <div class="me-2">curUrl: {{ getCurrentUrl }}</div>
-                    <div class="me-2">prevUrl: {{ getPreviousUrl }}</div> -->
-                    <a href="/settings" class="btn btn-outline-secondary me-2" role="button">Settings</a>
-                    <a href="/logout" class="btn btn-outline-secondary me-2" role="button">Logout</a>
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Welcome, {{ getUserFullName }}!
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end"
+                                aria-labelledby="navbarDarkDropdownMenuLink" style="width: 40px;">
+                                <li><a class="dropdown-item" href="/settings">Profile</a></li>
+                                <li><a class="dropdown-item" href="/settings">Preferences</a></li>
+                                <li><a class="dropdown-item" href="/settings">Billing</a></li>
+                                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <!-- <a href="/settings" class="btn btn-outline-secondary me-2" role="button">Settings</a> -->
+                    <!-- <a href="/logout" class="btn btn-outline-secondary me-2" role="button">Logout</a> -->
+
+                    <!-- Debug -->
+                    <!-- <div class="me-2">isLogged: {{ isLogged }}</div> -->
+                    <!-- <div class="me-2">curUrl: {{ getCurrentUrl }}</div> -->
+                    <!-- <div class="me-2">prevUrl: {{ getPreviousUrl }}</div> -->
                 </div>
 
                 <div v-else class="d-flex align-items-center">
-                    <!-- <div class="me-2">isLogged: {{ isLogged }} </div>
-                    <div class="me-2">curUrl: {{ getCurrentUrl }}</div>
-                    <div class="me-2">prevUrl: {{ getPreviousUrl }}</div> -->
+                    <!-- Debug -->
+                    <!-- <div class="me-2">isLogged: {{ isLogged }} </div> -->
+                    <!-- <div class="me-2">curUrl: {{ getCurrentUrl }}</div> -->
+                    <!-- <div class="me-2">prevUrl: {{ getPreviousUrl }}</div> -->
                     <a href="/login" class="btn btn-outline-secondary me-2" role="button">Login</a>
                     <a href="/signup" class="btn btn-secondary me-2" role="button">Sign-Up</a>
                 </div>
@@ -96,6 +114,14 @@ export default {
 
         isStats() {
             return this.$store.state.currentUrl.includes("stats");
+        },
+
+        getUserFullName() {
+            let userFullName = this.$store.state.userFullName;
+            if (userFullName === null || userFullName === "") {
+                return "Error";
+            }
+            return userFullName;
         }
     }
 }

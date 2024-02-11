@@ -4,15 +4,15 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-start">
-        <div>
+        <div class="mb-4">
             <BreadcrumbWorkoutsComponent />
-            <AlertComponent :message="message" :messageType="messageType" /><br>
+            <AlertListComponent :alerts="alerts" />
+            <AlertComponent :message="message" :messageType="messageType" />
             <ButtonComponent link="/workouts-create-media" title="New Media" />
-            <br><br>
         </div>
 
+        <!-- Filter -->
         <button id="filterButton" @click="onFilterToggle" class="btn btn-secondary mb-3">{{ filterButtonText }}</button>
-
         <form class="filter-width"
             :class="{ 'd-flex flex-column align-items-start mb-3': isFilterVisible, 'd-none': !isFilterVisible }">
 
@@ -29,20 +29,22 @@
             </div>
 
             <div class="d-flex flex-row flex-wrap mb-2">
-                <div class="mb-2 me-3">
-                    <input type="text" class="form-control" id="filterName" v-model="filterName"
+                <div class="d-flex align-items-center mb-2 me-3">
+                    <input type="text" class="form-control me-1" id="filterName" v-model="filterName"
                         placeholder="Filter by name">
+                    <TooltipComponent :text="getTooltipText('title')" />
                 </div>
 
-                <div class="mb-2 me-3">
-                    <input type="text" class="form-control" id="filterDescription" v-model="filterDescription"
+                <div class="d-flex align-items-center mb-2 me-3">
+                    <input type="text" class="form-control me-1" id="filterDescription" v-model="filterDescription"
                         placeholder="Filter by description">
+                    <TooltipComponent :text="getTooltipText('description')" />
                 </div>
             </div>
 
             <div class="d-flex flex-row flex-wrap mb-2">
                 <div class="mb-2 me-3">
-                    <select id="sortField" v-model="sortField" class="form-select" aria-label="sortField">
+                    <select id="sortField" v-model="filterSortField" class="form-select" aria-label="sortField">
                         <option :value="null" disabled>Sort by</option>
                         <option :key="1" :value="'name'">Name</option>
                         <option :key="2" :value="'description'">Description</option>
@@ -50,7 +52,7 @@
                 </div>
 
                 <div class="mb-2 me-3">
-                    <select id="sortDirection" v-model="sortDirection" class="form-select" aria-label="sortDirection">
+                    <select id="sortDirection" v-model="filterSortDirection" class="form-select" aria-label="sortDirection">
                         <option :value="null" disabled>Direction</option>
                         <option :key="1" :value="'asc'">Ascending</option>
                         <option :key="2" :value="'desc'">Descending</option>
@@ -58,7 +60,7 @@
                 </div>
 
                 <div class="mb-2 me-3">
-                    <select id="pageSize" v-model="pageSize" class="form-select" aria-label="pageSize">
+                    <select id="pageSize" v-model="filterPageSize" class="form-select" aria-label="pageSize">
                         <option :value="null" disabled>Page size</option>
                         <option :key="1" :value="5">5</option>
                         <option :key="2" :value="10">10</option>
@@ -74,12 +76,13 @@
             </div>
         </form>
 
+        <!-- HttpRef List -->
         <AlertComponent :message="filterMessage" :messageType="filterMessageType" /><br>
 
         <div id="totalElements" v-if="totalElements" class="text-muted mb-2">{{ this.totalElements }} found</div>
 
-        <div v-if="entities && entities.length > 0" class="d-flex flex-row flex-wrap">
-            <div v-for="entity in entities" :key="entity.id">
+        <div v-if="httpRefs && httpRefs.length > 0" class="d-flex flex-row flex-wrap">
+            <div v-for="entity in httpRefs" :key="entity.id">
                 <MediaComponent :id="entity.id" :name="entity.name" :description="entity.description"
                     :isCustom="entity.isCustom" :httpRef="entity.ref" />
             </div>
@@ -100,21 +103,31 @@
     </div>
 </template>
 
-
-
 <script>
 import { useMeta } from "vue-meta";
-import { getToken } from "../../shared/js/auth.js";
-import { getAndValidateToken } from "../../shared/js/auth.js";
-import { HTTP_REFS, HTTP_REFS_DEFAULT } from "../../shared/URL.js";
-import { SECONDARY, WARNING, NOT_FOUND, YOUR_ARE_UNLOGGED } from "../../shared/MESSAGE.js";
+import { getToken, getAndValidateToken, on401 } from "@/shared/js/auth";
+import { buildAlertsList } from "@/shared/js/exceptions";
+import { HTTP_REFS, HTTP_REFS_DEFAULT } from "@/shared/URL";
+import { SECONDARY, WARNING, NOT_FOUND, YOUR_ARE_UNLOGGED } from "@/shared/Messages";
+import { FILTER_DESCRIPTION_TOOLTIP, FILTER_TITLE_TOOLTIP } from "@/shared/Tooltips";
+import ButtonComponent from "@/shared/components/ButtonComponent.vue";
+import AlertComponent from "@/shared/components/AlertComponent.vue";
+import AlertListComponent from "@/shared/components/AlertListComponent.vue";
 import MediaComponent from "../components/MediaComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
-import AlertComponent from "../../shared/components/AlertComponent.vue";
-import ButtonComponent from "../../shared/components/ButtonComponent.vue";
+import TooltipComponent from "@/shared/components/TooltipComponent.vue";
 
 export default {
     name: "MediasListPage",
+
+    components: {
+        MediaComponent,
+        BreadcrumbWorkoutsComponent,
+        AlertComponent,
+        AlertListComponent,
+        ButtonComponent,
+        TooltipComponent
+    },
 
     setup() {
         useMeta({
@@ -130,103 +143,117 @@ export default {
             isFilterVisible: false,
             filterButtonText: "Filter",
 
-            entities: [],
-
             filterName: null,
             filterDescription: null,
             filterIsDefault: null,
             filterIsCustom: null,
-            sortField: null,
-            sortDirection: null,
-            pageSize: null,
-            isCustom: null,
+            filterSortField: null,
+            filterSortDirection: null,
+            filterPageSize: null,
+            filterIsCustomRequestValue: null,
 
-            content: [],
+            httpRefs: [],
             totalPages: 0,
             totalElements: null,
             pageNumber: 0,
-            size: null,
-            isFirst: null,
-            isLast: null,
-            hasNext: null,
-            hasPrevious: null,
 
-            message: "",
-            messageType: "",
-
-            filterMessage: "",
-            filterMessageType: ""
+            message: null,
+            messageType: null,
+            filterMessage: null,
+            filterMessageType: null,
+            alerts: []
         };
-    },
-
-    components: {
-        MediaComponent,
-        BreadcrumbWorkoutsComponent,
-        AlertComponent,
-        ButtonComponent
     },
 
     async created() {
         this.$store.commit("setCurrentUrl", "/workouts-media-list");
-        this.setIsCustom();
-        const token = await getAndValidateToken();
+        const token = await getAndValidateToken(this);
 
-        let response = null;
         if (token) {
             this.$store.commit("setLogged", true);
-            response = await this.getHttpRefs(this.getUrlString(0), token);
-
-            if (response.status === 200) {
-                if (Array.isArray(response.body.content) && response.body.content.length === 0) {
-                    this.filterMessageType = SECONDARY;
-                    this.filterMessage = NOT_FOUND;
-                    this.entities = [];
-                    this.totalPages = 0;
-                    this.pageNumber = 0;
-                } else {
-                    this.entities = response.body.content;
-                    this.totalPages = response.body.totalPages;
-                    this.pageNumber = response.body.number;
-                    this.totalElements = response.body.totalElements;
-                }
-            }
-            else if (response.status === 401) {
-                this.$router.push("/login");
-            }
-            else {
-                this.messageType = WARNING;
-                this.message = `Error: ${response.body.message}`;
-            }
-
         } else {
             this.$store.commit("setLogged", false);
             this.messageType = SECONDARY;
             this.message = YOUR_ARE_UNLOGGED;
-            const urlString = this.getUrlString(0);
-            response = await this.getDefaultHttpRefs(urlString);
+        }
+        const defaultPageNumber = 0;
+        await this.onPageRequest(null, defaultPageNumber);
+    },
+
+    methods: {
+        async onPageRequest(event, pageNumber) {
+            if (event === null) {
+                // do nothing;
+            }
+            else {
+                event.preventDefault();
+            }
+            this.setIsCustomRequestValue();
+            this.clearAlerts();
+            const urlString = this.getUrlString(pageNumber);
+            const isLogged = this.$store.state.isLogged;
+
+            let response = null;
+            if (isLogged) {
+                const token = getToken();
+                response = await this.getDefaultAndCustomHttpRefs(urlString, token);
+            } else {
+                response = await this.getDefaultHttpRefs(urlString);
+            }
 
             if (response.status === 200) {
                 if (Array.isArray(response.body.content) && response.body.content.length === 0) {
                     this.filterMessageType = SECONDARY;
                     this.filterMessage = NOT_FOUND;
-                    this.entities = [];
+                    this.httpRefs = [];
                     this.totalPages = 0;
                     this.pageNumber = 0;
+                    this.totalElements = null;
                 } else {
-                    this.entities = response.body.content;
+                    this.httpRefs = response.body.content;
                     this.totalPages = response.body.totalPages;
                     this.pageNumber = response.body.number;
                     this.totalElements = response.body.totalElements;
                 }
+            } else if (response.status === 401) {
+                on401(this);
             }
             else {
-                this.messageType = WARNING;
-                this.message = `Error: ${response.body.message}`;
+                this.alerts = buildAlertsList(response.body, WARNING);
             }
-        }
-    },
+        },
 
-    methods: {
+        getUrlString(pageNumber) {
+            let urlString = `?pageNumber=${pageNumber}`;
+            if (this.filterPageSize !== null) {
+                urlString += `&pageSize=${this.filterPageSize}`;
+            }
+            if (this.filterIsCustomRequestValue !== null) {
+                urlString += `&isCustom=${this.filterIsCustomRequestValue}`;
+            }
+            if (this.filterName !== null && this.filterName.trim() !== "") {
+                urlString += `&name=${this.filterName.trim()}`;
+            }
+            if (this.filterDescription !== null && this.filterDescription.trim() !== "") {
+                urlString += `&description=${this.filterDescription.trim()}`;
+            }
+            if (this.filterSortField !== null) {
+                urlString += `&sortField=${this.filterSortField}`;
+            }
+            if (this.filterSortDirection !== null) {
+                urlString += `&sortDirection=${this.filterSortDirection}`;
+            }
+            return urlString;
+        },
+
+        clearAlerts() {
+            this.message = null;
+            this.messageType = null;
+            this.filterMessage = null;
+            this.filterMessageType = null;
+            this.alerts = [];
+        },
+
         onFilterToggle() {
             this.isFilterVisible = !this.isFilterVisible;
             this.filterButtonText = this.isFilterVisible ? "Hide Filter" : "Filter";
@@ -238,71 +265,37 @@ export default {
             this.filterDescription = null;
             this.filterIsCustom = null;
             this.filterIsDefault = null;
-            this.isCustom = null;
-            this.sortField = null;
-            this.sortDirection = null;
-            this.pageSize = null;
+            this.filterIsCustomRequestValue = null;
+            this.filterSortField = null;
+            this.filterSortDirection = null;
+            this.filterPageSize = null;
+            this.message = null;
+            this.messageType = null;
+            this.alerts = [];
         },
 
-        setIsCustom() {
-            if (this.filterIsCustom === true && (this.filterIsDefault === null || this.filterIsDefault === false)) this.isCustom = true;
-            else if (this.filterIsDefault === true && (this.filterIsCustom === null || this.filterIsCustom === false)) this.isCustom = false;
-            else this.isCustom = null;
-        },
-
-        getUrlString(pageNumber) {
-            let urlString = `?pageNumber=${pageNumber}`;
-            if (this.pageSize !== null) urlString += `&pageSize=${this.pageSize}`;
-            if (this.isCustom !== null) urlString += `&isCustom=${this.isCustom}`;
-            if (this.filterName !== null && this.filterName.trim() !== "") urlString += `&name=${this.filterName.trim()}`;
-            if (this.filterDescription !== null && this.filterDescription.trim() !== "")
-                urlString += `&description=${this.filterDescription.trim()}`;
-            if (this.sortField !== null) urlString += `&sortField=${this.sortField}`;
-            if (this.sortDirection !== null) urlString += `&sortDirection=${this.sortDirection}`;
-            return urlString;
-        },
-
-        async onPageRequest(event, pageNumber) {
-            event.preventDefault();
-            this.filterMessageType = "";
-            this.filterMessage = "";
-            this.totalElements = null;
-            this.setIsCustom();
-            const urlString = this.getUrlString(pageNumber);
-
-            const isLogged = this.$store.state.isLogged;
-            let response = null;
-            if (isLogged) {
-                const token = getToken();
-                response = await this.getHttpRefs(urlString, token);
-            } else {
-                response = await this.getDefaultHttpRefs(urlString);
+        setIsCustomRequestValue() {
+            if (this.filterIsCustom === true && (this.filterIsDefault === null || this.filterIsDefault === false)) {
+                this.filterIsCustomRequestValue = true;
             }
-
-            if (response.status === 200) {
-                if (Array.isArray(response.body.content) && response.body.content.length === 0) {
-                    this.filterMessageType = SECONDARY;
-                    this.filterMessage = NOT_FOUND;
-                    this.entities = [];
-                    this.totalPages = 0;
-                    this.pageNumber = 0;
-                } else {
-                    this.entities = response.body.content;
-                    this.totalPages = response.body.totalPages;
-                    this.pageNumber = response.body.number;
-                    this.totalElements = response.body.totalElements;
-                }
-            }
-            else if (response.status === 401) {
-                this.$router.push("/login");
+            else if (this.filterIsDefault === true && (this.filterIsCustom === null || this.filterIsCustom === false)) {
+                this.filterIsCustomRequestValue = false;
             }
             else {
-                this.messageType = WARNING;
-                this.message = `Error: ${response.body.message}`;
+                this.filterIsCustomRequestValue = null;
             }
         },
 
-        async getHttpRefs(urlParams, token) {
+        getTooltipText(fieldName) {
+            if (fieldName === "title") {
+                return FILTER_TITLE_TOOLTIP;
+            }
+            if (fieldName === "description") {
+                return FILTER_DESCRIPTION_TOOLTIP;
+            }
+        },
+
+        async getDefaultAndCustomHttpRefs(urlParams, token) {
             let URL = HTTP_REFS + urlParams;
             const res = await fetch(URL, {
                 method: "GET",

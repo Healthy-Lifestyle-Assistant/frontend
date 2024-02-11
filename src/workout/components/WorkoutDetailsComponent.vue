@@ -31,8 +31,8 @@
 </template>
 
 <script>
+import ButtonComponent from "@/shared/components/ButtonComponent.vue";
 import ExerciseComponent from "../components/ExerciseComponent.vue";
-import ButtonComponent from "../../shared/components/ButtonComponent.vue";
 
 export default {
     name: "WorkoutDetailsComponent",

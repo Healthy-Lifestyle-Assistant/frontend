@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { truncateStringWithWordBoundary } from "../../shared/js/stringUtils";
+import { truncateStringWithWordBoundary } from "@/shared/js/stringUtils";
 
 export default {
 	name: "WorkoutComponent",

@@ -4,85 +4,123 @@
 	</metainfo>
 
 	<div class="d-flex flex-column align-items-start">
-		<AlertComponent :message="message" :messageType="messageType" />
+		<div>
+			<AlertListComponent :alerts="alerts" />
+			<AlertComponent :message="message" :messageType="messageType" />
+		</div>
 
 		<!-- Update -->
 		<h4 class="mb-4 text-muted">Update Profile</h4>
-		<form class="mb-5" @submit.prevent="onSubmitUpdateForm" style="width: fit-content">
+		<form class="mb-5" @submit.prevent="onSubmitUpdateForm" style="width: fit-content;">
 			<div class="mb-4">
-				<label for="username" class="form-label">Current username: {{ this.usernameLabel }}</label>
-				<input type="text" class="form-control" id="username" v-model="username" placeholder="Enter new username" />
+				<label for="username" class="form-label">Current username: {{ user.username }}</label>
+				<div class="d-flex justify-content-between align-items-center">
+					<input type="text" class="form-control me-1" id="username" v-model="formUsername"
+						placeholder="Enter new username" />
+					<TooltipComponent :text="getTooltipText('username')" />
+				</div>
 			</div>
 
 			<div class="mb-4">
-				<label for="email" class="form-label">Current email: {{ this.emailLabel }}</label>
-				<input type="email" class="form-control" id="email" v-model="email" placeholder="Enter new email" />
+				<label for="email" class="form-label">Current email: {{ user.email }}</label>
+				<div class="d-flex justify-content-between align-items-center">
+					<input type="email" class="form-control me-1" id="email" v-model="formEmail"
+						placeholder="Enter new email" />
+					<TooltipComponent :text="getTooltipText('email')" />
+				</div>
+
 			</div>
 
 			<div class="mb-4">
-				<label for="fullName" class="form-label">Current full name: {{ this.fullNameLabel }}</label>
-				<input type="text" class="form-control" id="fullName" v-model="fullName"
-					placeholder="Enter new full name" />
+				<label for="fullName" class="form-label">Current full name: {{ user.fullName }}</label>
+				<div class="d-flex justify-content-between align-items-center">
+					<input type="text" class="form-control me-1" id="fullName" v-model="formFullName"
+						placeholder="Enter new full name" />
+					<TooltipComponent :text="getTooltipText('fullName')" />
+				</div>
 			</div>
 
 			<div class="mb-4">
-				<label for="age" class="form-label">Current age: {{ this.ageLabel === null ? "None" : this.ageLabel
-				}}</label>
-				<input type="age" class="form-control" id="age" v-model="age" placeholder="Enter new age" />
+				<label for="age" class="form-label">Current age: {{ user.age === null ? "None" : user.age }}</label>
+				<div class="d-flex justify-content-between align-items-center">
+					<input type="age" class="form-control me-1" id="age" v-model="formAge" placeholder="Enter new age" />
+					<TooltipComponent :text="getTooltipText('age')" />
+				</div>
 			</div>
 
-			<div v-if="countries" class="mb-4">
+			<div v-if="countries && countries.length > 0" class="mb-4">
 				<label for="countries" class="form-label">Current country</label>
-				<select id="countries" v-model="countryId" class="form-select" aria-label="Select new country" required>
-					<option v-for="elt in countries" :key="elt.id" :value="elt.id">
-						{{ elt.name }}
-					</option>
-				</select>
+				<div class="d-flex justify-content-between align-items-center">
+					<select id="countries" v-model="formCountryId" class="form-select me-1" aria-label="Select new country"
+						required>
+						<option v-for="country in countries" :key="country.id" :value="country.id">
+							{{ country.name }}
+						</option>
+					</select>
+					<TooltipComponent :text="getTooltipText('country')" />
+				</div>
 			</div>
 
 			<div class="mb-4">
 				<label for="password" class="form-label">Update password</label>
-				<input type="password" class="form-control" id="password" v-model="password"
-					placeholder="Enter new password" />
+				<div class="d-flex justify-content-between align-items-center">
+					<input type="password" class="form-control me-1" id="password" v-model="formPassword"
+						placeholder="Enter new password" />
+					<TooltipComponent :text="getTooltipText('password')" />
+				</div>
 			</div>
 
 			<div class="mb-4">
 				<label for="confirmPassword" class="form-label">Confirm new password</label>
-				<input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword"
-					placeholder="Enter new password" />
+				<div class="d-flex justify-content-between align-items-center">
+					<input type="password" class="form-control me-1" id="confirmPassword" v-model="formConfirmPassword"
+						placeholder="Enter new password" />
+					<TooltipComponent :text="getTooltipText('password')" />
+				</div>
 			</div>
 
+			<button @click.prevent="onClearForm" class="btn btn-outline-secondary mt-4 me-2">Clear</button>
 			<button type="submit" class="btn btn-secondary mt-4">Update</button>
 		</form>
 
 		<!-- Delete -->
-        <div>
-            <h4 class="mb-2 text-muted">Delete Profile</h4>
-            <div class="mb-2">Deletion of the profile will delete all user's data.</div>
-            <div class="d-flex">
-                <input type="checkbox" value="" class="form-check-input" id="confirmDeletion" v-model="confirmDeletion">
-                <label for="confirmDeletion" class="form-check-label ms-2"><span class="span-color">Confirm deletion. This
-                        action cannot be undone.</span></label>
-            </div>
+		<div>
+			<h4 class="mb-2 text-muted">Delete Profile</h4>
+			<div class="mb-2">Deletion of the profile will delete all user's data.</div>
+			<div class="d-flex">
+				<input type="checkbox" value="" class="form-check-input" id="confirmDeletion" v-model="confirmDeletion">
+				<label for="confirmDeletion" class="form-check-label ms-2"><span class="span-color">Confirm deletion. This
+						action cannot be undone.</span></label>
+			</div>
 
-            <form @submit.prevent="onSubmitDeleteForm" style="min-width: 13rem; width: fit-content;" class="mb-5">
-                <button :disabled="!confirmDeletion" type="submit" class="btn btn-warning mt-4">Delete</button>
-            </form>
-            <br>
-        </div>
+			<form @submit.prevent="onSubmitDeleteForm" style="min-width: 13rem; width: fit-content;" class="mb-5">
+				<button :disabled="!confirmDeletion" type="submit" class="btn btn-warning mt-4">Delete</button>
+			</form>
+			<br>
+		</div>
 	</div>
 </template>
 
 <script>
 import { useMeta } from "vue-meta";
-import { getToken } from "../../shared/js/auth.js";
-import { getAndValidateToken } from "../../shared/js/auth.js";
-import { COUNTRIES, USERS, USERS_SLASH } from "../../shared/URL.js";
-import { SUCCESS, WARNING, PROFILE_UPDATED_SUCCESSFULLY, PROFILE_DELETED_SUCCESSFULLY } from "../../shared/MESSAGE.js";
-import AlertComponent from "../../shared/components/AlertComponent.vue";
+import { getToken, getAndValidateToken, removeToken, on401, redirectToLoginSessionExpired } from "@/shared/js/auth";
+import { getStringOrNull } from "@/shared/js/stringUtils";
+import { buildAlertsList } from "@/shared/js/exceptions";
+import { COUNTRIES, USERS, USERS_SLASH } from "@/shared/URL";
+import { SUCCESS, WARNING, PROFILE_UPDATED_SUCCESSFULLY, PROFILE_DELETED_SUCCESSFULLY } from "@/shared/Messages";
+import { USERNAME_TOOLTIP, EMAIL_TOOLTIP, FULL_NAME_TOOLTIP, AGE_TOOLTIP, COUNTRY_TOOLTIP, PASSWORD_TOOLTIP } from "@/shared/Tooltips";
+import AlertComponent from "@/shared/components/AlertComponent.vue";
+import AlertListComponent from "@/shared/components/AlertListComponent.vue";
+import TooltipComponent from "@/shared/components/TooltipComponent.vue";
 
 export default {
 	name: "SettingsPage",
+
+	components: {
+		AlertComponent,
+		AlertListComponent,
+		TooltipComponent
+	},
 
 	setup() {
 		useMeta({
@@ -95,158 +133,163 @@ export default {
 
 	data() {
 		return {
-			usernameLabel: null,
-			emailLabel: null,
-			fullNameLabel: null,
-			ageLabel: null,
-			countries: null,
+			formUsername: null,
+			formEmail: null,
+			formFullName: null,
+			formPassword: null,
+			formConfirmPassword: null,
+			formCountryId: null,
+			formAge: null,
 
-			userId: null,
-			username: null,
-			email: null,
-			fullName: null,
-			password: null,
-			confirmPassword: null,
-			countryId: null,
-			age: null,
+			user: {},
+			countries: [],
 
-			message: "",
-			messageType: "",
+			message: null,
+			messageType: null,
+			alerts: [],
+
 			confirmDeletion: false
 		};
 	},
 
-	components: {
-		AlertComponent,
-	},
-
 	async created() {
 		this.$store.commit("setCurrentUrl", "/settings");
-		let countriesResponse = await this.getCountries();
-		this.countries = countriesResponse.body;
-		const token = await getAndValidateToken();
+		const token = await getAndValidateToken(this);
+
 		if (!token) {
-			this.$store.commit("setLogged", false);
-			this.$router.push("/login");
+			redirectToLoginSessionExpired(this);
 		} else {
 			this.$store.commit("setLogged", true);
-			await this.getUserDetails(this.$route.params.id);
+			let countriesResponse = await this.getCountries();
+			let userResponse = await this.getUserDetails(this.$route.params.id);
+
+			if (countriesResponse.status === 200 && userResponse.status === 200) {
+				this.countries = countriesResponse.body;
+				this.user = userResponse.body;
+				this.formCountryId = this.user.countryId;
+			} else if (userResponse.status === 401) {
+				on401(this);
+			} else {
+				if (countriesResponse.status !== 200) {
+					this.alerts = this.alerts.concat(buildAlertsList(countriesResponse.body, WARNING));
+				}
+				if (userResponse.status !== 200) {
+					this.alerts = this.alerts.concat(buildAlertsList(userResponse.body, WARNING));
+				}
+			}
 		}
 	},
 
 	methods: {
 		async onSubmitUpdateForm() {
 			const requestDto = {
-				username: this.username,
-				email: this.email,
-				fullName: this.fullName,
-				countryId: this.countryId,
-				age: this.age,
-				password: this.password,
-				confirmPassword: this.confirmPassword
+				username: getStringOrNull(this.formUsername),
+				email: getStringOrNull(this.formEmail),
+				fullName: getStringOrNull(this.formFullName),
+				countryId: this.formCountryId,
+				age: this.formAge,
+				password: getStringOrNull(this.formPassword),
+				confirmPassword: getStringOrNull(this.formConfirmPassword)
 			};
 
-			try {
-				const res = await this.updateUser(requestDto);
-
-				if (res.status === 200) {
-					this.messageType = SUCCESS;
-					this.message = PROFILE_UPDATED_SUCCESSFULLY;
-
-					this.usernameLabel = res.body.username;
-					this.emailLabel = res.body.email;
-					this.fullNameLabel = res.body.fullName;
-					this.countryIdLabel = res.body.countryId;
-					this.ageLabel = res.body.age;
-				} else if (res.status === 401) {
-					localStorage.removeItem("token");
-					this.$store.commit("setLogged", false);
-					this.$router.push("/login");
-				} else {
-					let messageBuilder = "";
-					for (const key in res.body) {
-						messageBuilder += `${key}: ${res.body[key]}. `;
-					}
-					this.messageType = WARNING;
-					this.message = messageBuilder;
-				}
-			} catch (error) {
-				this.messageType = WARNING;
-				this.message = `Error: ${error}`;
+			const response = await this.updateUser(requestDto);
+			if (response.status === 200) {
+				this.user = response.body;
+				this.onClearForm();
+				this.messageType = SUCCESS;
+				this.message = PROFILE_UPDATED_SUCCESSFULLY;
+			} else if (response.status === 401) {
+				on401(this);
+			} else {
+				this.message = null;
+				this.messageType = null;
+				this.alerts = buildAlertsList(response.body, WARNING);
 			}
-
-			this.username = null;
-			this.email = null;
-			this.fullName = null;
-			this.age = null;
-			this.password = null;
-			this.confirmPassword = null;
 		},
 
 		async onSubmitDeleteForm() {
-			try {
-				const res = await this.deleteUser(this.$route.params.id);
+			const response = await this.deleteUser(this.$route.params.id);
+			if (response.status === 204) {
+				removeToken();
+				this.$store.commit("setLogged", false);
+				this.$store.commit("setSharedMessageType", SUCCESS);
+				this.$store.commit("setSharedMessage", PROFILE_DELETED_SUCCESSFULLY);
+				this.$router.push("/signup");
+			} else if (response.status === 401) {
+				on401(this);
+			} else {
+				this.alerts = buildAlertsList(response.body, WARNING);
+			}
+		},
 
-				if (res.status === 204) {
-					this.messageType = SUCCESS;
-					this.message = PROFILE_DELETED_SUCCESSFULLY;
-					localStorage.removeItem("token");
-					this.$store.commit("setLogged", false);
-					this.$router.push("/signup");
-				} else if (res.status === 401) {
-					localStorage.removeItem("token");
-					this.$store.commit("setLogged", false);
-					this.$router.push("/login");
-				} else {
-					let messageBuilder = "";
-					for (const key in res.body) {
-						messageBuilder += `${key}: ${res.body[key]}. `;
-					}
-					this.messageType = WARNING;
-					this.message = messageBuilder;
-				}
-			} catch (error) {
-				this.messageType = WARNING;
-				this.message = `Error: ${error}`;
+		onClearForm() {
+			this.formUsername = null;
+			this.formEmail = null;
+			this.formFullName = null;
+			this.formAge = null;
+			this.formPassword = null;
+			this.formConfirmPassword = null;
+			this.formCountryId = this.user.countryId;
+			this.message = null;
+			this.messageType = null;
+			this.alerts = [];
+		},
+
+		getTooltipText(fieldName) {
+			if (fieldName === "username") {
+				return USERNAME_TOOLTIP;
+			}
+			if (fieldName === "email") {
+				return EMAIL_TOOLTIP;
+			}
+			if (fieldName === "fullName") {
+				return FULL_NAME_TOOLTIP;
+			}
+			if (fieldName === "age") {
+				return AGE_TOOLTIP;
+			}
+			if (fieldName === "country") {
+				return COUNTRY_TOOLTIP;
+			}
+			if (fieldName === "password") {
+				return PASSWORD_TOOLTIP;
 			}
 		},
 
 		async getCountries() {
-			const res = await fetch(COUNTRIES, {
+			const response = await fetch(COUNTRIES, {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
 				},
 			});
-			const data = await res.json();
+			const data = await response.json();
 			return {
-				status: res.status,
+				status: response.status,
 				body: data,
 			};
 		},
 
 		async getUserDetails() {
 			let token = getToken();
-			const res = await fetch(USERS, {
+			const response = await fetch(USERS, {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
 				},
 			});
-			const data = await res.json();
-			this.userId = data.id;
-			this.usernameLabel = data.username;
-			this.emailLabel = data.email;
-			this.fullNameLabel = data.fullName;
-			this.ageLabel = data.age;
-			this.countryId = data.countryId;
+			const data = await response.json();
+			return {
+				status: response.status,
+				body: data,
+			};
 		},
 
 		async updateUser(requestBody) {
-			let URL = USERS_SLASH + this.userId;
+			let URL = USERS_SLASH + this.user.id;
 			let token = getToken();
-			const res = await fetch(URL, {
+			const response = await fetch(URL, {
 				method: "PATCH",
 				headers: {
 					"Content-Type": "application/json",
@@ -254,17 +297,17 @@ export default {
 				},
 				body: JSON.stringify(requestBody),
 			});
-			const data = await res.json();
+			const data = await response.json();
 			return {
-				status: res.status,
+				status: response.status,
 				body: data,
 			};
 		},
 
 		async deleteUser() {
-			let URL = USERS_SLASH + this.userId;
+			let URL = USERS_SLASH + this.user.id;
 			let token = getToken();
-			const res = await fetch(URL, {
+			const response = await fetch(URL, {
 				method: "DELETE",
 				headers: {
 					"Content-Type": "application/json",
@@ -272,7 +315,7 @@ export default {
 				},
 			});
 			return {
-				status: res.status,
+				status: response.status,
 			};
 		},
 	},

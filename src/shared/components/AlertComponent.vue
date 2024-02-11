@@ -3,7 +3,7 @@
         {{ message }}
     </div>
 </template>
-  
+
 <script>
 export default {
     name: "AlertComponent",

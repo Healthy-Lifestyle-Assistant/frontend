@@ -4,15 +4,15 @@
     </metainfo>
 
     <div class="d-flex flex-column align-items-start">
-        <div>
+        <div class="mb-4">
             <BreadcrumbWorkoutsComponent />
-            <AlertComponent :message="message" :messageType="messageType" /><br>
+            <AlertListComponent :alerts="alerts" />
+            <AlertComponent :message="message" :messageType="messageType" />
             <ButtonComponent link="/workouts-create-workout" title="New Workout" />
-            <br><br>
         </div>
 
+        <!-- Filter -->
         <button id="filterButton" @click="onFilterToggle" class="btn btn-secondary mb-3">{{ filterButtonText }}</button>
-
         <form class="filter-width"
             :class="{ 'd-flex flex-column align-items-start mb-3': isFilterVisible, 'd-none': !isFilterVisible }">
 
@@ -41,28 +41,31 @@
             </div>
 
             <div class="d-flex flex-row flex-wrap mb-2">
-                <div class="mb-2 me-3">
-                    <input type="text" class="form-control" id="filterTitle" v-model="filterTitle"
+                <div class="d-flex align-items-center mb-2 me-3">
+                    <input type="text" class="form-control me-1" id="filterTitle" v-model="filterTitle"
                         placeholder="Filter by title">
+                    <TooltipComponent :text="getTooltipText('title')" />
                 </div>
 
-                <div class="mb-2 me-3">
-                    <input type="text" class="form-control" id="filterDescription" v-model="filterDescription"
+                <div class="d-flex align-items-center mb-2 me-3">
+                    <input type="text" class="form-control me-1" id="filterDescription" v-model="filterDescription"
                         placeholder="Filter by description">
+                    <TooltipComponent :text="getTooltipText('description')" />
                 </div>
             </div>
 
             <div v-if="bodyParts && bodyParts.length > 0" class="d-flex flex-row flex-wrap mb-2">
                 <div v-for="bodyPart in bodyParts" :key="bodyPart.id" class="me-2">
                     <input type="checkbox" value="" class="form-check-input" :id="bodyPart.name"
-                        @click="onClickBodyPartCheckbox(bodyPart.id)" :checked="bodyPartsStates[bodyPart.id]">
+                        @click="onClickBodyPartCheckbox(bodyPart.id)"
+                        :checked="filterSelectedBodyPartsCheckboxesStates[bodyPart.id]">
                     <label :for="bodyPart.name" class="form-check-label">{{ bodyPart.name }}</label>
                 </div>
             </div>
 
             <div class="d-flex flex-row flex-wrap mb-2">
                 <div class="mb-2 me-3">
-                    <select id="sortField" v-model="sortField" class="form-select" aria-label="sortField">
+                    <select id="sortField" v-model="filterSortField" class="form-select" aria-label="sortField">
                         <option :value="null" disabled>Sort by</option>
                         <option :key="1" :value="'title'">Title</option>
                         <option :key="2" :value="'description'">Description</option>
@@ -70,7 +73,7 @@
                 </div>
 
                 <div class="mb-2 me-3">
-                    <select id="sortDirection" v-model="sortDirection" class="form-select" aria-label="sortDirection">
+                    <select id="sortDirection" v-model="filterSortDirection" class="form-select" aria-label="sortDirection">
                         <option :value="null" disabled>Direction</option>
                         <option :key="1" :value="'asc'">Ascending</option>
                         <option :key="2" :value="'desc'">Descending</option>
@@ -78,7 +81,7 @@
                 </div>
 
                 <div class="mb-2 me-3">
-                    <select id="pageSize" v-model="pageSize" class="form-select" aria-label="pageSize">
+                    <select id="pageSize" v-model="filterPageSize" class="form-select" aria-label="pageSize">
                         <option :value="null" disabled>Page size</option>
                         <option :key="1" :value="5">5</option>
                         <option :key="2" :value="10">10</option>
@@ -88,18 +91,19 @@
             </div>
 
             <div>
-                <button id="clearButton" @click="onClearFilter($event)"
+                <button id="clearButton" @click.prevent="onClearFilter()"
                     class="btn btn-outline-secondary mb-2 me-2">Clear</button>
                 <button id="applyButton" @click="onPageRequest($event, 0)" class="btn btn-secondary mb-2">Apply</button>
             </div>
         </form>
 
+        <!-- Workouts List -->
         <AlertComponent :message="filterMessage" :messageType="filterMessageType" /><br>
 
         <div id="totalElements" v-if="totalElements" class="text-muted mb-2">{{ this.totalElements }} found</div>
 
-        <div v-if="entities && entities.length > 0" class="d-flex flex-row flex-wrap">
-            <div v-for="entity in entities" :key="entity.id">
+        <div v-if="workouts && workouts.length > 0" class="d-flex flex-row flex-wrap">
+            <div v-for="entity in workouts" :key="entity.id">
                 <WorkoutComponent :id="entity.id" :title="entity.title" :description="entity.description"
                     :bodyParts="entity.bodyParts" :isCustom="entity.isCustom" :needsEquipment="entity.needsEquipment"
                     :exercises="entity.exercises" />
@@ -123,17 +127,29 @@
 
 <script>
 import { useMeta } from "vue-meta";
-import { getToken } from "../../shared/js/auth.js";
-import { getAndValidateToken } from "../../shared/js/auth.js";
-import { WORKOUTS, WORKOUTS_DEFAULT, BODY_PARTS } from "../../shared/URL.js";
-import { SECONDARY, WARNING, NOT_FOUND, YOUR_ARE_UNLOGGED } from "../../shared/MESSAGE.js";
+import { getToken, getAndValidateToken, on401 } from "@/shared/js/auth";
+import { buildAlertsList } from "@/shared/js/exceptions";
+import { WORKOUTS, WORKOUTS_DEFAULT, BODY_PARTS } from "@/shared/URL";
+import { SECONDARY, WARNING, NOT_FOUND, YOUR_ARE_UNLOGGED } from "@/shared/Messages";
+import { FILTER_DESCRIPTION_TOOLTIP, FILTER_TITLE_TOOLTIP } from "@/shared/Tooltips";
+import AlertComponent from "@/shared/components/AlertComponent.vue";
+import AlertListComponent from "@/shared/components/AlertListComponent.vue";
+import ButtonComponent from "@/shared/components/ButtonComponent.vue";
 import WorkoutComponent from "../components/WorkoutComponent.vue";
 import BreadcrumbWorkoutsComponent from "../components/BreadcrumbWorkoutsComponent.vue";
-import AlertComponent from "../../shared/components/AlertComponent.vue";
-import ButtonComponent from "../../shared/components/ButtonComponent.vue";
+import TooltipComponent from "@/shared/components/TooltipComponent.vue";
 
 export default {
     name: "WorkoutsListPage",
+
+    components: {
+        WorkoutComponent,
+        BreadcrumbWorkoutsComponent,
+        AlertComponent,
+        AlertListComponent,
+        ButtonComponent,
+        TooltipComponent
+    },
 
     setup() {
         useMeta({
@@ -149,206 +165,68 @@ export default {
             isFilterVisible: false,
             filterButtonText: "Filter",
 
-            entities: [],
-            bodyParts: [],
-
             filterTitle: null,
             filterDescription: null,
             filterIsDefault: null,
             filterIsCustom: null,
+            filterIsCustomRequestValue: null,
             filterWithEquipment: null,
             filterWithoutEquipment: null,
-            bodyPartsIds: [],
-            bodyPartsStates: {},
-            sortField: null,
-            sortDirection: null,
-            pageSize: null,
-            isCustom: null,
-            needsEquipment: null,
+            filterNeedsEquipmentRequestValue: null,
+            filterSortField: null,
+            filterSortDirection: null,
+            filterPageSize: null,
+            filterSelectedBodyPartsIds: [],
+            filterSelectedBodyPartsCheckboxesStates: {},
 
-            content: [],
+            workouts: [],
+            bodyParts: [],
+
             totalPages: 0,
-            totalElements: null,
             pageNumber: 0,
-            size: null,
-            isFirst: null,
-            isLast: null,
-            hasNext: null,
-            hasPrevious: null,
+            totalElements: null,
 
-            message: "",
-            messageType: "",
-
-            filterMessage: "",
-            filterMessageType: ""
+            message: null,
+            messageType: null,
+            filterMessage: null,
+            filterMessageType: null,
+            alerts: []
         };
     },
 
     async created() {
         this.$store.commit("setCurrentUrl", "/workouts-list");
-        this.setIsCustom();
-        this.setNeedsEquipment();
-        const token = await getAndValidateToken();
+        const token = await getAndValidateToken(this);
 
-        let bodyPartsResponse = await this.getBodyParts();
-        if (bodyPartsResponse.status == 200) {
-            this.bodyParts = bodyPartsResponse.body;
-        }
-
-        let entitiesResponse = null;
         if (token) {
             this.$store.commit("setLogged", true);
-            entitiesResponse = await this.getWorkouts(this.getUrlString(0), token);
-
-            if (entitiesResponse.status === 200) {
-                if (Array.isArray(entitiesResponse.body.content) && entitiesResponse.body.content.length === 0) {
-                    this.filterMessageType = SECONDARY;
-                    this.filterMessage = NOT_FOUND;
-                    this.httpRefs = [];
-                    this.totalPages = 0;
-                    this.pageNumber = 0;
-                } else {
-                    this.entities = entitiesResponse.body.content;
-                    this.totalPages = entitiesResponse.body.totalPages;
-                    this.pageNumber = entitiesResponse.body.number;
-                    this.totalElements = entitiesResponse.body.totalElements;
-                }
-            }
-            else if (entitiesResponse.status === 401) {
-                this.$router.push("/login");
-            }
-            else {
-                this.messageType = WARNING;
-                this.message = `${entitiesResponse.body.message} - ${entitiesResponse.status})`;
-            }
-
         } else {
             this.$store.commit("setLogged", false);
             this.messageType = SECONDARY;
             this.message = YOUR_ARE_UNLOGGED;
-            const urlString = this.getUrlString(0);
-            entitiesResponse = await this.getDefaultWorkouts(urlString);
-
-            if (entitiesResponse.status === 200) {
-                if (Array.isArray(entitiesResponse.body.content) && entitiesResponse.body.content.length === 0) {
-                    this.filterMessageType = SECONDARY;
-                    this.filterMessage = NOT_FOUND;
-                    this.entities = [];
-                    this.totalPages = 0;
-                    this.pageNumber = 0;
-                } else {
-                    this.entities = entitiesResponse.body.content;
-                    this.totalPages = entitiesResponse.body.totalPages;
-                    this.pageNumber = entitiesResponse.body.number;
-                    this.totalElements = entitiesResponse.body.totalElements;
-                }
-            }
-            else {
-                this.messageType = WARNING;
-                this.message = `${entitiesResponse.body.message} - ${entitiesResponse.status}`;
-            }
         }
-    },
-
-    components: {
-        WorkoutComponent,
-        BreadcrumbWorkoutsComponent,
-        AlertComponent,
-        ButtonComponent
+        const defaultPageNumber = 0;
+        await this.onPageRequest(null, defaultPageNumber);
     },
 
     methods: {
-        onFilterToggle() {
-            this.isFilterVisible = !this.isFilterVisible;
-            this.filterButtonText = this.isFilterVisible ? "Hide Filter" : "Filter";
-        },
-
-        onClearFilter(event) {
-            event.preventDefault();
-            this.filterWithEquipment = null;
-            this.filterWithoutEquipment = null;
-            this.filterTitle = null;
-            this.filterDescription = null;
-            this.filterIsCustom = null;
-            this.filterIsDefault = null;
-            this.isCustom = null;
-            this.bodyPartsIds = [];
-            this.sortField = null;
-            this.sortDirection = null;
-            this.pageSize = null;
-            this.bodyPartsStates = {};
-        },
-
-        onClickBodyPartCheckbox(id) {
-            if (this.bodyPartsIds.includes(id)) {
-                let index = this.bodyPartsIds.indexOf(id);
-                this.bodyPartsIds.splice(index, 1);
-                delete this.bodyPartsStates[id];
-            } else {
-                this.bodyPartsIds.push(id);
-                this.bodyPartsStates[id] = true;
-            }
-        },
-
-        setIsCustom() {
-            if (this.filterIsCustom === true && (this.filterIsDefault === null || this.filterIsDefault === false)) {
-                this.isCustom = true;
-            }
-            else if (this.filterIsDefault === true && (this.filterIsCustom === null || this.filterIsCustom === false)) {
-                this.isCustom = false;
-            }
-            else {
-                this.isCustom = null;
-            }
-        },
-
-        setNeedsEquipment() {
-            if (this.filterWithEquipment === true && (this.filterWithoutEquipment === null || this.filterWithoutEquipment === false)) {
-                this.needsEquipment = true;
-            }
-            else if (this.filterWithoutEquipment === true && (this.filterWithEquipment === null || this.filterWithEquipment === false)) {
-                this.needsEquipment = false;
-            }
-            else {
-                this.needsEquipment = null;
-            }
-        },
-
-        getUrlString(pageNumber) {
-            let urlString = `?pageNumber=${pageNumber}`;
-            if (this.pageSize !== null) urlString += `&pageSize=${this.pageSize}`;
-            if (this.isCustom !== null) urlString += `&isCustom=${this.isCustom}`;
-            if (this.needsEquipment != null) urlString += `&needsEquipment=${this.needsEquipment}`;
-            if (this.filterTitle !== null && this.filterTitle.trim() !== "") urlString += `&title=${this.filterTitle.trim()}`;
-            if (this.filterDescription !== null && this.filterDescription.trim() !== "")
-                urlString += `&description=${this.filterDescription.trim()}`;
-            if (this.bodyPartsIds && this.bodyPartsIds.length > 0) {
-                let bodyPartsIdsString = "&bodyPartsIds=";
-                for (let i = 0; i < this.bodyPartsIds.length; i++) {
-                    bodyPartsIdsString += `${this.bodyPartsIds[i]},`
-                }
-                bodyPartsIdsString = bodyPartsIdsString.slice(0, bodyPartsIdsString.length - 1);
-                urlString += bodyPartsIdsString;
-            }
-            if (this.sortField !== null) urlString += `&sortField=${this.sortField}`;
-            if (this.sortDirection !== null) urlString += `&sortDirection=${this.sortDirection}`;
-            return urlString;
-        },
-
         async onPageRequest(event, pageNumber) {
-            event.preventDefault();
-            this.filterMessageType = "";
-            this.filterMessage = "";
-            this.totalElements = null;
-            this.setIsCustom();
-            this.setNeedsEquipment();
+            if (event === null) {
+                // do nothing;
+            }
+            else {
+                event.preventDefault();
+            }
+            this.setIsCustomRequestValue();
+            this.setNeedsEquipmentRequestValue();
+            this.clearAlerts();
             const urlString = this.getUrlString(pageNumber);
-
             const isLogged = this.$store.state.isLogged;
+
             let response = null;
             if (isLogged) {
                 const token = getToken();
-                response = await this.getWorkouts(urlString, token);
+                response = await this.getDefaultAndCustomWorkouts(urlString, token);
             } else {
                 response = await this.getDefaultWorkouts(urlString);
             }
@@ -357,66 +235,173 @@ export default {
                 if (Array.isArray(response.body.content) && response.body.content.length === 0) {
                     this.filterMessageType = SECONDARY;
                     this.filterMessage = NOT_FOUND;
-                    this.entities = [];
+                    this.workouts = [];
                     this.totalPages = 0;
                     this.pageNumber = 0;
+                    this.totalElements = null;
                 } else {
-                    this.entities = response.body.content;
+                    this.workouts = response.body.content;
                     this.totalPages = response.body.totalPages;
                     this.pageNumber = response.body.number;
                     this.totalElements = response.body.totalElements;
                 }
+            } else if (response.status === 401) {
+                on401(this);
+            } else {
+                this.alerts = buildAlertsList(response.body, WARNING);
             }
-            else if (response.status === 401) {
-                this.$router.push("/login");
+        },
+
+        getUrlString(pageNumber) {
+            let urlString = `?pageNumber=${pageNumber}`;
+            if (this.filterPageSize !== null) {
+                urlString += `&pageSize=${this.filterPageSize}`;
+            }
+            if (this.filterIsCustomRequestValue !== null) {
+                urlString += `&isCustom=${this.filterIsCustomRequestValue}`;
+            }
+            if (this.filterNeedsEquipmentRequestValue != null) {
+                urlString += `&needsEquipment=${this.filterNeedsEquipmentRequestValue}`;
+            }
+            if (this.filterTitle !== null && this.filterTitle.trim() !== "") {
+                urlString += `&title=${this.filterTitle.trim()}`;
+            }
+            if (this.filterDescription !== null && this.filterDescription.trim() !== "") {
+                urlString += `&description=${this.filterDescription.trim()}`;
+            }
+            if (this.filterSelectedBodyPartsIds && this.filterSelectedBodyPartsIds.length > 0) {
+                let bodyPartsIdsString = "&bodyPartsIds=";
+                for (let i = 0; i < this.filterSelectedBodyPartsIds.length; i++) {
+                    bodyPartsIdsString += `${this.filterSelectedBodyPartsIds[i]},`
+                }
+                bodyPartsIdsString = bodyPartsIdsString.slice(0, bodyPartsIdsString.length - 1);
+                urlString += bodyPartsIdsString;
+            }
+            if (this.filterSortField !== null) {
+                urlString += `&sortField=${this.filterSortField}`;
+            }
+            if (this.filterSortDirection !== null) {
+                urlString += `&sortDirection=${this.filterSortDirection}`;
+            }
+            return urlString;
+        },
+
+        clearAlerts() {
+            this.message = null;
+            this.messageType = null;
+            this.filterMessage = null;
+            this.filterMessageType = null;
+            this.alerts = [];
+        },
+
+        onFilterToggle() {
+            this.isFilterVisible = !this.isFilterVisible;
+            this.filterButtonText = this.isFilterVisible ? "Hide Filter" : "Filter";
+        },
+
+        onClearFilter() {
+            this.filterWithEquipment = null;
+            this.filterWithoutEquipment = null;
+            this.filterTitle = null;
+            this.filterDescription = null;
+            this.filterIsCustom = null;
+            this.filterIsDefault = null;
+            this.filterIsCustomRequestValue = null;
+            this.filterSelectedBodyPartsIds = [];
+            this.filterSelectedBodyPartsCheckboxesStates = {};
+            this.filterSortField = null;
+            this.filterSortDirection = null;
+            this.filterPageSize = null;
+            this.message = null;
+            this.messageType = null;
+            this.alerts = [];
+        },
+
+        onClickBodyPartCheckbox(id) {
+            if (this.filterSelectedBodyPartsIds.includes(id)) {
+                let index = this.filterSelectedBodyPartsIds.indexOf(id);
+                this.filterSelectedBodyPartsIds.splice(index, 1);
+                delete this.filterSelectedBodyPartsCheckboxesStates[id];
+            } else {
+                this.filterSelectedBodyPartsIds.push(id);
+                this.filterSelectedBodyPartsCheckboxesStates[id] = true;
+            }
+        },
+
+        setIsCustomRequestValue() {
+            if (this.filterIsCustom === true && (this.filterIsDefault === null || this.filterIsDefault === false)) {
+                this.filterIsCustomRequestValue = true;
+            }
+            else if (this.filterIsDefault === true && (this.filterIsCustom === null || this.filterIsCustom === false)) {
+                this.filterIsCustomRequestValue = false;
             }
             else {
-                this.messageType = WARNING;
-                this.message = `Error: ${response.body.message}`;
+                this.filterIsCustomRequestValue = null;
+            }
+        },
+
+        setNeedsEquipmentRequestValue() {
+            if (this.filterWithEquipment === true && (this.filterWithoutEquipment === null || this.filterWithoutEquipment === false)) {
+                this.filterNeedsEquipmentRequestValue = true;
+            }
+            else if (this.filterWithoutEquipment === true && (this.filterWithEquipment === null || this.filterWithEquipment === false)) {
+                this.filterNeedsEquipmentRequestValue = false;
+            }
+            else {
+                this.filterNeedsEquipmentRequestValue = null;
+            }
+        },
+
+        getTooltipText(fieldName) {
+            if (fieldName === "title") {
+                return FILTER_TITLE_TOOLTIP;
+            }
+            if (fieldName === "description") {
+                return FILTER_DESCRIPTION_TOOLTIP;
             }
         },
 
         async getDefaultWorkouts(urlParams) {
             let URL = WORKOUTS_DEFAULT + urlParams;
-            const res = await fetch(URL, {
+            const response = await fetch(URL, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 }
             });
-            const data = await res.json();
+            const data = await response.json();
             return {
-                status: res.status,
+                status: response.status,
                 body: data
             };
         },
 
-        async getWorkouts(urlParams, token) {
+        async getDefaultAndCustomWorkouts(urlParams, token) {
             let URL = WORKOUTS + urlParams;
-            const res = await fetch(URL, {
+            const response = await fetch(URL, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 }
             });
-            const data = await res.json();
+            const data = await response.json();
             return {
-                status: res.status,
+                status: response.status,
                 body: data
             };
         },
 
-        async getBodyParts() {
-            const res = await fetch(BODY_PARTS, {
+        async getDefaultBodyParts() {
+            const response = await fetch(BODY_PARTS, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 }
             });
-            const data = await res.json();
+            const data = await response.json();
             return {
-                status: res.status,
+                status: response.status,
                 body: data
             };
         }
