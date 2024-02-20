@@ -24,3 +24,8 @@ export const WORKOUTS_DEFAULT = BASE + "workouts/default";
 export const WORKOUTS_DEFAULT_SLASH = BASE + "workouts/default/";
 // Shared
 export const PAGE_SIZE = "?pageSize=1000";
+//Mentals
+export const MENTALS = BASE + "mentals";
+export const MENTALS_SLASH = BASE + "mentals/";
+export const MENTALS_DEFAULT = MENTALS + "/default";
+export const MENTALS_DEFAULT_SLASH = MENTALS + "/default/";

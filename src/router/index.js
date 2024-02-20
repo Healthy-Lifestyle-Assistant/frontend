@@ -33,8 +33,8 @@ import RemindersWorkoutsPage from "../workout/pages/RemindersWorkoutsPage.vue";
 // Nutrition
 import NutritionPage from "../nutrition/pages/NutritionPage.vue";
 
-// Meditation
-import MeditationsPage from "../meditation/pages/MeditationsPage.vue";
+// Mental
+import MentalsListPage from "../mental/pages/MentalsListPage.vue";
 
 // Calendar
 import CalendarPage from "../calendar/pages/CalendarPage.vue";
@@ -150,11 +150,11 @@ const routes = [
         component: NutritionPage
     },
 
-    // Meditation
+    // Mental
     {
-        path: "/meditations",
-        name: "MeditationsPage",
-        component: MeditationsPage
+        path: "/mental-list",
+        name: "MentalsListPage",
+        component: MentalsListPage
     },
 
     // Calendar

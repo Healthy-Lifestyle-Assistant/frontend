@@ -26,7 +26,7 @@
                     </li>
 
                     <li class="nav-item me-3">
-                        <a href="/meditations" :class="{ 'nav-link': true, 'active': isMeditations }">Mental</a>
+                        <a href="/mentals-list" :class="{ 'nav-link': true, 'active': isMental }">Mental</a>
                     </li>
 
                     <li class="nav-item me-3">
@@ -104,8 +104,8 @@ export default {
             return this.$store.state.currentUrl.includes("nutrition");
         },
 
-        isMeditations() {
-            return this.$store.state.currentUrl.includes("meditations");
+        isMental() {
+            return this.$store.state.currentUrl.includes("mentals");
         },
 
         isCalendar() {
