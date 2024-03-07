@@ -3,13 +3,20 @@
 
         <div class="container-fluid">
             <!-- Logo -->
-            <a href="/" class="navbar-brand me-5">
-                <!-- <img src="../../assets/logo.png" alt="Logo" class="d-inline-block align-text-top logo-custom-size"> -->
-                Healthy Lifestyle
-            </a>
+            <div class="d-flex align-items-center me-5">
+                <a href="/" class="navbar-brand">
+                    <!-- <img src="../../assets/logo.png" alt="Logo" class="d-inline-block align-text-top logo-custom-size"> -->
+                    Healthy Lifestyle
+                </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <img v-if="isNotificationIconVisible()" src="../../assets/notification.png" alt=""
+                     style="width: 24px; height: 24px;"
+                     @click="onNotificationClick">
+            </div>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -26,24 +33,37 @@
                     </li>
 
                     <li class="nav-item me-3">
-                        <a href="/meditations" :class="{ 'nav-link': true, 'active': isMeditations }">Mental</a>
+                        <a href="/meditations" :class="{ 'nav-link': true, 'active': isMeditations }">Mental
+                            Activity</a>
                     </li>
 
                     <li class="nav-item me-3">
-                        <a href="/calendar" :class="{ 'nav-link': true, 'active': isCalendar }">Calendar</a>
+                        <a href="/calendar-today" :class="{ 'nav-link': true, 'active': isCalendar }">Calendar</a>
                     </li>
 
                     <li class="nav-item me-3">
-                        <a href="/stats" :class="{ 'nav-link': true, 'active': isStats }">Stats</a>
+                        <a href="/stats-today" :class="{ 'nav-link': true, 'active': isStats }">Stats</a>
                     </li>
                 </ul>
 
-                <!-- Login/Signup -->
+                <!-- User Profile -->
                 <div v-if="isLogged" class="d-flex align-items-center">
+                    <div v-if="isNotificationIconVisible()" class="me-2" @click="onNotificationClick">
+                        <img src="../../assets/notification.png" alt="" style="width: 24px; height: 24px;">
+                    </div>
+
+                    <div class="me-3">
+                        <a :href="getCurrentUrl()" @click="onClickEN($event)" class="me-2"><b>EN</b></a>
+                        <a :href="getCurrentUrl()" @click="onClickUA($event)" class="me-2"
+                           style="text-decoration: none;">UA</a>
+                        <a :href="getCurrentUrl()" @click="onClickRU($event)" class="me-2"
+                           style="text-decoration: none;">RU</a>
+                    </div>
+
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
+                               data-bs-toggle="dropdown" aria-expanded="false">
                                 Welcome, {{ getUserFullName }}!
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end"
@@ -55,22 +75,23 @@
                             </ul>
                         </li>
                     </ul>
-                    <!-- <a href="/settings" class="btn btn-outline-secondary me-2" role="button">Settings</a> -->
-                    <!-- <a href="/logout" class="btn btn-outline-secondary me-2" role="button">Logout</a> -->
 
-                    <!-- Debug -->
-                    <!-- <div class="me-2">isLogged: {{ isLogged }}</div> -->
-                    <!-- <div class="me-2">curUrl: {{ getCurrentUrl }}</div> -->
-                    <!-- <div class="me-2">prevUrl: {{ getPreviousUrl }}</div> -->
+
                 </div>
 
+                <!-- Login, Signup -->
                 <div v-else class="d-flex align-items-center">
-                    <!-- Debug -->
-                    <!-- <div class="me-2">isLogged: {{ isLogged }} </div> -->
-                    <!-- <div class="me-2">curUrl: {{ getCurrentUrl }}</div> -->
-                    <!-- <div class="me-2">prevUrl: {{ getPreviousUrl }}</div> -->
-                    <a href="/login" class="btn btn-outline-secondary me-2" role="button">Login</a>
-                    <a href="/signup" class="btn btn-secondary me-2" role="button">Sign-Up</a>
+                    <div class="me-3">
+                        <a :href="getCurrentUrl()" @click="onClickEN($event)" class="me-2"><b>EN</b></a>
+                        <a :href="getCurrentUrl()" @click="onClickUA($event)" class="me-2"
+                           style="text-decoration: none;">UA</a>
+                        <a :href="getCurrentUrl()" @click="onClickRU($event)" class="me-2"
+                           style="text-decoration: none;">RU</a>
+                    </div>
+                    <div>
+                        <a href="/login" class="btn btn-outline-secondary me-2" role="button">Login</a>
+                        <a href="/signup" class="btn btn-secondary me-2" role="button">Sign-Up</a>
+                    </div>
                 </div>
 
             </div>
@@ -86,14 +107,6 @@ export default {
     computed: {
         isLogged() {
             return this.$store.state.isLogged;
-        },
-
-        getCurrentUrl() {
-            return this.$store.state.currentUrl;
-        },
-
-        getPreviousUrl() {
-            return this.$store.state.previousUrl;
         },
 
         isWorkouts() {
@@ -122,6 +135,35 @@ export default {
                 return "Error";
             }
             return userFullName;
+        }
+    },
+
+    methods: {
+        onNotificationClick() {
+            alert(this.$store.state.pushNotification);
+        },
+
+        isNotificationIconVisible() {
+            return this.$store.state.pushNotification !== null;
+        },
+
+        onClickEN(event) {
+            event.preventDefault();
+            alert("English is already selected");
+        },
+
+        onClickUA(event) {
+            event.preventDefault();
+            alert("Зараз доступна тільки англійська");
+        },
+
+        onClickRU(event) {
+            event.preventDefault();
+            alert("Сейчас доступен только английский");
+        },
+
+        getCurrentUrl() {
+            return this.$store.state.currentUrl;
         }
     }
 }

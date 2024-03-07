@@ -1,47 +1,51 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {createRouter, createWebHistory} from "vue-router";
 // Home
-import HomePage from "../home/pages/HomePage.vue";
+import HomePage from "@/home/HomePage.vue";
 
 // Auth
-import LoginPage from "../auth/pages/LoginPage.vue";
-import LogoutPage from "../auth/pages/LogoutPage.vue";
+import LoginPage from "@/auth/LoginPage.vue";
+import LogoutPage from "@/auth/LogoutPage.vue";
 
 // User
-import SignupPage from "../user/pages/SignupPage.vue";
-import SettingsPage from "../user/pages/SettingsPage.vue";
+import UserSignupPage from "@/user/UserSignupPage.vue";
+import UserManagePage from "@/user/UserManagePage.vue";
 
 // Workout
-import WorkoutsListPage from "../workout/pages/WorkoutsListPage.vue";
-import WorkoutDetailsPage from "../workout/pages/WorkoutDetailsPage.vue";
-import WorkoutCreatePage from "../workout/pages/WorkoutCreatePage.vue";
-import WorkoutManagePage from "../workout/pages/WorkoutManagePage.vue";
+import WorkoutsListPage from "@/activity/workout/WorkoutsListPage.vue";
+import WorkoutDetailsPage from "@/activity/workout/WorkoutDetailsPage.vue";
+import WorkoutCreatePage from "@/activity/workout/WorkoutCreatePage.vue";
+import WorkoutManagePage from "@/activity/workout/WorkoutManagePage.vue";
+import WorkoutSetupReminderPage from "@/reminder/workout/WorkoutSetupReminderPage.vue";
+import WorkoutListRemindersPage from "@/reminder/workout/WorkoutListRemindersPage.vue";
 
 // Exercise
-import ExercisesListPage from "../workout/pages/ExercisesListPage.vue";
-import ExerciseDetailsPage from "../workout/pages/ExerciseDetailsPage.vue";
-import ExerciseCreatePage from "../workout/pages/ExerciseCreatePage.vue";
-import ExerciseManagePage from "../workout/pages/ExerciseManagePage.vue";
+import ExercisesListPage from "@/activity/workout/ExercisesListPage.vue";
+import ExerciseDetailsPage from "@/activity/workout/ExerciseDetailsPage.vue";
+import ExerciseCreatePage from "@/activity/workout/ExerciseCreatePage.vue";
+import ExerciseManagePage from "@/activity/workout/ExerciseManagePage.vue";
 
 // Media
-import MediasListPage from "../workout/pages/MediasListPage.vue";
-import MediaCreatePage from "../workout/pages/MediaCreatePage.vue";
-import MediaManagePage from "../workout/pages/MediaManagePage.vue";
-
-// Reminder
-import RemindersWorkoutsPage from "../workout/pages/RemindersWorkoutsPage.vue";
+import MediasListPage from "@/activity/workout/MediasListPage.vue";
+import MediaCreatePage from "@/activity/workout/MediaCreatePage.vue";
+import MediaManagePage from "@/activity/workout/MediaManagePage.vue";
 
 // Nutrition
-import NutritionPage from "../nutrition/pages/NutritionPage.vue";
+import NutritionPage from "@/activity/nutrition/NutritionPage.vue";
 
 // Meditation
-import MeditationsPage from "../meditation/pages/MeditationsPage.vue";
+import MentalActivityPage from "@/activity/mental/MentalActivityPage.vue";
 
 // Calendar
-import CalendarPage from "../calendar/pages/CalendarPage.vue";
+import CalendarTodayPage from "@/calendar/CalendarTodayPage.vue";
+import CalendarWeekPage from "@/calendar/CalendarWeekPage.vue";
+import CalendarMonthPage from "@/calendar/CalendarMonthPage.vue";
+import CalendarSelectPeriodPage from "@/calendar/CalendarSelectPeriodPage.vue";
 
-// Calendar
-import StatsPage from "../stats/pages/StatsPage.vue";
-
+// Stats
+import StatsTodayPage from "@/stats/StatsTodayPage.vue";
+import StatsWeekPage from "@/stats/StatsWeekPage.vue";
+import StatsMonthPage from "@/stats/StatsMonthPage.vue";
+import StatsSelectPeriodPage from "@/stats/StatsSelectPeriodPage.vue";
 
 const routes = [
     // Home
@@ -67,12 +71,12 @@ const routes = [
     {
         path: "/signup",
         name: "SignupPage",
-        component: SignupPage
+        component: UserSignupPage
     },
     {
         path: "/settings",
         name: "SettingsPage",
-        component: SettingsPage
+        component: UserManagePage
     },
 
     // Workout
@@ -95,6 +99,16 @@ const routes = [
         path: "/workouts-manage-workout/:id",
         name: "WorkoutManagePage",
         component: WorkoutManagePage
+    },
+    {
+        path: "/workouts-setup-reminder/:workoutId",
+        name: "WorkoutSetupReminderPage",
+        component: WorkoutSetupReminderPage
+    },
+    {
+        path: "/workouts-reminders-list",
+        name: "WorkoutRemindersListPage",
+        component: WorkoutListRemindersPage
     },
 
     // Exercise
@@ -136,13 +150,6 @@ const routes = [
         component: MediaManagePage
     },
 
-    // Reminder
-    {
-        path: "/workouts-reminders-list",
-        name: "RemindersWorkoutsPage",
-        component: RemindersWorkoutsPage
-    },
-
     // Nutrition
     {
         path: "/nutrition",
@@ -154,22 +161,52 @@ const routes = [
     {
         path: "/meditations",
         name: "MeditationsPage",
-        component: MeditationsPage
+        component: MentalActivityPage
     },
 
     // Calendar
     {
-        path: "/calendar",
-        name: "CalendarPage",
-        component: CalendarPage
+        path: "/calendar-today",
+        name: "CalendarTodayPage",
+        component: CalendarTodayPage
+    },
+    {
+        path: "/calendar-week",
+        name: "CalendarWeekPage",
+        component: CalendarWeekPage
+    },
+    {
+        path: "/calendar-month",
+        name: "CalendarMonthPage",
+        component: CalendarMonthPage
+    },
+    {
+        path: "/calendar-select-period",
+        name: "CalendarSelectPeriodPage",
+        component: CalendarSelectPeriodPage
     },
 
     // Stats
     {
-        path: "/stats",
-        name: "StatsPage",
-        component: StatsPage
+        path: "/stats-today",
+        name: "StatsTodayPage",
+        component: StatsTodayPage
     },
+    {
+        path: "/stats-week",
+        name: "StatsWeekPage",
+        component: StatsWeekPage
+    },
+    {
+        path: "/stats-month",
+        name: "StatsMonthPage",
+        component: StatsMonthPage
+    },
+    {
+        path: "/stats-select-period",
+        name: "StatsSelectPeriodPage",
+        component: StatsSelectPeriodPage
+    }
 ];
 
 const router = createRouter({
