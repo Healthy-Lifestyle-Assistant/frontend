@@ -1,7 +1,7 @@
-import {UrlAuth} from "@/auth/misc/UrlAuth";
-import {AlertMessageShared} from "@/shared/util/AlertMessageShared";
-import {AlertMessageAuth} from "@/auth/misc/AlertMessageAuth";
-import {getToken} from "firebase/messaging";
+import { UrlAuth } from "@/auth/misc/UrlAuth";
+import { AlertMessageShared } from "@/shared/util/AlertMessageShared";
+import { AlertMessageAuth } from "@/auth/misc/AlertMessageAuth";
+import { getToken } from "firebase/messaging";
 
 export class AuthUtil {
     static getToken() {
@@ -29,6 +29,12 @@ export class AuthUtil {
         if (response.status === 200) {
             const body = await response.json();
             obj.$store.commit("setUserFullName", body[1]);
+
+            const vapidKey = localStorage.getItem("2");
+            if (vapidKey === null || vapidKey === "") {
+                localStorage.setItem("2", body[2]);
+            }
+
             return token;
         }
 
@@ -76,24 +82,42 @@ export class AuthUtil {
         obj.$router.push("/login");
     }
 
-    static getFirebaseNotificationToken(messaging) {
-        let vapidKey = "BDwM5GScO3-AZjdyk40lvdlRwp_WMDZLZ5EjJxm8L9JV8O-D4mr7w7RVhuAcwg6vksVrUToyNtWLtlBBc5pJgD0";
+    static handleFirebaseUserToken(messaging) {
+        let vapidKey = localStorage.getItem("2");
+        let firebaseUserTokenFromLocalStorage = localStorage.getItem("3");
 
         getToken(messaging,
-            {vapidKey: vapidKey})
-            .then(async (currentToken) => {
-                if (currentToken) {
-                    console.log("currentToken: ", currentToken);
-                    // let requestDto = {
-                    //     firebaseClientToken: currentToken
-                    // };
-                    // await setFirebaseClientToken(requestDto);
-
+            { vapidKey: vapidKey })
+            .then(async (receivedToken) => {
+                if (receivedToken) {
+                    const requestDto = {
+                        firebaseUserTokenFromLocalStorage: firebaseUserTokenFromLocalStorage,
+                        firebaseUserTokenNowReceived: receivedToken
+                    };
+                    await AuthUtil.handleFirebaseUserTokenRestApi(requestDto);
+                    localStorage.setItem("3", receivedToken);
                 } else {
                     console.log("No registration token available. Request permission to generate one.");
                 }
             }).catch((err) => {
-            console.log("An error occurred while retrieving token. ", err);
+                console.log("An error occurred while retrieving token. ", err);
+            });
+    }
+
+    static async handleFirebaseUserTokenRestApi(requestDto) {
+        let token = AuthUtil.getToken();
+        let response = await fetch("/api/v1/calendar/notification/handleFirebaseUserToken", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(requestDto)
         });
+        // const data = await response.json();
+        return {
+            status: response.status,
+            // body: data
+        };
     }
 }
