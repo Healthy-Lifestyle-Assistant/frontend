@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isNotificationVisible() && !isClosedByUser" class="mb-3">
+    <div v-if="isNotificationVisible()" class="mb-3">
         <div class="alert alert-success" role="alert"
              style="width: fit-content;">
             {{ getNotification() }}
@@ -7,19 +7,12 @@
         <button class="btn btn-outline-secondary me-2" role="button"
                 @click="onClearButtonClick">Clear
         </button>
-        <button class="btn btn-secondary" role="button" @click="onCloseButtonClick">Close</button>
     </div>
 </template>
 
 <script>
 export default {
     name: "AlertNotificationComponent",
-
-    data() {
-        return {
-            isClosedByUser: false
-        }
-    },
 
     methods: {
         isNotificationVisible() {
@@ -35,10 +28,6 @@ export default {
 
         onClearButtonClick() {
             this.$store.commit("setPushNotification", null);
-        },
-
-        onCloseButtonClick() {
-            this.isClosedByUser = true;
         }
     }
 };

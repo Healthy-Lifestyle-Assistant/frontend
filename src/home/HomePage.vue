@@ -125,7 +125,7 @@ export default {
             this.$store.commit("setLogged", false);
         } else {
             this.$store.commit("setLogged", true);
-            AuthUtil.getFirebaseNotificationToken(this.messaging);
+            AuthUtil.handleFirebaseUserToken(this.messaging);
         }
     },
 
